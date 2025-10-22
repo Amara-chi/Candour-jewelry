@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useTheme } from '../hooks/useTheme'
-import Navbar from '../../Navbar'
+import Navbar from '../components/Navbar'
 
 const MainLayout = ({ children }) => {
   const { theme } = useTheme()

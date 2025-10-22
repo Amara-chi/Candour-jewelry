@@ -9,7 +9,7 @@ import Home from './routes/User/Home'
 
 function App() {
   const { theme } = useTheme()
-  return <Home />
+  return null
  
     {/* <ProductDetails />
   <Cart />
