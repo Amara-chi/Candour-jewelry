@@ -1,5 +1,6 @@
 import MainLayout from '../../layouts/MainLayout'
 import ProductCard from '../../features/product/productCard'
+import Button from '../../components/Button'
 
 const Home = () => {
   const featuredProducts = Array(6).fill(0) // Placeholder products
@@ -7,7 +8,7 @@ const Home = () => {
   return (
     <MainLayout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-500 to-wine-500 text-white py-20">
+      <section className="bg-gradient-to-r from-primary-500 to-wine-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-5xl font-elegant font-bold mb-6">
             Timeless Elegance
@@ -15,9 +16,9 @@ const Home = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Discover our exclusive collection of handcrafted jewelry pieces that blend traditional craftsmanship with contemporary design.
           </p>
-          <button className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-lg">
-            Shop Collection
-          </button>
+          <Button variant='primary' size='lg'>
+            Shop Now
+          </Button>
         </div>
       </section>
 

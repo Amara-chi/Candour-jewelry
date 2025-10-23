@@ -6,12 +6,14 @@ import { router } from './routes/router.jsx'
 import { store } from './app/store.js'
 import './index.css'
 import App from './App.jsx'
+import { ModalProvider } from './components/Modal.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
+      <ModalProvider>
         <App />
-          <RouterProvider router={router} />
+        <RouterProvider router={router} />
         <script>
            if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
@@ -20,8 +22,9 @@ createRoot(document.getElementById('root')).render(
               .then(reg => console.log('Service worker registered:', reg))
               .catch(err => console.log('Service worker registration failed:', err));
           })
-      }
+          }
         </script>
+      </ModalProvider>
     </Provider>
   </StrictMode>,
 )
