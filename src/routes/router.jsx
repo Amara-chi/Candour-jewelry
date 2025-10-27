@@ -4,6 +4,7 @@ import Cart from './User/Cart'
 import Dashboard from './Admin/Dashboard'
 import ProductDetails from './User/ProductDetails'
 import Shop from './User/Shop' 
+import TestComp from './User/TestComp'
 
 
 // Create root route
@@ -40,6 +41,12 @@ const productRoute = createRoute({
   component: ProductDetails,
 })
 
+const testCompRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/test-comp',
+  component: TestComp,
+})
+
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -47,6 +54,7 @@ const routeTree = rootRoute.addChildren([
   cartRoute,
   adminRoute,
   productRoute,
+  testCompRoute
 ])
 
 // Create the router

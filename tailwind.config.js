@@ -27,7 +27,7 @@ export const theme = {
         400: '#BF4D57',
         500: '#A9343F',
         600: '#8F2C36',
-        700: '#722F37',
+        700: '#722F37', // Deep wine (main)
         800: '#5A242C',
         900: '#41181F',
       },
@@ -42,12 +42,35 @@ export const theme = {
         700: '#334155',
         800: '#1e293b',
         900: '#0f172a', // Dark
-      }
+      },
+      neutral: {
+        50: '#FAF8F3',  // Ivory
+        100: '#EAE6DA', // Sand Beige
+        200: '#C2B8A3', // Muted Taupe
+      },
+      emerald: {
+        500: '#0B6E4F',
+        600: '#085C42',
+      },
     },
     fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      serif: ['Playfair Display', 'serif'],
-    }
+  sans: ['Inter', 'system-ui', 'sans-serif'],
+  serif: ['Playfair Display', 'serif'],
+  parisienne: ['Parisienne', 'cursive'],
+},
+    boxShadow: {
+      soft: '0 2px 8px rgba(0,0,0,0.08)',
+      gold: '0 0 10px rgba(218,165,32,0.3)',
+    },
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '3rem',
+        xl: '4rem',
+      },
+    },
   },
 };
 export const plugins = [];
