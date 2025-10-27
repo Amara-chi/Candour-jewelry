@@ -32,8 +32,8 @@ const Home = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="relative container mx-auto flex flex-col items-center justify-center text-center pt-32 px-6">
-        <h1 className="text-4xl md:text-6xl font-parisienne font-extrabold text-wine-500 dark:text-primary-500 mt-28 leading-tight">
+      <div className="relative container mx-auto flex flex-col items-center justify-center text-center pt-28 px-6">
+        <h1 className="text-4xl md:text-7xl font-parisienne font-extrabold text-wine-500 dark:text-primary-500 mt-28 leading-tight ">
   Timeless Elegance, Handcrafted Luxury
 </h1>
 

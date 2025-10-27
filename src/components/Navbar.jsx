@@ -26,13 +26,13 @@ const Navbar = () => {
   return (
     <nav className="bg-white dark:bg-dark-900 shadow-lg border-b border-primary-200 dark:border-dark-700 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between sm:mr-[-30px] items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={closeMobileMenu}>
-            <div className='w-32 '>
+            <div className='w-28 '>
               <img src={logo} alt="" />
             </div>
-            <span className="text-xl font-elegant font-bold text-wine-400 dark:text-primary-400 ">
+            <span className=" md:text-3xl sm:text-sm sm:text-nowrap ml-[-20px] font-parisienne font-bold text-wine-400 dark:text-primary-400 ">
               Candour's Jewelry
             </span>
           </Link>
