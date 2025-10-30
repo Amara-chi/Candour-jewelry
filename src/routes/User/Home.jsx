@@ -34,9 +34,8 @@ const Home = () => {
       {/* Hero Content */}
       <div className="relative container mx-auto flex flex-col items-center justify-center text-center pt-32 px-6">
         <h1 className="text-4xl md:text-6xl font-parisienne font-extrabold text-wine-500 dark:text-primary-500 mt-28 leading-tight">
-  Timeless Elegance, Handcrafted Luxury
-</h1>
-
+          Timeless Elegance, Handcrafted Luxury
+        </h1>
 
         <p className="text-lg md:text-xl text-dark-600 max-w-2xl mb-8">
           Discover jewelry that tells your story — crafted with passion,
@@ -61,7 +60,7 @@ const Home = () => {
       </div>
     </section>
   
-      {/* Featured Products */}
+    {/* Featured Products */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-elegant font-bold text-center text-dark-900 dark:text-white mb-12">
           Featured Collection
