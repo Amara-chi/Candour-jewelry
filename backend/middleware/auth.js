@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-// Protect routes
 export const protect = async (req, res, next) => {
   let token;
 
@@ -17,10 +16,8 @@ export const protect = async (req, res, next) => {
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Get user from the token
     req.user = await User.findById(decoded.id).select('-password');
     
     if (!req.user) {
@@ -39,7 +36,6 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// Grant access to specific roles
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

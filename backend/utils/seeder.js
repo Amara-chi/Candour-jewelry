@@ -9,7 +9,6 @@ const createAdminUser = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB Connected for seeding...');
 
-    // Check if admin already exists
     const adminExists = await User.findOne({ email: 'admin@candourjewelry.com' });
     
     if (!adminExists) {
