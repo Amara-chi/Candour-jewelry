@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import Navbar from '../components/Navbar'
+import CustomCursor from '../components/CustomCursor'
 
 const MainLayout = ({ children }) => {
   const { theme } = useTheme()
@@ -17,6 +18,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-dark-900 transition-colors duration-300">
+      <CustomCursor />
       <Navbar />
       <main className="transition-colors duration-300">
         {children}

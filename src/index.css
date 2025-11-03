@@ -30,6 +30,26 @@
   transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Custom cursor styles */
+@layer base {
+  /* Hide default cursor on elements when custom cursor is active */
+  @media (min-width: 768px) {
+    body {
+      cursor: none !important;
+    }
+    
+    /* Ensure interactive elements still show pointer state */
+    a, button, [role="button"], input, select, textarea, .cursor-pointer {
+      cursor: none !important;
+    }
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -37,4 +57,12 @@
 
 ::-webkit-scrollbar-track {
   @apply bg-dark-100 dark:bg-dark-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-600;
 }

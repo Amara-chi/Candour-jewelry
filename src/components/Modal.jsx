@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import Button from './Button'
 import Input from './Input'
+import { useAuth } from '../hooks/useAuth'
 
 // Modal Context
 const ModalContext = React.createContext()
@@ -153,12 +154,16 @@ const ProductDetailsModal = ({ data }) => {
 // Login Modal
 const LoginModal = ({ data }) => {
   const { closeModal, openModal } = useModal()
+  const { login, loading, error, clearError } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
   const [errors, setErrors] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    return () => clearError()
+  }, [clearError])
 
   const handleChange = (e) => {
     setFormData({
@@ -175,7 +180,6 @@ const LoginModal = ({ data }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setIsLoading(true)
     
     // Validation
     const newErrors = {}
@@ -184,21 +188,13 @@ const LoginModal = ({ data }) => {
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
-      setIsLoading(false)
       return
     }
     
-    try {
-      // TODO: Replace with actual API call
-      console.log('Login data:', formData)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+    const result = await login(formData)
+    if (result.type === 'auth/login/fulfilled') {
       closeModal()
-      // Show success message or redirect
-    } catch (error) {
-      setErrors({ submit: 'Login failed. Please try again.' })
-    } finally {
-      setIsLoading(false)
+      // You can add a success toast here if needed
     }
   }
 
@@ -212,6 +208,13 @@ const LoginModal = ({ data }) => {
       <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white text-center">
         Welcome Back
       </h2>
+      
+      {/* Show backend error */}
+      {error && (
+        <div className="bg-wine-100 border border-wine-400 text-wine-700 px-4 py-3 rounded text-sm">
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
@@ -235,18 +238,14 @@ const LoginModal = ({ data }) => {
           error={errors.password}
           required
         />
-
-        {errors.submit && (
-          <p className="text-wine-500 text-sm text-center">{errors.submit}</p>
-        )}
         
         <Button 
           type="submit" 
           variant="primary" 
           className="w-full"
-          disabled={isLoading}
+          disabled={loading}
         >
-          {isLoading ? 'Signing In...' : 'Sign In'}
+          {loading ? 'Signing In...' : 'Sign In'}
         </Button>
       </form>
 
@@ -266,18 +265,22 @@ const LoginModal = ({ data }) => {
   )
 }
 
+
 // Register Modal
 const RegisterModal = ({ data }) => {
   const { closeModal, openModal } = useModal()
+  const { register, loading, error, clearError } = useAuth()
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: ''
   })
   const [errors, setErrors] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    return () => clearError()
+  }, [clearError])
 
   const handleChange = (e) => {
     setFormData({
@@ -294,12 +297,10 @@ const RegisterModal = ({ data }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setIsLoading(true)
     
     // Validation
     const newErrors = {}
-    if (!formData.firstName) newErrors.firstName = 'First name is required'
-    if (!formData.lastName) newErrors.lastName = 'Last name is required'
+    if (!formData.name) newErrors.name = 'Full name is required'
     if (!formData.email) newErrors.email = 'Email is required'
     if (!formData.password) newErrors.password = 'Password is required'
     if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters'
@@ -309,21 +310,18 @@ const RegisterModal = ({ data }) => {
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
-      setIsLoading(false)
       return
     }
     
-    try {
-      // TODO: Replace with actual API call
-      console.log('Registration data:', formData)
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+    const result = await register({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password
+    })
+
+    if (result.type === 'auth/register/fulfilled') {
       closeModal()
-      // Show success message or redirect to login
-    } catch (error) {
-      setErrors({ submit: 'Registration failed. Please try again.' })
-    } finally {
-      setIsLoading(false)
+      // You can add a success toast here if needed
     }
   }
 
@@ -338,30 +336,24 @@ const RegisterModal = ({ data }) => {
         Create Account
       </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label="First Name"
-            name="firstName"
-            type="text"
-            placeholder="John"
-            value={formData.firstName}
-            onChange={handleChange}
-            error={errors.firstName}
-            required
-          />
-          
-          <Input
-            label="Last Name"
-            name="lastName"
-            type="text"
-            placeholder="Doe"
-            value={formData.lastName}
-            onChange={handleChange}
-            error={errors.lastName}
-            required
-          />
+      {/* Show backend error */}
+      {error && (
+        <div className="bg-wine-100 border border-wine-400 text-wine-700 px-4 py-3 rounded text-sm">
+          {error}
         </div>
+      )}
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Full Name"
+          name="name"
+          type="text"
+          placeholder="John Doe"
+          value={formData.name}
+          onChange={handleChange}
+          error={errors.name}
+          required
+        />
         
         <Input
           label="Email Address"
@@ -395,18 +387,14 @@ const RegisterModal = ({ data }) => {
           error={errors.confirmPassword}
           required
         />
-
-        {errors.submit && (
-          <p className="text-wine-500 text-sm text-center">{errors.submit}</p>
-        )}
         
         <Button 
           type="submit" 
           variant="primary" 
           className="w-full"
-          disabled={isLoading}
+          disabled={loading}
         >
-          {isLoading ? 'Creating Account...' : 'Create Account'}
+          {loading ? 'Creating Account...' : 'Create Account'}
         </Button>
       </form>
 
