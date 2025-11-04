@@ -18,7 +18,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-dark-900 transition-colors duration-300">
-      < CustomCursor />
+      <CustomCursor />
       <Navbar />
       <main className="transition-colors duration-300">
         {children}
