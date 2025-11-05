@@ -5,46 +5,61 @@ import Dashboard from './Admin/Dashboard'
 import ProductDetails from './User/ProductDetails'
 import Shop from './User/Shop' 
 import TestComp from './User/TestComp'
-
+import AdminLayout from '../layouts/AdminLayout'
+import MainLayout from '../layouts/MainLayout'
 
 // Create root route
 const rootRoute = createRootRoute()
 
-// Create individual routes
+// Layout wrappers
+const withMainLayout = (Component) => (props) => (
+  <MainLayout>
+    <Component {...props} />
+  </MainLayout>
+)
+
+const withAdminLayout = (Component) => (props) => (
+  <AdminLayout>
+    <Component {...props} />
+  </AdminLayout>
+)
+
+// Public routes with MainLayout
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: Home,
+  component: withMainLayout(Home),
 })
 
 const shopRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/shop',
-  component: Shop, 
+  component: withMainLayout(Shop),
 })
 
 const cartRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/cart',
-  component: Cart,
-})
-
-const adminRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/admin',
-  component: Dashboard,
+  component: withMainLayout(Cart),
 })
 
 const productRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/product/$id',
-  component: ProductDetails,
+  component: withMainLayout(ProductDetails),
 })
 
 const testCompRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/test-comp',
-  component: TestComp,
+  component: withMainLayout(TestComp),
+})
+
+
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: withAdminLayout(Dashboard),
 })
 
 // Create the route tree

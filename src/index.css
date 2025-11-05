@@ -30,15 +30,23 @@
   transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  scroll-behavior: smooth;
+}
+
+
 /* Custom cursor styles */
 @layer base {
-  /* Hide default cursor on elements when custom cursor is active */
   @media (min-width: 768px) {
     body {
       cursor: none !important;
     }
     
-    /* Ensure interactive elements still show pointer state */
     a, button, [role="button"], input, select, textarea, .cursor-pointer {
       cursor: none !important;
     }

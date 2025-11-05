@@ -81,15 +81,12 @@ const Navbar = () => {
             >
               Cart
             </Link>
-            <Link 
-              to="/admin" 
-              className="text-dark-700 dark:text-dark-200 hover:text-wine-500 dark:hover:text-wine-400 transition-colors"
-              activeProps={{
-                className: "text-wine-500 dark:text-wine-400 font-semibold"
-              }}
-            >
-              Admin
-            </Link>
+          
+            {isAuthenticated && isAdmin && (
+              <a href="/admin" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
+                Admin
+              </a>
+            )}
           </div>
 
           {/* Desktop Theme Toggle & Actions */}
@@ -250,16 +247,12 @@ const Navbar = () => {
               >
                 Cart
               </Link>
-              <Link 
-                to="/test-comp" 
-                className="block px-3 py-2 text-dark-700 dark:text-dark-200 hover:text-wine-500 dark:hover:text-wine-400 transition-colors"
-                activeProps={{
-                  className: "text-wine-500 dark:text-wine-400 font-semibold"
-                }}
-                onClick={closeMobileMenu}
-              >
-                Admin
-              </Link>
+
+              {isAuthenticated && isAdmin && (
+                <a href="/admin" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
+                  Admin
+                </a>
+              )}
 
               {/* Mobile Auth Buttons */}
               <div className="px-3 py-2 space-y-2 border-t border-dark-200 dark:border-dark-700 pt-4">
