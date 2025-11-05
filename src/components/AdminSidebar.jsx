@@ -1,33 +1,31 @@
-import { useState } from "react"
-import { useAuth } from "../hooks/useAuth"
-import { Link } from "@tanstack/react-router"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useAuth } from "../hooks/useAuth";
+import { Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const AdminSidebar = () => {
-  const { user, logout } = useAuth()
-  const [isOpen, setIsOpen] = useState(true)
-
-  const toggleSidebar = () => setIsOpen(!isOpen)
+const AdminSidebar = ({ isOpen, toggleSidebar }) => {
+  const { user, logout } = useAuth();
 
   const menuItems = [
-    { path: "/admin", label: "Dashboard" },
-    { path: "/admin/products", label: "Products" },
-    { path: "/admin/orders", label: "Orders" },
-    { path: "/admin/categories", label: "Categories" },
-    { path: "/admin/users", label: "Users" },
+    { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+    { path: '/admin/products', label: 'Products', icon: '💎' },
+    { path: '/admin/orders', label: 'Orders', icon: '📦' },
+    { path: '/admin/categories', label: 'Categories', icon: '📑' },
+    { path: '/admin/users', label: 'Users', icon: '👥' },
   ]
 
   return (
     <div
-      className={`fixed top-0 left-0 h-screen z-40 transition-all duration-500 ease-in-out
-        ${isOpen ? "w-64" : "w-20"}
-        bg-white dark:bg-dark-900 border-r border-gray-200 dark:border-dark-700
+      className={`fixed pt-16 top-0 left-0 h-full z-40 transition-all duration-500 ease-in-out
+        ${isOpen ? "w-64" : "md:w-[97px]"}
+        bg-white dark:bg-dark-900 border-r border-primary-200  dark:border-dark-700
         shadow-md flex flex-col`}
     >
-      {/* Sidebar Toggle Button */}
+      {/* Toggle button */}
       <button
         onClick={toggleSidebar}
-        className="absolute -right-4 top-6 bg-primary-500 hover:bg-primary-600 text-white p-2 rounded-full shadow-md transition-all"
+        className={`absolute bg-primary-600  mt-[8px] hover:bg-primary-700 text-white p-2 rounded-r-full shadow-md transition-all duration-500 ease-in-out ${
+          isOpen ? `left-64` : `left-24`
+        }`}
       >
         {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
       </button>
@@ -39,7 +37,7 @@ const AdminSidebar = () => {
         </div>
         {isOpen && (
           <span className="text-lg font-semibold text-dark-800 dark:text-white whitespace-nowrap">
-            Candour Admin
+           Admin's Section
           </span>
         )}
       </div>
@@ -53,8 +51,8 @@ const AdminSidebar = () => {
         </div>
       )}
 
-      {/* Navigation Links */}
-      <nav className="flex-1 mt-4 space-y-2 px-2">
+      {/* Navigation */}
+      <nav className={`flex-1 mt-4 space-y-2 px-2 ${isOpen ? ' ' : 'flex items-center flex-col'}`}>
         {menuItems.map((item) => (
           <Link
             key={item.path}
@@ -66,8 +64,13 @@ const AdminSidebar = () => {
                 "bg-primary-500 text-white dark:bg-primary-600 dark:text-white",
             }}
           >
-            <span className="text-lg mr-3">{item.icon}</span>
-            {isOpen && <span className="whitespace-nowrap">{item.label}</span>}
+            {isOpen ? <div className="whitespace-nowrap flex gap-4">
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+              </div>
+              : <div className="whitespace-nowrap flex gap-4">
+              <span>{item.icon}</span>
+              </div>}
           </Link>
         ))}
       </nav>
@@ -83,7 +86,7 @@ const AdminSidebar = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AdminSidebar
+export default AdminSidebar;

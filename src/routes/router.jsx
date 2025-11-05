@@ -4,23 +4,38 @@ import Cart from './User/Cart'
 import Dashboard from './Admin/Dashboard'
 import ProductDetails from './User/ProductDetails'
 import Shop from './User/Shop' 
-import TestComp from './User/TestComp'
 import AdminLayout from '../layouts/AdminLayout'
 import MainLayout from '../layouts/MainLayout'
+import Footer from '../components/Footer'
+// import Analytics from './Admin/Analytics'
+// import ManageProducts from './Admin/ManageProducts'
+// import ManageOrders from './Admin/ManageOrders'
+// import ManageCategories from './Admin/ManageCategories'
+import ManageUsers from './Admin/ManageUsers'
 
-// Create root route
-const rootRoute = createRootRoute()
+// Root route
+const rootRoute = createRootRoute({
+  errorComponent: () => (
+    <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="text-white text-xl">Something went wrong!</div>
+    </div>
+  )
+})
 
 // Layout wrappers
 const withMainLayout = (Component) => (props) => (
   <MainLayout>
     <Component {...props} />
+    <Footer />
   </MainLayout>
 )
 
 const withAdminLayout = (Component) => (props) => (
   <AdminLayout>
-    <Component {...props} />
+    <MainLayout>
+      <Component {...props} />
+      <Footer />
+    </MainLayout>
   </AdminLayout>
 )
 
@@ -49,17 +64,17 @@ const productRoute = createRoute({
   component: withMainLayout(ProductDetails),
 })
 
-const testCompRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/test-comp',
-  component: withMainLayout(TestComp),
-})
-
-
+// Admin routes with AdminLayout
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/admin',
+  path: '/admin/dashboard',
   component: withAdminLayout(Dashboard),
+})
+
+const adminUsersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/users',
+  component: withAdminLayout(ManageUsers),
 })
 
 // Create the route tree
@@ -67,10 +82,9 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   shopRoute,
   cartRoute,
-  adminRoute,
   productRoute,
-  testCompRoute
+  adminRoute,
+  adminUsersRoute,
 ])
 
-// Create the router
 export const router = createRouter({ routeTree })

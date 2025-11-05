@@ -7,6 +7,7 @@ import productReducer from '../features/product/productSlice'
 import cartReducer from '../features/cart/cartSlice'
 import categoryReducer from '../features/categories/categorySlice'
 import orderReducer from '../features/orders/orderSlice'
+import userReducer from '../features/user/userSlice'
 
 // Persist config for auth
 const authPersistConfig = {
@@ -37,6 +38,7 @@ export const store = configureStore({
     products: productReducer,
     categories: categoryReducer,
     orders: orderReducer,
+    users: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

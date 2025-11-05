@@ -83,7 +83,7 @@ const Navbar = () => {
             </Link>
           
             {isAuthenticated && isAdmin && (
-              <a href="/admin" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
+              <a href="/admin/dashboard" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
                 Admin
               </a>
             )}
@@ -159,7 +159,7 @@ const Navbar = () => {
 
   {/* Badge (dot with count) */}
   <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary-500 text-white">
-    3
+    0
   </span>
 </Link>
 
@@ -198,7 +198,7 @@ const Navbar = () => {
 
   {/* Badge (dot with count) */}
   <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary-500 text-white">
-    3
+    0
   </span>
 </Link>
 
@@ -249,7 +249,7 @@ const Navbar = () => {
               </Link>
 
               {isAuthenticated && isAdmin && (
-                <a href="/admin" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
+                <a href="/admin/dashboard" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
                   Admin
                 </a>
               )}

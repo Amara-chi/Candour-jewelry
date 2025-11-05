@@ -1,25 +1,28 @@
-import { useEffect } from 'react'
-import { useAuth } from '../hooks/useAuth'
-import { useNavigate } from '@tanstack/react-router'
-import AdminSidebar from '../components/AdminSidebar'
+import { useEffect, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "@tanstack/react-router";
+import Footer from "../components/Footer";
+import AdminSidebar from "../components/AdminSidebar";
 
 const AdminLayout = ({ children }) => {
-  const { isAuthenticated, isAdmin, loading } = useAuth()
-  const navigate = useNavigate()
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   useEffect(() => {
-    // Redirect if not admin
     if (!loading && (!isAuthenticated || !isAdmin)) {
-      navigate({ to: '/' })
+      navigate({ to: "/" });
     }
-  }, [isAuthenticated, isAdmin, loading, navigate])
+  }, [isAuthenticated, isAdmin, loading, navigate]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-white">Loading...</div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated || !isAdmin) {
@@ -27,21 +30,24 @@ const AdminLayout = ({ children }) => {
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
         <div className="text-white">Access Denied</div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="min-h-screen bg-dark-900 text-white flex">
-      <AdminSidebar />
-      
-      {/* Main Content */}
-      <div className="flex-1 ml-64"> 
-        <div className="">
-          {children}
-        </div>
+    <div className="min-h-screen bg-dark-900 text-white flex transition-all duration-500 ease-in-out">
+      {/* Sidebar */}
+      <AdminSidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+
+      {/* Main content */}
+      <div
+        className={`flex-1 transition-all duration-500 ease-in-out ${
+          isOpen ? "ml-64" : "ml-[97px]"
+        }`}
+      >
+        {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AdminLayout
+export default AdminLayout;

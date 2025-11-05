@@ -2,14 +2,17 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
 
+// Load env vars
 dotenv.config();
 
+// Route files
 import auth from './routes/auth.js';
+import users from './routes/users.js'; 
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -24,8 +27,11 @@ const connectDB = async () => {
   }
 };
 
+// Mount routers
 app.use('/api/auth', auth);
+app.use('/api/users', users);
 
+// Basic health check route
 app.get('/api/health', (req, res) => {
   res.json({ 
     message: 'Candour Jewelry API is running!',
@@ -33,6 +39,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Connect to database and start server
 const startServer = async () => {
   await connectDB();
   

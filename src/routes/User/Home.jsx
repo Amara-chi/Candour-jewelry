@@ -4,12 +4,14 @@ import Button from '../../components/Button'
 import { Link } from '@tanstack/react-router'
 import hero from '../../assets/hero.png'
 import candour from '../../assets/candour.png'
+import Footer from '../../components/Footer'
 
 
 const Home = () => {
   const featuredProducts = Array(6).fill(0) // Placeholder products
 
   return (
+    <>
     <MainLayout>
     <section className="h-screen relative  to-primary-200 text-dark-900 overflow-hidden">
       {/* Background Image */}
@@ -33,10 +35,10 @@ const Home = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="relative container mx-auto flex flex-col items-center justify-center text-center pt-28 px-6">
-        <h1 className="text-4xl md:text-7xl font-parisienne font-extrabold text-wine-500 dark:text-primary-500 mt-28 leading-tight ">
-  Timeless Elegance, Handcrafted Luxury
-</h1>
+      <div className="relative container mx-auto flex flex-col items-center justify-center text-center h-full px-4">
+        <h1 className="text-4xl md:text-7xl font-parisienne font-extrabold text-wine-500 dark:text-primary-500 leading-tight ">
+          Timeless Elegance, Handcrafted Luxury
+        </h1>
 
 
         <p className="text-lg md:text-xl dark:text-white text-gray-800 font-semibold mt-3 max-w-2xl mb-8">
@@ -301,6 +303,7 @@ const Home = () => {
   </div>
 </section>
     </MainLayout>
+    </>
   )
 }
 

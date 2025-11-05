@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
 
-
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const [isClicking, setIsClicking] = useState(false)
-  const { theme, toggleTheme, isDark } = useTheme()
-  
+  const { isDark } = useTheme()
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window)
     }
-    
     checkMobile()
     window.addEventListener('resize', checkMobile)
 
@@ -24,14 +21,10 @@ const CustomCursor = () => {
       setPosition({ x: e.clientX, y: e.clientY })
     }
 
-    const handleMouseEnter = () => setIsVisible(true)
-    const handleMouseLeave = () => setIsVisible(false)
     const handleMouseDown = () => setIsClicking(true)
     const handleMouseUp = () => setIsClicking(false)
 
     document.addEventListener('mousemove', updatePosition)
-    document.addEventListener('mouseenter', handleMouseEnter)
-    document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mousedown', handleMouseDown)
     document.addEventListener('mouseup', handleMouseUp)
 
@@ -39,8 +32,6 @@ const CustomCursor = () => {
 
     return () => {
       document.removeEventListener('mousemove', updatePosition)
-      document.removeEventListener('mouseenter', handleMouseEnter)
-      document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('mouseup', handleMouseUp)
       window.removeEventListener('resize', checkMobile)
@@ -52,40 +43,38 @@ const CustomCursor = () => {
 
   return (
     <>
-      {/* Main cursor with invert effect */}
+      {/* Main dot */}
       <div
-        className="fixed pointer-events-none z-90 transition-all ease-in-out duration-200"
+        className="fixed pointer-events-none transition-transform duration-75 ease-out"
         style={{
           left: `${position.x - 16}px`,
           top: `${position.y - 16}px`,
-          opacity: isVisible ? 1 : 0,
-          width: isClicking ? '20px' : '32px',
-          height: isClicking ? '20px' : '32px',
-          padding: '4px',
+          width: isClicking ? '5px' : '17px',
+          height: isClicking ? '5px' : '17px',
           borderRadius: '50%',
-        //   background: isDark ? '#A9343F' : 'rgba(234, 179, 8)',
-          filter: 'invert(1)',
-          mixBlendMode: 'difference',
+          background: isDark ? 'rgba(234,179,8,0.9)' : '#A9343F',
+          zIndex: 9999,
           transform: isClicking ? 'scale(0.8)' : 'scale(1)',
-          boxShadow: isDark ? '0 0 0 2px #A9313F' : '0 0 0 2px rgba(234, 179, 8)',
+          transition: 'transform 0.1s ease-out',
         }}
       />
-      
-      {/* Pulsing ring effect */}
+
+      {/* Outline ring */}
       <div
-        className="fixed pointer-events-none z-50 transition-opacity duration-300"
+        className="fixed pointer-events-none"
         style={{
           left: `${position.x - 24}px`,
           top: `${position.y - 24}px`,
-          opacity: isVisible ? 0.6 : 0,
-          width: '48px',
-          height: '48px',
+          width: '33px',
+          height: '33px',
           borderRadius: '50%',
-          border: isDark ? '5px solid rgba(234, 179, 8)' : '5px solid #A9343F',
-          animation: 'pulse 2s infinite'
+          border: isDark ? '2px solid rgba(234,179,8,0.6)' : '2px solid #A9343F',
+          opacity: 0.4,
+          zIndex: 9998,
+          animation: 'pulse 2s infinite ease-in-out',
         }}
       />
-      
+
       <style jsx>{`
         @keyframes pulse {
           0% { transform: scale(1); opacity: 0.6; }
