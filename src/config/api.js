@@ -1,17 +1,28 @@
-// Environment-based API configuration for Vercel monorepo
+// Smart API configuration for Vercel monorepo
 const getApiUrl = () => {
-  // For production on Vercel - use relative path since backend is in same project
-  if (import.meta.env.PROD) {
-    return '/api'; // Relative path - Vercel will route to your backend
+  // Check if we're in a browser environment
+  if (typeof window !== 'undefined') {
+    const isVercelProduction = window.location.hostname.includes('vercel.app');
+    
+    if (isVercelProduction) {
+      console.log('🚀 Production: Using relative API path');
+      return '/api'; // Relative path for Vercel monorepo
+    }
+    
+    // Development - use localhost
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('💻 Development: Using localhost API');
+      return 'http://localhost:5000/api';
+    }
   }
-  // For development
-  return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  
+  // Fallback
+  return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
 };
 
 export const API_URL = getApiUrl();
 
-// Debug info
-console.log('🔧 API Configuration:');
-console.log(' - Environment:', import.meta.env.MODE);
+console.log('🔧 Final API Configuration:');
 console.log(' - API URL:', API_URL);
-console.log(' - VITE_API_URL env:', import.meta.env.VITE_API_URL);
+console.log(' - Hostname:', typeof window !== 'undefined' ? window.location.hostname : 'server');
+console.log(' - PROD mode:', import.meta.env.PROD);
