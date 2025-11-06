@@ -51,5 +51,4 @@ export default defineConfig({
   },
   // Important for Vercel deployment
   publicDir: 'public',
-  base: './' // Use relative paths
 })

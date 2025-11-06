@@ -24,24 +24,20 @@ app.use(cors({
 app.use(express.json());
 
 // MongoDB Connection
-let isDbConnected = false;
-
 const connectDB = async () => {
-  if (isDbConnected) return;
-  
   try {
     console.log('Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGO_URI);
-    isDbConnected = true;
     console.log('MongoDB Connected Successfully');
+    return true;
   } catch (error) {
     console.error('Database connection error:', error.message);
-    // Don't throw error in production - let it retry
-    if (process.env.NODE_ENV !== 'production') {
-      throw error;
-    }
+    return false;
   }
 };
+
+// Connect to DB immediately
+connectDB();
 
 // Import routes
 import auth from './routes/auth.js';
@@ -53,23 +49,15 @@ app.use('/api/users', users);
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
-  try {
-    await connectDB(); // Ensure DB connection
-    const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-    
-    res.json({ 
-      message: 'Candour Jewelry API is running!',
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
-      database: dbStatus,
-      version: '1.0.0'
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: 'API is running but database connection failed',
-      error: error.message
-    });
-  }
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  
+  res.json({ 
+    message: 'Candour Jewelry API is running!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: dbStatus,
+    version: '1.0.0'
+  });
 });
 
 // Root API endpoint
@@ -103,18 +91,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Vercel serverless function handler
-const handler = async (req, res) => {
-  // Ensure DB connection on cold start
-  if (!isDbConnected) {
-    await connectDB();
-  }
-  
-  return app(req, res);
-};
-
-// Export for Vercel serverless
-export default handler;
+// Export the app directly for Vercel
+export default app;
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
