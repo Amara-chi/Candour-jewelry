@@ -27,26 +27,25 @@ app.use(express.json());
 const connectDB = async () => {
   try {
     console.log('Connecting to MongoDB...');
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB Connected Successfully');
+    
+    const conn = await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      maxPoolSize: 10,
+      retryWrites: true,
+      w: 'majority'
+    });
+    
+    console.log('✅ MongoDB Connected Successfully to:', conn.connection.host);
     return true;
   } catch (error) {
-    console.error('Database connection error:', error.message);
+    console.error('❌ Database connection error:', error.message);
+    console.error('Connection string used:', process.env.MONGODB_URI || process.env.MONGO_URI ? '***' : 'NOT SET');
     return false;
   }
 };
-
-mongoose.connection.on('connected', () => {
-  console.log('✅ MongoDB connected successfully');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('⚠️ MongoDB disconnected');
-});
 
 // Connect to DB immediately
 connectDB();
