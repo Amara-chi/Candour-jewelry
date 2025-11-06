@@ -17,7 +17,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://candour-jewelry.vercel.app' 
+    'https://candour-jewelry.vercel.app',
+      /\.vercel\.app$/ 
   ],
   credentials: true
 }));

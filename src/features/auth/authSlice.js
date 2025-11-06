@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { API_URL } from '../../../backend/config/api'; 
+import { API_URL } from '../../config/api'; 
 
 
 // Helper function to safely access localStorage

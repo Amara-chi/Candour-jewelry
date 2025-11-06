@@ -32,4 +32,24 @@ export default defineConfig({
       },
     }),
   ],
+  // Add these for Vercel deployment
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    emptyOutDir: true
+  },
+  server: {
+    port: 5173,
+    // Proxy API calls to backend in development
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  },
+  // Important for Vercel deployment
+  publicDir: 'public',
+  base: './' // Use relative paths
 })
