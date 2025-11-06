@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { API_URL } from '../../../backend/config/api'; 
 
-const API_URL = '/api';
 
 // Helper function to safely access localStorage
 const getStoredToken = () => {
@@ -84,7 +84,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    token: getStoredToken(), // Use the safe function
+    token: getStoredToken(), 
     isAuthenticated: false,
     loading: false,
     error: null,
@@ -96,7 +96,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.isAdmin = false;
-      removeStoredToken(); // Use the safe function
+      removeStoredToken(); 
     },
     clearError: (state) => {
       state.error = null;
@@ -115,7 +115,7 @@ const authSlice = createSlice({
         state.token = action.payload.data.token;
         state.isAuthenticated = true;
         state.isAdmin = action.payload.data.role === 'admin';
-        setStoredToken(action.payload.data.token); // Use the safe function
+        setStoredToken(action.payload.data.token); 
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -132,7 +132,7 @@ const authSlice = createSlice({
         state.token = action.payload.data.token;
         state.isAuthenticated = true;
         state.isAdmin = action.payload.data.role === 'admin';
-        setStoredToken(action.payload.data.token); // Use the safe function
+        setStoredToken(action.payload.data.token); 
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -154,7 +154,7 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.isAdmin = false;
-        removeStoredToken(); // Use the safe function
+        removeStoredToken(); 
       });
   },
 });

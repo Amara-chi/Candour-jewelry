@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-const API_URL = '/api';
+import { API_URL } from '../../../backend/config/api'; 
 
 // Async thunks for user management
 // In your userSlice.js, update the getUsers thunk:
