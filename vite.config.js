@@ -30,9 +30,11 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      }
     }),
   ],
-  // Add these for Vercel deployment
   build: {
     outDir: 'dist',
     sourcemap: false,
@@ -40,7 +42,6 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // Proxy API calls to backend in development
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
@@ -49,6 +50,5 @@ export default defineConfig({
       }
     }
   },
-  // Important for Vercel deployment
-  publicDir: 'public',
+  publicDir: 'public'
 })
