@@ -7,13 +7,8 @@
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && npm run dev",
-    "build": "npm run build:frontend",
-    "build:frontend": "cd frontend && npm run build",
-    "build:backend": "echo 'Backend built by Vercel'",
-    "start": "cd backend && npm start",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "build": "vite build",
+    "start": "cd backend && npm start"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.1",

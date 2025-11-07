@@ -24,15 +24,6 @@ const AuthInitializer = ({ children }) => {
   return children
 }
 
-// Add this to your main.jsx temporarily to test
-console.log('API URL:', import.meta.env.VITE_API_URL);
-console.log('Environment:', import.meta.env.MODE);
-
-// Test the health endpoint
-fetch('/api/health')
-  .then(res => res.json())
-  .then(data => console.log('Health check:', data))
-  .catch(err => console.error('Health check failed:', err));
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -43,16 +34,6 @@ createRoot(document.getElementById('root')).render(
             <App />
             <RouterProvider router={router} />
           </AuthInitializer>
-          <script>
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', () => {
-                navigator.serviceWorker
-                  .register('/service-worker.js')
-                  .then(reg => console.log('Service worker registered:', reg))
-                  .catch(err => console.log('Service worker registration failed:', err));
-              })
-            }
-          </script>
         </ModalProvider>
       </PersistGate>
     </Provider>
