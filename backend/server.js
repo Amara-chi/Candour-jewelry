@@ -23,12 +23,19 @@ app.use(cors({
 
 app.use(express.json());
 
-// MongoDB Connection
+// MongoDB Connection - Fixed
 const connectDB = async () => {
   try {
-    console.log('Connecting to MongoDB...');
+    console.log('🔗 Connecting to MongoDB...');
     
-    const conn = await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
+    const mongoUri = process.env.MONGODB_URI;
+    console.log('📝 MongoDB URI:', mongoUri ? '*** set ***' : 'NOT SET');
+    
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI environment variable is not set');
+    }
+
+    const conn = await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 30000,
@@ -39,10 +46,26 @@ const connectDB = async () => {
     });
     
     console.log('✅ MongoDB Connected Successfully to:', conn.connection.host);
+    console.log('📊 Database:', conn.connection.db.databaseName);
     return true;
+    
   } catch (error) {
-    console.error('❌ Database connection error:', error.message);
-    console.error('Connection string used:', process.env.MONGODB_URI || process.env.MONGO_URI ? '***' : 'NOT SET');
+    console.error('❌ MongoDB Connection Failed:');
+    console.error('📛 Error Name:', error.name);
+    console.error('💬 Error Message:', error.message);
+    console.error('🔗 Error Code:', error.code);
+    
+    // Specific error handling
+    if (error.name === 'MongoServerSelectionError') {
+      console.error('💡 Tip: Check MongoDB Atlas network access and IP whitelist');
+    } else if (error.name === 'MongoNetworkError') {
+      console.error('💡 Tip: Network error - check firewall and DNS settings');
+    } else if (error.name === 'MongoAuthenticationError') {
+      console.error('💡 Tip: Authentication failed - check username/password');
+    } else if (error.name === 'MongoParseError') {
+      console.error('💡 Tip: Invalid connection options - check MongoDB driver version');
+    }
+    
     return false;
   }
 };
@@ -71,7 +94,23 @@ import users from './routes/users.js';
 app.use('/api/auth', auth);
 app.use('/api/users', users);
 
+// Vercel-specific debug endpoint
+app.get('/api/debug/vercel-env', (req, res) => {
+  const mongoUri = process.env.MONGODB_URI;
+  
+  res.json({
+    nodeEnv: process.env.NODE_ENV,
+    vercelEnv: process.env.VERCEL_ENV,
+    mongoUriExists: !!mongoUri,
+    mongoUriLength: mongoUri ? mongoUri.length : 0,
+    mongoUriStartsWith: mongoUri ? mongoUri.substring(0, 50) + '...' : 'NOT SET',
+    allEnvVars: Object.keys(process.env).filter(key => 
+      key.includes('MONGO') || key.includes('VERCEL') || key.includes('NODE')
+    )
+  });
+});
 
+// Database debug endpoint
 app.get('/api/debug/db', (req, res) => {
   const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
   
@@ -81,16 +120,14 @@ app.get('/api/debug/db', (req, res) => {
     mongoUriStartsWith: mongoUri ? mongoUri.substring(0, 30) + '...' : 'NOT SET',
     mongooseState: mongoose.connection.readyState,
     mongooseStateName: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState],
-    nodeVersion: process.version,
-    bufferCommands: false,
-    bufferMaxEntries: 0,
-    family: 4
+    nodeVersion: process.version
   };
 
   console.log('🔍 Database Debug Info:', debugInfo);
   res.json(debugInfo);
 });
 
+// Test database query endpoint
 app.get('/api/debug/test-query', async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
@@ -119,6 +156,7 @@ app.get('/api/debug/test-query', async (req, res) => {
   }
 });
 
+// Test database ping endpoint
 app.get('/api/debug/test-ping', async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
@@ -144,6 +182,41 @@ app.get('/api/debug/test-ping', async (req, res) => {
       message: 'Database ping failed',
       error: error.message,
       readyState: mongoose.connection.readyState
+    });
+  }
+});
+
+// Connection test endpoint
+app.get('/api/debug/connection-test', async (req, res) => {
+  try {
+    console.log('Testing MongoDB connection...');
+    
+    // Create a new connection to get detailed error
+    const mongooseTest = await import('mongoose');
+    const testConn = await mongooseTest.default.createConnection(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000
+    });
+    
+    await testConn.asPromise();
+    
+    res.json({
+      success: true,
+      message: 'Connection test passed',
+      host: testConn.host,
+      database: testConn.db.databaseName
+    });
+    
+    await testConn.close();
+    
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'Connection test failed',
+      error: error.message,
+      errorName: error.name,
+      errorCode: error.code
     });
   }
 });
