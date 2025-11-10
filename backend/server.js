@@ -24,7 +24,8 @@ app.use(cors({
 app.use(express.json());
 
 // MongoDB Connection - Fixed
-const connectDB = async () => {
+// MongoDB Connection with retry logic
+const connectDB = async (retries = 5, delay = 2000) => {
   try {
     console.log('🔗 Connecting to MongoDB...');
     
@@ -50,29 +51,25 @@ const connectDB = async () => {
     return true;
     
   } catch (error) {
-    console.error('❌ MongoDB Connection Failed:');
+    console.error(`❌ MongoDB Connection Failed (${retries} retries left):`);
     console.error('📛 Error Name:', error.name);
     console.error('💬 Error Message:', error.message);
-    console.error('🔗 Error Code:', error.code);
     
-    // Specific error handling
-    if (error.name === 'MongoServerSelectionError') {
-      console.error('💡 Tip: Check MongoDB Atlas network access and IP whitelist');
-    } else if (error.name === 'MongoNetworkError') {
-      console.error('💡 Tip: Network error - check firewall and DNS settings');
-    } else if (error.name === 'MongoAuthenticationError') {
-      console.error('💡 Tip: Authentication failed - check username/password');
-    } else if (error.name === 'MongoParseError') {
-      console.error('💡 Tip: Invalid connection options - check MongoDB driver version');
+    if (retries > 0) {
+      console.log(`🔄 Retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return connectDB(retries - 1, delay * 1.5); // Exponential backoff
     }
     
     return false;
   }
 };
 
-// Enhanced connection events
+// Enhanced connection events with better logging
 mongoose.connection.on('connected', () => {
   console.log('✅ Mongoose connected to MongoDB');
+  console.log('🏠 Host:', mongoose.connection.host);
+  console.log('📊 Database:', mongoose.connection.db?.databaseName);
 });
 
 mongoose.connection.on('error', (err) => {
@@ -81,6 +78,14 @@ mongoose.connection.on('error', (err) => {
 
 mongoose.connection.on('disconnected', () => {
   console.log('⚠️ Mongoose disconnected from MongoDB');
+});
+
+mongoose.connection.on('connecting', () => {
+  console.log('🔄 Mongoose connecting to MongoDB...');
+});
+
+mongoose.connection.on('disconnecting', () => {
+  console.log('🔌 Mongoose disconnecting from MongoDB...');
 });
 
 // Connect to DB immediately
