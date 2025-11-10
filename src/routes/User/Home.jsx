@@ -2,8 +2,6 @@ import MainLayout from '../../layouts/MainLayout'
 import ProductCard from '../../features/product/productCard'
 import Button from '../../components/Button'
 import { Link } from '@tanstack/react-router'
-import hero from '../../assets/hero.png'
-import candour from '../../assets/candour.png'
 import Footer from '../../components/Footer'
 
 
@@ -13,15 +11,9 @@ const Home = () => {
   return (
     <>
     <MainLayout>
-    <section className="h-screen relative  to-primary-200 text-dark-900 overflow-hidden">
-      {/* Background Image */}
-      <div className=" absolute inset-0 inset-x-0 bottom-0 pointer-events-non">
-        <img
-          src={hero}
-          alt="Luxury Jewelry Background"
-          className="w-full h-full object-cover opacity-65"
-        />
-      </div>
+    <section className="h-screen relative bg-gradient-to-b from-primary-50 to-primary-200 dark:from-dark-800 dark:to-dark-900 text-dark-900 overflow-hidden">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 inset-x-0 bottom-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-primary-100 dark:to-dark-800"></div>
 
       {/* Bottom Geometric Pattern Overlay */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none">
@@ -87,12 +79,11 @@ const Home = () => {
           <Link to="/about">Order a Customised Piece</Link>
         </Button>
       </div>
-      <div className="relative h-80 md:h-96 lg:h-full rounded-lg overflow-hidden shadow-lg">
-        <img 
-          src={candour} 
-          alt="Artisan at work"
-          className="rounded-lg object-cover w-full h-full z-99"
-        />
+      <div className="relative h-80 md:h-96 lg:h-full rounded-lg overflow-hidden shadow-lg bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-700 dark:to-dark-600 flex items-center justify-center">
+        <div className="text-center text-gray-400 dark:text-gray-500">
+          <div className="text-6xl mb-2">✨</div>
+          <p>Artisan Gallery</p>
+        </div>
       </div>
       
       {/* Bottom Geometric Pattern Overlay */}
