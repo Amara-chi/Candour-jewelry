@@ -2,6 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import auth from './routes/auth.js';
+import users from './routes/users.js';
+
 
 // Load env vars
 dotenv.config();
@@ -23,8 +26,14 @@ app.use(cors({
 
 app.use(express.json());
 
-// MongoDB Connection - Fixed
-// MongoDB Connection with retry logic
+Cloudinary configuration (add to your server.js)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
 const connectDB = async (retries = 5, delay = 2000) => {
   try {
     console.log('🔗 Connecting to MongoDB...');
@@ -58,14 +67,13 @@ const connectDB = async (retries = 5, delay = 2000) => {
     if (retries > 0) {
       console.log(`🔄 Retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
-      return connectDB(retries - 1, delay * 1.5); // Exponential backoff
+      return connectDB(retries - 1, delay * 1.5); 
     }
     
     return false;
   }
 };
 
-// Enhanced connection events with better logging
 mongoose.connection.on('connected', () => {
   console.log('✅ Mongoose connected to MongoDB');
   console.log('🏠 Host:', mongoose.connection.host);
@@ -88,12 +96,7 @@ mongoose.connection.on('disconnecting', () => {
   console.log('🔌 Mongoose disconnecting from MongoDB...');
 });
 
-// Connect to DB immediately
 connectDB();
-
-// Import routes
-import auth from './routes/auth.js';
-import users from './routes/users.js';
 
 // Use routes
 app.use('/api/auth', auth);
