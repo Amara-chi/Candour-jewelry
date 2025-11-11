@@ -1,6 +1,6 @@
 import Product from '../models/Product.js';
 import { v2 as cloudinary } from 'cloudinary';
-import slugify from 'slugify';
+// import slugify from 'slugify';
 
 // @desc    Get all products with advanced filtering
 // @route   GET /api/products

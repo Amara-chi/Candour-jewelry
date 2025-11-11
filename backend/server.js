@@ -4,7 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import auth from './routes/auth.js';
 import users from './routes/users.js';
-
+import products from './routes/products.js';
+import { v2 as cloudinary } from 'cloudinary';
 
 // Load env vars
 dotenv.config();
@@ -26,7 +27,6 @@ app.use(cors({
 
 app.use(express.json());
 
-Cloudinary configuration (add to your server.js)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -101,6 +101,7 @@ connectDB();
 // Use routes
 app.use('/api/auth', auth);
 app.use('/api/users', users);
+app.use('/api/products', products);
 
 // Vercel-specific debug endpoint
 app.get('/api/debug/vercel-env', (req, res) => {

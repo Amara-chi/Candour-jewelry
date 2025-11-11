@@ -46,12 +46,6 @@ const indexRoute = createRoute({
   component: withMainLayout(Home),
 })
 
-const shopRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/shop',
-  component: withMainLayout(Shop),
-})
-
 const cartRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/cart',
@@ -63,6 +57,19 @@ const productRoute = createRoute({
   path: '/product/$id',
   component: withMainLayout(ProductDetails),
 })
+
+// Add these routes
+const shopRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/shop',
+  component: withMainLayout(ProductList),
+});
+
+const adminProductsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/products',
+  component: withAdminLayout(() => <ProductList isAdmin={true} />),
+});
 
 // Admin routes with AdminLayout
 const adminRoute = createRoute({
@@ -85,6 +92,7 @@ const routeTree = rootRoute.addChildren([
   productRoute,
   adminRoute,
   adminUsersRoute,
+  adminProductsRoute,
 ])
 
 export const router = createRouter({ routeTree })
