@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { useModal } from '../../../components/Modal';
-import { useCart } from '../../../hooks/useCart';
-import { useAuth } from '../../../hooks/useAuth';
-import Button from '../../../components/Button';
-import { LazyImage } from '../../../components/LazyImage';
+import { useModal } from '../../components/Modal';
+import { useCart } from '../../hooks/useCart';
+import { useAuth } from '../../hooks/useAuth';
+import Button from '../../components/Button';
+import { LazyImage } from '../../components/LazyImage';
 
 const ProductCard = ({ product, isAdmin = false, priority = false }) => {
   const { openModal } = useModal();
@@ -90,6 +90,18 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
         {product.comparePrice > product.price && (
           <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
             Sale
+          </span>
+        )}
+        {/* Admin-only status badge */}
+        {isAdmin && product.status && (
+          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+            product.status === 'active' 
+              ? 'bg-green-500 text-white'
+              : product.status === 'draft'
+              ? 'bg-yellow-500 text-white'
+              : 'bg-gray-500 text-white'
+          }`}>
+            {product.status}
           </span>
         )}
       </div>
@@ -181,10 +193,40 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
               </Button>
             </>
           ) : (
-            <div className="text-xs text-dark-500 dark:text-dark-400 space-y-1">
-              <div>SKU: {product.sku || 'N/A'}</div>
-              <div>Stock: {product.trackQuantity ? product.quantity : '∞'}</div>
-              <div className="capitalize">Status: {product.status}</div>
+            // Admin info and actions
+            <div className="w-full">
+              <div className="text-xs text-dark-500 dark:text-dark-400 space-y-1 mb-3">
+                <div className="flex justify-between">
+                  <span>SKU:</span>
+                  <span>{product.sku || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Stock:</span>
+                  <span>{product.trackQuantity ? product.quantity : '∞'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Status:</span>
+                  <span className="capitalize">{product.status}</span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleEdit}
+                  className="flex-1 justify-center text-xs"
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => openModal('product-details', { product, isAdmin: true })}
+                  className="flex-1 justify-center text-xs"
+                >
+                  View
+                </Button>
+              </div>
             </div>
           )}
         </div>

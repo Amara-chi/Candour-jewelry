@@ -8,10 +8,11 @@ import AdminLayout from '../layouts/AdminLayout'
 import MainLayout from '../layouts/MainLayout'
 import Footer from '../components/Footer'
 // import Analytics from './Admin/Analytics'
-// import ManageProducts from './Admin/ManageProducts'
+import ManageProducts from './Admin/Manageproducts'
 // import ManageOrders from './Admin/ManageOrders'
 // import ManageCategories from './Admin/ManageCategories'
 import ManageUsers from './Admin/ManageUsers'
+import ProductList from '../features/product/productList'
 
 // Root route
 const rootRoute = createRootRoute({
@@ -68,7 +69,7 @@ const shopRoute = createRoute({
 const adminProductsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin/products',
-  component: withAdminLayout(() => <ProductList isAdmin={true} />),
+  component: withAdminLayout(ManageProducts),
 });
 
 // Admin routes with AdminLayout
@@ -83,6 +84,7 @@ const adminUsersRoute = createRoute({
   path: '/admin/users',
   component: withAdminLayout(ManageUsers),
 })
+
 
 // Create the route tree
 const routeTree = rootRoute.addChildren([

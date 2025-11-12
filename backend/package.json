@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "seed": "node utils/seeder.js"
-  },
+    "seed:admin": "node utils/seeder.js",
+    "seed:products": "node utils/productseeder.js"
+}
+  ,
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.40.0",

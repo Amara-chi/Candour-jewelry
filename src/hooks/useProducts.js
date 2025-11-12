@@ -3,12 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { productAPI } from '../features/product/productAPI';
 import { setFilters } from '../features/product/productSlice';
 
-// SWR fetcher
-const fetcher = (url) => productAPI.get(url).then(res => res.data);
+const fetcher = async (url) => {
+  const path = url.replace('/api', '');
+  
+  try {
+    const response = await productAPI.getProducts();
+    return response;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+};
 
 export const useProducts = (params = {}) => {
   const dispatch = useDispatch();
-  const filters = useSelector(state => state.products.filters);
+  const filters = useSelector(state => state.products?.filters || {});
   
   const queryString = new URLSearchParams({
     ...filters,
@@ -23,21 +32,24 @@ export const useProducts = (params = {}) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      dedupingInterval: 60000, // 1 minute
-      keepPreviousData: true
+      dedupingInterval: 60000,
+      keepPreviousData: true,
+      onError: (err) => {
+        console.error('Products fetch error:', err);
+      }
     }
   );
 
   const updateFilters = (newFilters) => {
     dispatch(setFilters(newFilters));
-    mutate(); // Revalidate with new filters
+    mutate();
   };
 
   return {
     products: data?.data || [],
     pagination: data?.pagination,
     loading: isLoading,
-    error,
+    error: error?.message || error?.response?.data?.message || null,
     mutate,
     filters,
     updateFilters
@@ -47,7 +59,15 @@ export const useProducts = (params = {}) => {
 export const useProduct = (productId) => {
   const { data, error, mutate, isLoading } = useSWR(
     productId ? `/api/products/${productId}` : null,
-    fetcher,
+    async () => {
+      try {
+        const response = await productAPI.getProduct(productId);
+        return response;
+      } catch (error) {
+        console.error('Product fetch error:', error);
+        throw error;
+      }
+    },
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true
@@ -57,7 +77,7 @@ export const useProduct = (productId) => {
   return {
     product: data?.data,
     loading: isLoading,
-    error,
+    error: error?.message || error?.response?.data?.message || null,
     mutate
   };
 };

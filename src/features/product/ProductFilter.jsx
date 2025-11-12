@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCategories } from '../../../hooks/useCategories';
+import { useCategories } from '../../hooks/useCategories';
 
 const ProductFilters = ({ filters, onFilterChange, onClearFilters }) => {
   const { categories } = useCategories();

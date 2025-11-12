@@ -75,7 +75,7 @@ const CustomCursor = () => {
         }}
       />
 
-      <style jsx>{`
+      <style>{`
         @keyframes pulse {
           0% { transform: scale(1); opacity: 0.6; }
           50% { transform: scale(1.1); opacity: 0.3; }

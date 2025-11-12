@@ -1,8 +1,16 @@
-import React, { useCallback, useRef } from 'react';
-import ProductCard from './ProductCard';
+import React from 'react';
+import ProductCard from './productCard';
 import { useInView } from 'react-intersection-observer';
 
-const ProductGrid = ({ products, loading, onLoadMore, hasMore }) => {
+const ProductGrid = ({ 
+  products, 
+  loading, 
+  onLoadMore, 
+  hasMore, 
+  isAdmin = false,
+  selectedProducts = [],
+  onSelectProduct 
+}) => {
   const [loadMoreRef, inView] = useInView({
     threshold: 0,
     rootMargin: '100px',
@@ -18,10 +26,10 @@ const ProductGrid = ({ products, loading, onLoadMore, hasMore }) => {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">🔍</div>
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        <h3 className="text-xl font-semibold text-white mb-2">
           No products found
         </h3>
-        <p className="text-gray-500 dark:text-dark-400">
+        <p className="text-gray-400">
           Try adjusting your search filters
         </p>
       </div>
@@ -36,7 +44,10 @@ const ProductGrid = ({ products, loading, onLoadMore, hasMore }) => {
           <ProductCard
             key={product._id || product._tempId || index}
             product={product}
-            priority={index < 4} // Lazy load after first 4
+            priority={index < 4}
+            isAdmin={isAdmin}
+            isSelected={selectedProducts.includes(product._id)}
+            onSelect={onSelectProduct}
           />
         ))}
       </div>

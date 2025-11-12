@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { useProducts } from '../../../hooks/useProducts';
+import { useProducts } from '../../hooks/useProducts';
 import ProductGrid from './ProductGrid';
-import ProductFilters from './ProductFilters';
-import { SEOHead } from '../../../components/SEOHead';
-import Button from '../../../components/Button';
-import { useModal } from '../../../components/Modal';
+import ProductFilters from './ProductFilter';
+import { SEOHead } from '../../components/SEOHead';
+import Button from '../../components/Button';
+import { useModal } from '../../components/Modal';
 
 const ProductList = ({ isAdmin = false }) => {
   const { openModal } = useModal();
@@ -45,6 +45,9 @@ const ProductList = ({ isAdmin = false }) => {
   };
 
   if (error) {
+    const errorMessage = typeof error === 'string' ? error : 
+                         error?.message || 'An unknown error occurred';
+    
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -52,7 +55,7 @@ const ProductList = ({ isAdmin = false }) => {
           <h2 className="text-2xl font-bold text-dark-900 dark:text-white mb-2">
             Failed to load products
           </h2>
-          <p className="text-dark-600 dark:text-dark-300 mb-4">{error}</p>
+          <p className="text-dark-600 dark:text-dark-300 mb-4">{errorMessage}</p>
           <Button variant="primary" onClick={() => mutate()}>
             Try Again
           </Button>
