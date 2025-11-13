@@ -59,7 +59,6 @@ export const getProducts = async (req, res) => {
 
     const products = await Product.find(query)
       .populate('categories', 'name slug')
-      .populate('collections', 'name slug')
       .sort(sort)
       .limit(limit * 1)
       .skip((page - 1) * limit);
@@ -95,8 +94,7 @@ export const getProduct = async (req, res) => {
         { slug: req.params.id }
       ]
     })
-    .populate('categories', 'name slug')
-    .populate('collections', 'name slug');
+    .populate('categories', 'name slug');
 
     if (!product) {
       return res.status(404).json({

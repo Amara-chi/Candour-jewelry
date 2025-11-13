@@ -35,10 +35,20 @@ api.interceptors.response.use(
 );
 
 export const productAPI = {
-  // Get all products with filters
+ 
   getProducts: async (params = {}) => {
-    const response = await api.get('/products', { params });
-    return response.data;
+    try {
+      console.log('🔍 Fetching products with params:', params);
+      const response = await api.get('/products', { params });
+      console.log('✅ Products fetched successfully:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Products fetch failed:');
+      console.error('Status:', error.response?.status);
+      console.error('Error response:', error.response?.data);
+      console.error('Full error:', error);
+      throw error;
+    }
   },
 
   // Get single product by ID or slug
@@ -48,11 +58,21 @@ export const productAPI = {
   },
 
   // Create new product
-  createProduct: async (productData) => {
-    const response = await api.post('/products', productData);
-    return response.data;
+    createProduct: async (productData) => {
+    try {
+      console.log('🔄 Sending product data:', productData);
+      const response = await api.post('/products', productData);
+      console.log('✅ Product created successfully:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Product creation failed:');
+      console.error('Status:', error.response?.status);
+      console.error('Error response:', error.response?.data);
+      console.error('Full error:', error);
+      throw error;
+    }
   },
-
+ 
   // Update product
   updateProduct: async (id, productData) => {
     const response = await api.put(`/products/${id}`, productData);

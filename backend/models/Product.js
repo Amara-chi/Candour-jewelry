@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
+  
   name: {
     type: String,
     required: [true, 'Please add a product name'],
@@ -10,9 +11,9 @@ const productSchema = new mongoose.Schema({
   },
   slug: {
     type: String,
-    required: true,
     unique: true,
-    index: true
+    index: true,
+    sparse: true,
   },
   description: {
     type: String,
@@ -64,6 +65,7 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Collection'
   }],
+
   status: {
     type: String,
     enum: ['active', 'draft', 'archived'],
@@ -82,11 +84,11 @@ const productSchema = new mongoose.Schema({
   images: [{
     public_id: {
       type: String,
-      required: true
+      // required: true
     },
     url: {
       type: String,
-      required: true
+      // required: true
     },
     alt: String,
     isPrimary: {
@@ -134,14 +136,16 @@ const productSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Generate slug before saving
 productSchema.pre('save', function(next) {
-  if (this.isModified('name')) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
+  if (this.isModified('name') || !this.slug) {
+    if (this.name) {
+      this.slug = this.name
+        .toLowerCase()
+        .replace(/[^a-z0-9 -]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .substring(0, 100);
+    }
   }
   next();
 });
