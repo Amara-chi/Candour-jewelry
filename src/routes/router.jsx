@@ -12,7 +12,7 @@ import ManageProducts from './Admin/Manageproducts'
 // import ManageOrders from './Admin/ManageOrders'
 // import ManageCategories from './Admin/ManageCategories'
 import ManageUsers from './Admin/ManageUsers'
-import ProductList from '../features/product/productList'
+import ProductList from '../features/product/productsList.jsx'
 
 // Root route
 const rootRoute = createRootRoute({
