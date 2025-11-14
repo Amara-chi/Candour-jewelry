@@ -40,7 +40,7 @@ const connectDB = async (retries = 5, delay = 2000) => {
     console.log('🔗 Connecting to MongoDB...');
     
     const mongoUri = process.env.MONGODB_URI;
-    console.log('📝 MongoDB URI:', mongoUri ? '*** set ***' : 'NOT SET');
+    console.log('📝 MongoDB URI:', mongoUri ? ' set ' : 'NOT SET');
     
     if (!mongoUri) {
       throw new Error('MONGODB_URI environment variable is not set');
@@ -76,9 +76,7 @@ const connectDB = async (retries = 5, delay = 2000) => {
 };
 
 mongoose.connection.on('connected', () => {
-  console.log('✅ Mongoose connected to MongoDB');
   console.log('🏠 Host:', mongoose.connection.host);
-  console.log('📊 Database:', mongoose.connection.db?.databaseName);
 });
 
 mongoose.connection.on('error', (err) => {
