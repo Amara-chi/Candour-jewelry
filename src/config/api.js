@@ -18,9 +18,10 @@ const getApiUrl = () => {
   return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
 };
 
-export const API_URL = '/api';
+export const API_URL = getApiUrl();
 
-console.log('🚀 API Configuration:');
+console.log('🔧 Final API Configuration:');
 console.log(' - API URL:', API_URL);
+console.log(' - PROD mode:', import.meta.env.PROD);
 console.log(' - Environment:', import.meta.env.MODE);
 console.log(' - Hostname:', typeof window !== 'undefined' ? window.location.hostname : 'server');
