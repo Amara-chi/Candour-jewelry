@@ -22,7 +22,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/api\.yourdomain\.com\/api\/.*$/,
+            urlPattern: /^https:\/\/api\.candour-jewelry\.vercel\.com\/api\/.*$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
