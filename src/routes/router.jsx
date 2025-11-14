@@ -60,7 +60,7 @@ const productRoute = createRoute({
 const shopRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/shop',
-  component: withMainLayout(ProductList),
+  component: withMainLayout(ProductsList),
 });
 
 const adminProductsRoute = createRoute({
