@@ -4,7 +4,7 @@ import { useModal } from '../../components/Modal';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
-import ProductGrid from '../../features/product/ProductGrid';
+import ProductGrid from '../../features/product/ProductsGrid';
 // import ProductFilters from '../../features/product/ProductFilters';
 
 const ManageProducts = () => {
