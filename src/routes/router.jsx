@@ -7,12 +7,9 @@ import Shop from './User/Shop'
 import AdminLayout from '../layouts/AdminLayout'
 import MainLayout from '../layouts/MainLayout'
 import Footer from '../components/Footer'
-// import Analytics from './Admin/Analytics'
 import ManageProducts from './Admin/Manageproducts'
-// import ManageOrders from './Admin/ManageOrders'
-// import ManageCategories from './Admin/ManageCategories'
 import ManageUsers from './Admin/ManageUsers'
-import ProductList from '../features/product/productsList.jsx'
+import ProductsList from '../features/product/productsList.jsx'
 
 // Root route
 const rootRoute = createRootRoute({

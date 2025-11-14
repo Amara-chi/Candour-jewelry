@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useProducts } from '../../hooks/useProducts';
-import ProductGrid from './ProductGrid';
+import ProductGrid from './ProductsGrid';
 import ProductFilters from './ProductFilter';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
