@@ -1,13 +1,13 @@
+// components/ProductGrid.jsx
 import React from 'react';
-import ProductCard from './productCard';
 import { useInView } from 'react-intersection-observer';
+import ProductCard from './ProductCard';
 
 const ProductGrid = ({ 
   products, 
   loading, 
   onLoadMore, 
   hasMore, 
-  isAdmin = false,
   selectedProducts = [],
   onSelectProduct 
 }) => {
@@ -25,12 +25,12 @@ const ProductGrid = ({
   if (!products.length && !loading) {
     return (
       <div className="text-center py-12">
-        <div className="text-6xl mb-4">🔍</div>
-        <h3 className="text-xl font-semibold text-white mb-2">
+        <div className="text-6xl mb-4">📦</div>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           No products found
         </h3>
-        <p className="text-gray-400">
-          Try adjusting your search filters
+        <p className="text-gray-500 dark:text-gray-400">
+          Try adjusting your search filters or create a new product
         </p>
       </div>
     );
@@ -45,7 +45,6 @@ const ProductGrid = ({
             key={product._id || product._tempId || index}
             product={product}
             priority={index < 4}
-            isAdmin={isAdmin}
             isSelected={selectedProducts.includes(product._id)}
             onSelect={onSelectProduct}
           />

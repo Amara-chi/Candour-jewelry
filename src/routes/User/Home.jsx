@@ -1,9 +1,10 @@
 import MainLayout from '../../layouts/MainLayout'
-import ProductCard from '../../features/product/productCard'
+import ProductCard from '../../components/ProductCard'
 import Button from '../../components/Button'
 import { Link } from '@tanstack/react-router'
 import Footer from '../../components/Footer'
-
+import hero from '../../../src/assets/hero.png'
+import candour from '../../assets/candour.png'
 
 const Home = () => {
   const featuredProducts = Array(6).fill(0) // Placeholder products
@@ -11,9 +12,15 @@ const Home = () => {
   return (
     <>
     <MainLayout>
-    <section className="h-screen relative bg-gradient-to-b from-primary-50 to-primary-200 dark:from-dark-800 dark:to-dark-900 text-dark-900 overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 inset-x-0 bottom-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-primary-100 dark:to-dark-800"></div>
+    <section className="h-screen relative  to-primary-200 text-dark-900 overflow-hidden">
+      {/* Background Image */}
+      <div className=" absolute inset-0 inset-x-0 bottom-0 pointer-events-non">
+        <img
+          src={hero}
+          alt="Luxury Jewelry Background"
+          className="w-full h-full object-cover opacity-65"
+        />
+      </div>
 
       {/* Bottom Geometric Pattern Overlay */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none">
@@ -80,10 +87,7 @@ const Home = () => {
         </Button>
       </div>
       <div className="relative h-80 md:h-96 lg:h-full rounded-lg overflow-hidden shadow-lg bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-700 dark:to-dark-600 flex items-center justify-center">
-        <div className="text-center text-gray-400 dark:text-gray-500">
-          <div className="text-6xl mb-2">✨</div>
-          <p>Artisan Gallery</p>
-        </div>
+        <img src={candour} alt="" />
       </div>
       
       {/* Bottom Geometric Pattern Overlay */}
