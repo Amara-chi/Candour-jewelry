@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'autoUpdate', 
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
         runtimeCaching: [
@@ -22,7 +22,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/api\.yourdomain\.com\/api\/.*$/,
+            urlPattern: /^https:\/\/api\.candour-jewelry\.vercel\.com\/api\/.*$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',

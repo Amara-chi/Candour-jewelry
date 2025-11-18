@@ -3,7 +3,7 @@ import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import ProductCard from './ProductCard';
 
-const ProductGrid = ({ 
+const ProductsGrid = ({ 
   products, 
   loading, 
   onLoadMore, 
@@ -70,4 +70,4 @@ const ProductGrid = ({
   );
 };
 
-export default ProductGrid;
+export default ProductsGrid;

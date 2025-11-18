@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useProducts } from '../../hooks/useProducts';
-import ProductGrid from './ProductGrid';
+import ProductGrid from './ProductsGrid';
 import ProductFilters from './ProductFilter';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
 import { useModal } from '../../components/Modal';
 
-const ProductList = ({ isAdmin = false }) => {
+const ProductsList = ({ isAdmin = false }) => {
   const { openModal } = useModal();
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('-createdAt');
@@ -77,4 +77,4 @@ const ProductList = ({ isAdmin = false }) => {
   );
 };
 
-export default ProductList;
+export default ProductsList;
