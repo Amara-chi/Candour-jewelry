@@ -1,23 +1,71 @@
-import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-// You'll need to create this slice or adjust based on you
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchCart,
+  addToCart as addToCartAction,
+  updateCartItem as updateCartItemAction,
+  removeFromCart as removeFromCartAction,
+  clearCart as clearCartAction
+} from '../features/cart/cartSlice';
 
 export const useCart = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
 
-  const addToCart = useCallback(async (cartItem) => {
+  const getCart = useCallback(async () => {
     try {
-      // Temporary implementation - replace with your actual cart logic
-      console.log('Adding to cart:', cartItem)
-      // await dispatch(addToCart(cartItem)).unwrap()
-      return { success: true }
+      await dispatch(fetchCart()).unwrap();
     } catch (error) {
-      console.error('Failed to add to cart:', error)
-      throw error
+      console.error('Failed to fetch cart:', error);
+      throw error;
     }
-  }, [dispatch])
+  }, [dispatch]);
+
+  const addToCart = useCallback(async (productId, quantity = 1) => {
+    try {
+      await dispatch(addToCartAction({ productId, quantity })).unwrap();
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      throw error;
+    }
+  }, [dispatch]);
+
+  const updateQuantity = useCallback(async (itemId, quantity) => {
+    try {
+      await dispatch(updateCartItemAction({ itemId, quantity })).unwrap();
+    } catch (error) {
+      console.error('Failed to update cart:', error);
+      throw error;
+    }
+  }, [dispatch]);
+
+  const removeItem = useCallback(async (itemId) => {
+    try {
+      await dispatch(removeFromCartAction(itemId)).unwrap();
+    } catch (error) {
+      console.error('Failed to remove item:', error);
+      throw error;
+    }
+  }, [dispatch]);
+
+  const clear = useCallback(async () => {
+    try {
+      await dispatch(clearCartAction()).unwrap();
+    } catch (error) {
+      console.error('Failed to clear cart:', error);
+      throw error;
+    }
+  }, [dispatch]);
 
   return {
-    addToCart
-  }
-}
+    cart,
+    getCart,
+    addToCart,
+    updateQuantity,
+    removeItem,
+    clearCart: clear,
+    loading: cart.loading,
+    error: cart.error
+  };
+};
