@@ -10,7 +10,7 @@ const getApiUrl = () => {
     // Development - use localhost or proxy
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       console.log('💻 Development: Using localhost API');
-      return 'http://localhost:3001/api';
+      return 'http://localhost:5000/api';
     }
     
     // Replit environment - use proxy
@@ -21,7 +21,7 @@ const getApiUrl = () => {
   }
   
   // Fallback
-  return import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
+  return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
 };
 
 export const API_URL = getApiUrl();
