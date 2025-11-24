@@ -10,15 +10,12 @@ const CartPage = () => {
   const { cart, getCart, updateQuantity, removeItem, clearCart: clear, loading } = useCart();
 
   useEffect(() => {
-    // Only fetch cart if user is authenticated
+    // Fetch cart when user navigates to cart page
     const token = localStorage.getItem('token');
     if (token) {
-      getCart().catch(err => {
-        // Silently handle error - user might not have a cart yet
-        console.log('Cart fetch failed:', err);
-      });
+      getCart();
     }
-  }, [getCart]);
+  }, []);
 
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;

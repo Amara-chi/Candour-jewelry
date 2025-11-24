@@ -14,15 +14,7 @@ const Navbar = () => {
   const { isAuthenticated, user, logout, isAdmin } = useAuth()
   const { cart, getCart } = useCart()
 
-  // Fetch cart when user is authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      getCart().catch(err => {
-        // Silently handle error - user might not have a cart yet
-        console.log('Cart fetch skipped or failed:', err);
-      });
-    }
-  }, [isAuthenticated, getCart]);
+  // Don't fetch cart on initial load - causes page hang. Will fetch when user navigates to cart page
 
 
   const toggleMobileMenu = () => {
