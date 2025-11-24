@@ -371,28 +371,76 @@ const ProductFormModal = ({ data }) => {
           </div>
         </div>
 
-        {/* Image Upload Section (Placeholder for now) */}
+        {/* Image Upload Section */}
         <div>
           <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
             Product Images
           </label>
           <div className="border-2 border-dashed border-dark-200 dark:border-dark-600 rounded-lg p-6 text-center">
-            <div className="text-4xl mb-2">📷</div>
-            <p className="text-dark-600 dark:text-dark-300 mb-2">
-              Drag & drop images or click to upload
-            </p>
-            <p className="text-sm text-dark-500 dark:text-dark-400">
-              Supports JPG, PNG, WEBP • Max 5MB per image
-            </p>
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-3"
-              onClick={() => {/* Implement file upload */}}
-            >
-              Select Images
-            </Button>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={uploading}
+              className="hidden"
+              id="image-upload"
+            />
+            <label htmlFor="image-upload" className="cursor-pointer">
+              <div className="text-4xl mb-2">📷</div>
+              <p className="text-dark-600 dark:text-dark-300 mb-2">
+                {uploading ? 'Uploading...' : 'Click to upload images'}
+              </p>
+              <p className="text-sm text-dark-500 dark:text-dark-400">
+                Supports JPG, PNG, WEBP • Max 5MB per image
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-3 pointer-events-none"
+                disabled={uploading}
+              >
+                Select Images
+              </Button>
+            </label>
           </div>
+          
+          {images.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm font-medium text-dark-700 dark:text-dark-300 mb-3">
+                Uploaded Images ({images.length})
+              </p>
+              <div className="grid grid-cols-3 gap-4">
+                {images.map((img, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={img.url}
+                      alt={`Product ${index}`}
+                      className={`w-full h-24 object-cover rounded-lg ${img.isPrimary ? 'ring-2 ring-primary-500' : ''}`}
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                      {!img.isPrimary && (
+                        <button
+                          type="button"
+                          onClick={() => setPrimaryImage(index)}
+                          className="bg-primary-500 text-white px-2 py-1 rounded text-xs hover:bg-primary-600"
+                        >
+                          Primary
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="bg-wine-500 text-white px-2 py-1 rounded text-xs hover:bg-wine-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Form Actions */}
