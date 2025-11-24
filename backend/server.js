@@ -8,6 +8,7 @@ import products from './routes/products.js';
 import { v2 as cloudinary } from 'cloudinary';
 import categories from './routes/category.js';
 import cart from './routes/cart.js';
+import orders from './routes/orders.js';
 
 // Load env vars
 dotenv.config();
@@ -107,6 +108,7 @@ app.use('/api/users', users);
 app.use('/api/products', products);
 app.use('/api/categories', categories);
 app.use('/api/cart', cart);
+app.use('/api/orders', orders);
 
 // Vercel-specific debug endpoint
 app.get('/api/debug/vercel-env', (req, res) => {
