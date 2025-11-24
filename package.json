@@ -1,0 +1,47 @@
+{
+  "name": "candour-jewelry",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "build": "vite build",
+    "start": "cd backend && npm start"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.9.1",
+    "@tanstack/react-router": "^1.133.20",
+    "axios": "^1.13.1",
+    "cloudinary": "^2.8.0",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.552.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-helmet": "^6.1.0",
+    "react-intersection-observer": "^10.0.0",
+    "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0",
+    "slugify": "^1.6.6",
+    "swr": "^2.3.6",
+    "vite-plugin-pwa": "^1.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.22",
+    "globals": "^16.4.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
+    "vite": "^7.1.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
