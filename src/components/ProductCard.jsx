@@ -1,7 +1,7 @@
 // components/ProductCard.jsx
 import React from 'react';
-import { useModal } from '../../../components/Modal';
-import Button from '../../../components/Button';
+import { useModal } from './Modal';
+import Button from './Button';
 
 const ProductCard = ({ 
   product, 

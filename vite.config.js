@@ -79,10 +79,12 @@ export default defineConfig({
     }
   },
   server: {
-    port: 5173,
+    host: '0.0.0.0',
+    port: 5000,
+    strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false
       }
