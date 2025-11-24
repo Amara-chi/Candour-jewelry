@@ -13,13 +13,16 @@ dotenv.config();
 
 const app = express();
 
-// Enhanced CORS for Vercel
+// Enhanced CORS for Replit and Vercel
 app.use(cors({
   origin: [
+    'http://localhost:5000',
     'http://localhost:5173',
     'http://localhost:3000',
     'https://candour-jewelry.vercel.app',
-    /\.vercel\.app$/
+    /\.vercel\.app$/,
+    /\.replit\.dev$/,
+    /\.repl\.co$/
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -280,8 +283,8 @@ export default app;
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, 'localhost', () => {
     console.log(`Server running in development mode on port ${PORT}`);
     console.log(`Health check: http://localhost:${PORT}/api/health`);
   });

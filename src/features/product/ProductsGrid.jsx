@@ -1,7 +1,7 @@
 // components/ProductGrid.jsx
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
-import ProductCard from './ProductCard';
+import ProductCard from './productCard';
 
 const ProductsGrid = ({ 
   products, 
