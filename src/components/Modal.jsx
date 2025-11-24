@@ -131,6 +131,8 @@ const ProductFormModal = ({ data }) => {
 
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [images, setImages] = useState(product?.images || [])
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     if (product && mode === 'edit') {
@@ -163,7 +165,8 @@ const ProductFormModal = ({ data }) => {
         comparePrice: formData.comparePrice ? Number(formData.comparePrice) : undefined,
         quantity: formData.trackQuantity ? Number(formData.quantity) : 0,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        categories: formData.categories
+        categories: formData.categories,
+        images: images
       }
 
       if (mode === 'create') {
@@ -192,6 +195,51 @@ const ProductFormModal = ({ data }) => {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
+  }
+
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files)
+    setUploading(true)
+
+    try {
+      for (const file of files) {
+        const formDataForUpload = new FormData()
+        formDataForUpload.append('file', file)
+        formDataForUpload.append('upload_preset', 'candour_jewelry')
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || 'ditaw9w5x'}/image/upload`,
+          {
+            method: 'POST',
+            body: formDataForUpload
+          }
+        )
+
+        const data = await response.json()
+        if (data.secure_url) {
+          setImages(prev => [...prev, {
+            url: data.secure_url,
+            isPrimary: images.length === 0
+          }])
+        }
+      }
+    } catch (error) {
+      console.error('Image upload failed:', error)
+      setErrors(prev => ({ ...prev, images: 'Failed to upload images' }))
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const removeImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const setPrimaryImage = (index) => {
+    setImages(prev => prev.map((img, i) => ({
+      ...img,
+      isPrimary: i === index
+    })))
   }
 
   return (
