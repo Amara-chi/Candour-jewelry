@@ -4,11 +4,14 @@ import Cart from './User/Cart'
 import Dashboard from './Admin/Dashboard'
 import ProductDetails from './User/ProductDetails'
 import Shop from './User/Shop' 
+import CheckOut from './User/CheckOut'
+import OrderSuccess from './User/OrderSucess'
 import AdminLayout from '../layouts/AdminLayout'
 import MainLayout from '../layouts/MainLayout'
 import Footer from '../components/Footer'
 import ManageProducts from './Admin/Manageproducts'
 import ManageUsers from './Admin/ManageUsers'
+import ManageOrders from './Admin/ManageOrders'
 import ProductsList from '../features/product/productsList.jsx'
 
 // Root route
@@ -69,6 +72,18 @@ const adminProductsRoute = createRoute({
   component: withAdminLayout(ManageProducts),
 });
 
+const checkoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/checkout',
+  component: withMainLayout(CheckOut),
+});
+
+const orderSuccessRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/order-success',
+  component: withMainLayout(OrderSuccess),
+});
+
 // Admin routes with AdminLayout
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -82,6 +97,12 @@ const adminUsersRoute = createRoute({
   component: withAdminLayout(ManageUsers),
 })
 
+const adminOrdersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/orders',
+  component: withAdminLayout(ManageOrders),
+})
+
 
 // Create the route tree
 const routeTree = rootRoute.addChildren([
@@ -89,9 +110,12 @@ const routeTree = rootRoute.addChildren([
   shopRoute,
   cartRoute,
   productRoute,
+  checkoutRoute,
+  orderSuccessRoute,
   adminRoute,
   adminUsersRoute,
   adminProductsRoute,
+  adminOrdersRoute,
 ])
 
 export const router = createRouter({ routeTree })

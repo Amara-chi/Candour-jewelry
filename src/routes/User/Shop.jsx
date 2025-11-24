@@ -1,11 +1,16 @@
 import MainLayout from '../../layouts/MainLayout'
 import ProductCard from '../../features/product/productCard'
+import { SEOHead } from '../../components/SEOHead'
 
 const Shop = () => {
   const products = Array(9).fill(0) // Placeholder products
 
   return (
     <MainLayout>
+      <SEOHead 
+        title="Shop - Candour Jewelry | Premium Gold & Diamond Collections"
+        description="Explore our exquisite collection of handcrafted gold jewelry and luxury diamond pieces. Premium quality at affordable prices."
+      />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-4xl font-elegant font-bold text-dark-900 dark:text-white mb-8 text-center">
           Our Collections
