@@ -7,15 +7,21 @@ const getApiUrl = () => {
       return '/api'; 
     }
     
-    // Development - use localhost
+    // Development - use localhost or proxy
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       console.log('💻 Development: Using localhost API');
-      return 'http://localhost:5000/api';
+      return 'http://localhost:3001/api';
+    }
+    
+    // Replit environment - use proxy
+    if (window.location.hostname.includes('replit') || window.location.hostname.includes('repl.co')) {
+      console.log('🔧 Replit: Using proxy API');
+      return '/api';
     }
   }
   
   // Fallback
-  return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
+  return import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
 };
 
 export const API_URL = getApiUrl();

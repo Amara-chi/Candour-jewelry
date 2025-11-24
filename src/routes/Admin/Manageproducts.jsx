@@ -3,12 +3,7 @@ import { useProducts } from '../../hooks/useProducts';
 import { useModal } from '../../components/Modal';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
-import ProductGrid from './components/ProductGrid';
-import ProductList from './components/ProductList';
-import ProductFilters from './components/ProductFilters';
-import ProductStats from './components/ProductStats';
-import BulkActions from './components/BulkActions';
-import Toolbar from './components/Toolbar';
+import ProductGrid from '../../features/product/ProductsGrid';
 
 const ManageProducts = () => {
   const { openModal } = useModal();
@@ -114,65 +109,19 @@ const ManageProducts = () => {
           </Button>
         </div>
 
-        {/* Stats */}
-        <ProductStats products={products} />
-
-        {/* Bulk Actions */}
-        <BulkActions
+        {/* Product Display */}
+        <ProductGrid
+          products={filteredProducts}
+          loading={loading}
           selectedProducts={selectedProducts}
-          bulkAction={bulkAction}
-          onBulkActionChange={setBulkAction}
-          onApplyBulkAction={handleBulkAction}
-          onClearSelection={() => setSelectedProducts([])}
+          onSelectProduct={handleSelectProduct}
+          onLoadMore={() => {
+            if (pagination && pagination.page < pagination.pages) {
+              updateFilters({ page: pagination.page + 1 });
+            }
+          }}
+          hasMore={pagination && pagination.page < pagination.pages}
         />
-
-        <div className="flex flex-col lg:flex-row gap-6 mb-8">
-          {/* Filters */}
-          <div className="lg:w-80 flex-shrink-0">
-            <ProductFilters
-              filters={filters}
-              onFilterChange={updateFilters}
-            />
-          </div>
-
-          {/* Products Area */}
-          <div className="flex-1">
-            {/* Toolbar */}
-            <Toolbar
-              filteredCount={filteredProducts.length}
-              totalCount={products.length}
-              viewMode={viewMode}
-              sortBy={sortBy}
-              selectedProducts={selectedProducts}
-              onViewModeChange={setViewMode}
-              onSortChange={setSortBy}
-              onSelectAll={handleSelectAll}
-            />
-
-            {/* Product Display */}
-            {viewMode === 'grid' ? (
-              <ProductGrid
-                products={filteredProducts}
-                loading={loading}
-                selectedProducts={selectedProducts}
-                onSelectProduct={handleSelectProduct}
-                onLoadMore={() => {
-                  if (pagination && pagination.page < pagination.pages) {
-                    updateFilters({ page: pagination.page + 1 });
-                  }
-                }}
-                hasMore={pagination && pagination.page < pagination.pages}
-              />
-            ) : (
-              <ProductList
-                products={filteredProducts}
-                loading={loading}
-                selectedProducts={selectedProducts}
-                onSelectProduct={handleSelectProduct}
-              />
-            )}
-          </div>
-        </div>
       </div>
     </>
   );
