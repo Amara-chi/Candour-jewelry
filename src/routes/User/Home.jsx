@@ -5,12 +5,19 @@ import { Link } from '@tanstack/react-router'
 import Footer from '../../components/Footer'
 import hero from '../../../src/assets/hero.png'
 import candour from '../../assets/candour.png'
+import { SEOHead } from '../../components/SEOHead'
 
 const Home = () => {
   const featuredProducts = Array(6).fill(0) // Placeholder products
 
   return (
     <>
+    <SEOHead 
+      title="Premium Handcrafted Jewelry | Candour Jewelry"
+      description="Discover exquisite handcrafted jewelry with timeless elegance. Premium gold, diamond, and luxury pieces for every occasion."
+      keywords="handcrafted jewelry, gold jewelry, diamond rings, luxury jewelry, engagement rings, necklaces, earrings"
+      type="website"
+    />
     <MainLayout>
     <section className="h-screen relative  to-primary-200 text-dark-900 overflow-hidden">
       {/* Background Image */}

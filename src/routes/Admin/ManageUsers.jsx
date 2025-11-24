@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { SEOHead } from '../../components/SEOHead'
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, createUser, updateUser, deleteUser } from '../../features/user/userSlice';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Card from '../../components/Card';
 
+      <SEOHead title="Manage Users - Admin" description="View, create, edit, and manage user accounts and permissions." />
 const Users = () => {
   const dispatch = useDispatch();
   const { items: users, loading, error } = useSelector((state) => state.user || state.users || { items: [] });

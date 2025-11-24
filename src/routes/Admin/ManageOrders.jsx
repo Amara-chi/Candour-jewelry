@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SEOHead } from '../../components/SEOHead'
 import AdminLayout from '../../layouts/AdminLayout';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
@@ -15,6 +16,7 @@ const ManageOrders = () => {
   }, [filter]);
 
   const fetchOrders = async () => {
+      <SEOHead title="Manage Orders - Admin" description="View, filter, and manage customer orders and order statuses." />
     try {
       const token = localStorage.getItem('token');
       const query = filter !== 'all' ? `?status=${filter}` : '';

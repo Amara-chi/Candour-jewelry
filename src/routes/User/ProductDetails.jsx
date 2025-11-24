@@ -1,8 +1,14 @@
 import MainLayout from '../../layouts/MainLayout'
+import { SEOHead } from '../../components/SEOHead'
 
 const ProductDetails = () => {
   return (
     <MainLayout>
+      <SEOHead 
+        title="Premium Gold Necklace | Candour Jewelry"
+        description="Exquisitely crafted 18k gold necklace with diamond accents. Premium jewelry for special occasions and everyday elegance."
+        image="/images/product-necklace.jpg"
+      />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
