@@ -1,0 +1,21 @@
+{
+    "short_name": "CandourJewelry",
+    "name": "Candour's Jewelry",
+    "icons": [
+        {
+        "src": "/src/assets/cj_logo_circle.png",
+        "type": "image/png",
+        "sizes": "192x192"
+        },
+        {
+        "src": "/src/assets/cj_full_logo.png",
+        "type": "image/png",
+        "sizes": "512x512"
+        }
+    ],
+    "start_url": "/?home=true",
+    "display": "standalone",
+    "theme_color": "#ffffff",
+    "orientation": "portrait",
+    "background_color": "#ffffff"
+}
