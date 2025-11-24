@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /user/dashboard
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# Allow search engines to crawl product pages
+Allow: /product/
+Allow: /shop
+Allow: /
+
+# Sitemaps
+Sitemap: https://candour-jewelry.vercel.app/sitemap.xml
+Sitemap: https://candour-jewelry.vercel.app/sitemap-products.xml
+
+# Crawl delay
+Crawl-delay: 1
+Request-rate: 30/60
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
