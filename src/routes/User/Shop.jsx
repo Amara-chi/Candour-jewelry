@@ -3,7 +3,6 @@ import ProductCard from '../../features/product/productCard'
 import { SEOHead } from '../../components/SEOHead'
 
 const Shop = () => {
-  const products = Array(9).fill(0) // Placeholder products
 
   return (
     <MainLayout>
