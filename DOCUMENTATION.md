@@ -919,36 +919,7 @@ candour-jewelry/
 - Cloudinary account
 - Gmail account (for Nodemailer)
 
-### Backend Setup
-```bash
-cd backend
-npm install
 
-# Create .env file
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASSWORD=your_app_password
-
-# Start backend
-npm start  # Production
-npm run dev  # Development (nodemon)
-```
-
-### Frontend Setup
-```bash
-npm install
-
-# Create .env file
-VITE_API_URL=http://localhost:3001
-REACT_APP_CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-
-# Start frontend
-npm run dev
-```
 
 ### Access Application
 - Frontend: http://localhost:5000
