@@ -35,6 +35,7 @@ const Dashboard = () => {
   ]
 
   return (
+    <>
       <SEOHead title="Admin Dashboard" description="Manage your Candour Jewelry e-commerce store, products, orders, and customers." />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-elegant font-bold text-dark-900 dark:text-white mb-8">
@@ -69,6 +70,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+    </>
   )
 }
 
