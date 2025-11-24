@@ -38,14 +38,20 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 46265
-externalPort = 3000
+localPort = 39747
+externalPort = 3002
 
 [userenv]
 
 [userenv.shared]
 NODE_ENV = "development"
 PORT = "3001"
+MONGODB_URI = "mongodb+srv://namarachi525_db_user:in9ty7oUmYBK5rNL@cluster0.3l9zzd2.mongodb.net/candour-jewelry?retryWrites=true&w=majority"
+CLOUDINARY_CLOUD_NAME = "ditaw9w5x"
+CLOUDINARY_API_KEY = "323113535917633"
+CLOUDINARY_API_SECRET = "LDZT11xjuAaKsOHKwdCQe9qlvbQ"
+JWT_SECRET = "candour_jewelry_secret_key_2024"
+VITE_API_BASE_URL = "https://candour-backend.vercel.app/api"
 
 [deployment]
 deploymentTarget = "autoscale"

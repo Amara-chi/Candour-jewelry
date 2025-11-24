@@ -1,16 +1,28 @@
 import { Link } from '@tanstack/react-router'
 import { useTheme } from '../hooks/useTheme'
 import Button from './Button'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import logo from '../assets/cj_logo_circle.png'
 import { useAuth } from '../hooks/useAuth'
 import { useModal } from '../components/Modal'
+import { useCart } from '../hooks/useCart'
 
 const Navbar = () => {
   const { theme, toggleTheme, isDark } = useTheme()
   const { openModal } = useModal()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { isAuthenticated, user, logout, isAdmin } = useAuth()
+  const { cart, getCart } = useCart()
+
+  // Fetch cart when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      getCart().catch(err => {
+        // Silently handle error - user might not have a cart yet
+        console.log('Cart fetch skipped or failed:', err);
+      });
+    }
+  }, [isAuthenticated, getCart]);
 
 
   const toggleMobileMenu = () => {
@@ -74,12 +86,17 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/cart" 
-              className="text-dark-700 dark:text-dark-200 hover:text-wine-500 dark:hover:text-primary-400 transition-colors"
+              className="relative text-dark-700 dark:text-dark-200 hover:text-wine-500 dark:hover:text-primary-400 transition-colors"
               activeProps={{
                 className: "text-wine-500 dark:text-primary-400 font-semibold"
               }}
             >
               Cart
+              {cart.totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-wine-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  {cart.totalItems}
+                </span>
+              )}
             </Link>
           
             {isAuthenticated && isAdmin && (

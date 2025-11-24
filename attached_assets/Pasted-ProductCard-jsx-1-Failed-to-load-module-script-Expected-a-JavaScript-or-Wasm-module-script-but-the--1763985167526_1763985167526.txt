@@ -1,0 +1,40 @@
+ProductCard.jsx:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/html". Strict MIME type checking is enforced for module scripts per HTML spec.
+
+Task 1: Fix the above error
+Task 2: Make sure adding products viewing products and managing products are working on the admin end and on the user end implement the add to cart feature and functionality
+Task 3: Make sure the filters on manageProducts admin page is working or fix it, and implement the image uploads, storing and retrival via cloudinary. My cloudibnary details are in the env file
+Task 4: Make sure cart page is functional and working and updates the cart icon on the navbar. Also implement nodemailer to send mails to users once the place an order also admins and mails to update the users based on the current status of their order, admins should also be able to manage orders. 
+Task 5: Implement SEO optimazation site wide
+
+
+Note: Bear in mind im implementing the below in my project so should you;
+
+Global State Management (RTK)
+
+Redux Toolkit (RTK): The modern, simplified way to use Redux — comes with slices, reducers, and built-in async thunks.
+
+Intersection Observer
+
+A browser API (often used in React via hooks) to detect when an element enters or leaves the viewport — commonly used for lazy loading, infinite scrolling, and triggering animations on scroll.
+
+Component Portalling
+
+A React feature (ReactDOM.createPortal) that lets you render a child component into a different part of the DOM tree, outside its parent hierarchy — often used for modals, tooltips, and dropdowns.
+
+Persisting Data
+
+Storing data beyond component lifecycle — e.g., in localStorage, sessionStorage, IndexedDB, or persistent Redux/Zustand stores. Useful for keeping user preferences or session data even after page reloads.
+
+Optimistic Update
+
+A UX technique where you update the UI immediately after a user action (as if the request succeeded), then roll back if the API call fails — often used with libraries like React Query or Redux Toolkit Query.
+
+TanStack Router & SWR (for Data Fetching)
+
+TanStack Router: A new type-safe router for React apps — similar to React Router but with built-in data loading, validation, and type safety.
+
+SWR: A React hook library for data fetching (“stale-while-revalidate”) — it caches data locally, shows cached data instantly, then fetches fresh data in the background.
+
+Progressive Web Application (PWA)
+
+A web app that behaves like a native app — installable, offline-capable, fast, and reliable. In React, typically implemented with a service worker and manifest (e.g., via create-react-app’s PWA setup or Vite PWA plugin).

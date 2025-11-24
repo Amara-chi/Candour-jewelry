@@ -460,11 +460,7 @@ const ProductDetailsModal = ({ data }) => {
     }
 
     try {
-      await addToCart({
-        product: product._id,
-        quantity: 1,
-        price: product.price
-      })
+      await addToCart(product._id, 1)
       // Show success message (you can add toast notification)
       closeModal()
     } catch (error) {

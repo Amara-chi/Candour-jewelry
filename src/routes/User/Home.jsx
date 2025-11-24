@@ -1,5 +1,5 @@
 import MainLayout from '../../layouts/MainLayout'
-import ProductCard from '../../components/ProductCard'
+import ProductCard from '../../features/product/productCard'
 import Button from '../../components/Button'
 import { Link } from '@tanstack/react-router'
 import Footer from '../../components/Footer'
