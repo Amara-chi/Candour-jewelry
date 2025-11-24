@@ -22,11 +22,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
     }
 
     try {
-      await addToCart({
-        product: product._id,
-        quantity: 1,
-        price: product.price
-      });
+      await addToCart(product._id, 1);
       
       // Show success feedback (you can add a toast here)
       console.log('Added to cart:', product.name);
