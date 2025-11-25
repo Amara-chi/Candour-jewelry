@@ -6,6 +6,7 @@ const Shop = () => {
   const products = Array(9).fill(0) // Placeholder products
 
   return (
+    
     <MainLayout>
       <SEOHead 
         title="Shop - Candour Jewelry | Premium Gold & Diamond Collections"
