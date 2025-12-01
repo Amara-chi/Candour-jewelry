@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SEOHead } from '../../components/SEOHead'
-import AdminLayout from '../../layouts/AdminLayout';
 import { SEOHead } from '../../components/SEOHead';
+import AdminLayout from '../../layouts/AdminLayout';
 import Button from '../../components/Button';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
