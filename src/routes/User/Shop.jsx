@@ -1,11 +1,15 @@
 import MainLayout from '../../layouts/MainLayout'
 import ProductCard from '../../features/product/productCard'
 import { SEOHead } from '../../components/SEOHead'
+import { useProducts } from '../../hooks/useProducts';
 
 const Shop = () => {
 
+   const { 
+    products 
+  } = useProducts();
+
   return (
-    
     <MainLayout>
       <SEOHead 
         title="Shop - Candour Jewelry | Premium Gold & Diamond Collections"
