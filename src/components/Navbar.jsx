@@ -12,9 +12,7 @@ const Navbar = () => {
   const { openModal } = useModal()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { isAuthenticated, user, logout, isAdmin } = useAuth()
-  const { cart, getCart } = useCart()
-
-  // Don't fetch cart on initial load - causes page hang. Will fetch when user navigates to cart page
+  const { cart } = useCart()
 
 
   const toggleMobileMenu = () => {
@@ -76,15 +74,15 @@ const Navbar = () => {
             >
               Shop
             </Link>
-            <Link 
-              to="/cart" 
+            <Link
+              to="/cart"
               className="relative text-dark-700 dark:text-dark-200 hover:text-wine-500 dark:hover:text-primary-400 transition-colors"
               activeProps={{
                 className: "text-wine-500 dark:text-primary-400 font-semibold"
               }}
             >
               Cart
-              {cart.totalItems > 0 && (
+              {cart?.totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-wine-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
                   {cart.totalItems}
                 </span>
@@ -167,9 +165,11 @@ const Navbar = () => {
   </svg>
 
   {/* Badge (dot with count) */}
-  <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary-500 text-white">
-    0
-  </span>
+  {cart?.totalItems > 0 && (
+    <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-wine-500 text-white">
+      {cart.totalItems}
+    </span>
+  )}
 </Link>
 
           </div>
@@ -206,9 +206,11 @@ const Navbar = () => {
   </svg>
 
   {/* Badge (dot with count) */}
-  <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary-500 text-white">
-    0
-  </span>
+  {cart?.totalItems > 0 && (
+    <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-wine-500 text-white">
+      {cart.totalItems}
+    </span>
+  )}
 </Link>
 
             {/* Mobile menu toggle */}
