@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import MainLayout from '../../layouts/MainLayout';
 import { useCart } from '../../hooks/useCart';
@@ -7,48 +7,82 @@ import Button from '../../components/Button';
 import { SEOHead } from '../../components/SEOHead';
 
 const CartPage = () => {
-  const { cart, getCart, updateQuantity, removeItem, clearCart: clear, loading } = useCart();
+  const { cart, getCart, updateQuantity, removeItem, clearCart: clear, loading, error } = useCart();
+  const [actionLoading, setActionLoading] = useState(null);
 
   useEffect(() => {
-    // Fetch cart when user navigates to cart page
     const token = localStorage.getItem('token');
     if (token) {
       getCart();
     }
-  }, []);
+  }, [getCart]);
 
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;
+    setActionLoading(itemId);
     try {
       await updateQuantity(itemId, newQuantity);
     } catch (error) {
       console.error('Failed to update quantity:', error);
+      alert('Failed to update quantity. Please try again.');
+    } finally {
+      setActionLoading(null);
     }
   };
 
   const handleRemoveItem = async (itemId) => {
+    setActionLoading(itemId);
     try {
       await removeItem(itemId);
     } catch (error) {
       console.error('Failed to remove item:', error);
+      alert('Failed to remove item. Please try again.');
+    } finally {
+      setActionLoading(null);
     }
   };
 
   const handleClearCart = async () => {
     if (window.confirm('Are you sure you want to clear your cart?')) {
+      setActionLoading('clear');
       try {
         await clear();
       } catch (error) {
         console.error('Failed to clear cart:', error);
+        alert('Failed to clear cart. Please try again.');
+      } finally {
+        setActionLoading(null);
       }
     }
   };
 
-  if (loading && !cart.items.length) {
+  if (loading && (!cart.items || cart.items.length === 0)) {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <p className="text-dark-600 dark:text-dark-300">Loading your cart...</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <MainLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-6xl mb-4">😞</div>
+            <h2 className="text-2xl font-bold text-dark-900 dark:text-white mb-2">
+              Failed to load cart
+            </h2>
+            <p className="text-dark-600 dark:text-dark-300 mb-4">{error}</p>
+            <Button variant="primary" onClick={() => getCart()}>
+              Try Again
+            </Button>
+          </div>
         </div>
       </MainLayout>
     );
@@ -56,17 +90,17 @@ const CartPage = () => {
 
   return (
     <MainLayout>
-      <SEOHead 
+      <SEOHead
         title="Shopping Cart - Candour Jewelry"
         description="Review your cart and proceed to checkout"
       />
-      
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-elegant font-bold text-dark-900 dark:text-white mb-8">
           Shopping Cart
         </h1>
 
-        {cart.items.length === 0 ? (
+        {!cart.items || cart.items.length === 0 ? (
           <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
             <div className="text-center py-12">
               <span className="text-6xl mb-4 block">🛒</span>
@@ -124,17 +158,22 @@ const CartPage = () => {
                     <div className="flex items-center gap-2 mt-3">
                       <button
                         onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
-                        className="w-8 h-8 rounded-full border border-dark-300 dark:border-dark-600 hover:bg-dark-100 dark:hover:bg-dark-700 flex items-center justify-center transition-colors"
-                        disabled={item.quantity <= 1}
+                        className="w-8 h-8 rounded-full border border-dark-300 dark:border-dark-600 hover:bg-dark-100 dark:hover:bg-dark-700 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={item.quantity <= 1 || actionLoading === item._id}
                       >
                         -
                       </button>
                       <span className="w-12 text-center font-medium text-dark-900 dark:text-white">
-                        {item.quantity}
+                        {actionLoading === item._id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500 mx-auto"></div>
+                        ) : (
+                          item.quantity
+                        )}
                       </span>
                       <button
                         onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
-                        className="w-8 h-8 rounded-full border border-dark-300 dark:border-dark-600 hover:bg-dark-100 dark:hover:bg-dark-700 flex items-center justify-center transition-colors"
+                        className="w-8 h-8 rounded-full border border-dark-300 dark:border-dark-600 hover:bg-dark-100 dark:hover:bg-dark-700 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={actionLoading === item._id}
                       >
                         +
                       </button>
@@ -148,9 +187,10 @@ const CartPage = () => {
                     </p>
                     <button
                       onClick={() => handleRemoveItem(item._id)}
-                      className="text-wine-500 hover:text-wine-600 text-sm font-medium transition-colors"
+                      className="text-wine-500 hover:text-wine-600 text-sm font-medium transition-colors disabled:opacity-50"
+                      disabled={actionLoading === item._id}
                     >
-                      Remove
+                      {actionLoading === item._id ? 'Removing...' : 'Remove'}
                     </button>
                   </div>
                 </div>
@@ -159,9 +199,10 @@ const CartPage = () => {
               {/* Clear Cart Button */}
               <button
                 onClick={handleClearCart}
-                className="text-wine-500 hover:text-wine-600 text-sm font-medium"
+                className="text-wine-500 hover:text-wine-600 text-sm font-medium disabled:opacity-50"
+                disabled={actionLoading === 'clear'}
               >
-                Clear Cart
+                {actionLoading === 'clear' ? 'Clearing...' : 'Clear Cart'}
               </button>
             </div>
 
