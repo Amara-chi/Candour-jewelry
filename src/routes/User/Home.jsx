@@ -1,14 +1,26 @@
-import MainLayout from '../../layouts/MainLayout'
-import ProductCard from '../../features/product/productCard'
-import Button from '../../components/Button'
-import { Link } from '@tanstack/react-router'
-import Footer from '../../components/Footer'
-import hero from '../../../src/assets/hero.png'
-import candour from '../../assets/candour.png'
-import { SEOHead } from '../../components/SEOHead'
+import React, { useMemo } from 'react';
+import MainLayout from '../../layouts/MainLayout';
+import ProductCard from '../../features/product/productCard';
+import Button from '../../components/Button';
+import { Link } from '@tanstack/react-router';
+import Footer from '../../components/Footer';
+import hero from '../../../src/assets/hero.png';
+import candour from '../../assets/candour.png';
+import { SEOHead } from '../../components/SEOHead';
+import { useCategories } from '../../hooks/useCategories';
+import { useProducts } from '../../hooks/useProducts';
 
 const Home = () => {
-  const featuredProducts = Array(6).fill(0) // Placeholder products
+  const { categories, loading: categoriesLoading } = useCategories();
+  const { products, loading: productsLoading } = useProducts({
+    limit: 6,
+    status: 'active',
+    sort: '-createdAt'
+  });
+
+  const featuredProducts = useMemo(() => {
+    return products.slice(0, 6);
+  }, [products]);
 
   return (
     <>
@@ -116,25 +128,49 @@ const Home = () => {
   </div>
 </section>
 
-<section className="py-16 bg-gray-300 dark:bg-dark-700">
+<section className="py-16 bg-gray-50 dark:bg-dark-700">
   <div className="max-w-7xl mx-auto px-4">
     <h2 className="text-3xl font-elegant font-bold text-center text-dark-900 dark:text-white mb-12">
       Shop By Category
     </h2>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {['Rings', 'Necklaces', 'Earrings', 'Bracelets'].map((category) => (
-        <Link key={category} to={`/shop?category=${category.toLowerCase()}`}>
-          <div className="group cursor-pointer">
-            <div className="aspect-square bg-white dark:bg-dark-600 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
-              {/* Category image */}
+
+    {categoriesLoading ? (
+      <div className="flex justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      </div>
+    ) : categories.length === 0 ? (
+      <div className="text-center py-12">
+        <p className="text-dark-600 dark:text-dark-300">No categories available</p>
+      </div>
+    ) : (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {categories.slice(0, 8).map((category) => (
+          <Link key={category._id} to={`/shop?category=${category._id}`}>
+            <div className="group cursor-pointer h-full">
+              <div className="aspect-square bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-600 dark:to-dark-500 rounded-lg overflow-hidden shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                {category.image ? (
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-4xl">{category.icon || '💎'}</div>
+                )}
+              </div>
+              <h3 className="text-center mt-4 font-semibold text-dark-900 dark:text-white group-hover:text-primary-500 transition-colors">
+                {category.name}
+              </h3>
+              {category.description && (
+                <p className="text-center text-sm text-dark-600 dark:text-dark-300 mt-1">
+                  {category.description}
+                </p>
+              )}
             </div>
-            <h3 className="text-center mt-4 font-semibold text-dark-900 dark:text-white">
-              {category}
-            </h3>
-          </div>
-        </Link>
-      ))}
-    </div>
+          </Link>
+        ))}
+      </div>
+    )}
   </div>
 </section>
 
@@ -143,11 +179,26 @@ const Home = () => {
         <h2 className="text-3xl font-elegant font-bold text-center text-dark-900 dark:text-white mb-12">
           Featured Collection
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProducts.map((_, index) => (
-            <ProductCard key={index} product={{}} />
-          ))}
-        </div>
+
+        {productsLoading ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+          </div>
+        ) : featuredProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-dark-600 dark:text-dark-300">No featured products available</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProducts.map((product, index) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                priority={index < 3}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="py-16 bg-gray-50 dark:bg-dark-700">
