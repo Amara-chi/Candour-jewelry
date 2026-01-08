@@ -5,7 +5,6 @@ import { getUsers } from '../../features/user/userSlice'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { API_URL } from '../../config/api'
-import AdminLayout from '../../layouts/AdminLayout'
 import { Link } from '@tanstack/react-router'
 
 
@@ -71,7 +70,7 @@ const Dashboard = () => {
   ]
 
   return (
-    <AdminLayout>
+    <>
       <SEOHead title="Admin Dashboard" description="Manage your Candour Jewelry e-commerce store, products, orders, and customers." />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
@@ -178,7 +177,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-    </AdminLayout>
+    </>
   )
 }
 
