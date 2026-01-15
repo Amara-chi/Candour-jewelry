@@ -1,23 +1,28 @@
 import useSWR from 'swr';
 import { categoryAPI } from '../features/categories/CategoryAPI';
 
-const fetcher = (url) => categoryAPI.get(url).then(res => res.data);
+const fetcher = async () => {
+  const response = await categoryAPI.getCategories({ status: 'active' });
+  return response.data || [];
+};
 
 export const useCategories = () => {
   const { data, error, mutate, isLoading } = useSWR(
-    '/api/categories',
+    'categories',
     fetcher,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      dedupingInterval: 60000, // 1 minute cache
+      dedupingInterval: 60000,
+      shouldRetryOnError: true,
+      errorRetryCount: 3,
     }
   );
 
   return {
-    categories: data?.data || [],
+    categories: data || [],
     loading: isLoading,
-    error,
+    error: error?.message,
     mutate,
   };
 };
