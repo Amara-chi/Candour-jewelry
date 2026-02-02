@@ -8,11 +8,31 @@ let transporter = null;
 const initializeEmailService = () => {
   if (transporter) return transporter;
 
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailPassword = process.env.GMAIL_PASSWORD;
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = process.env.SMTP_PORT;
+  const smtpSecure = process.env.SMTP_SECURE === 'true';
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPassword = process.env.SMTP_PASSWORD;
+
+  const gmailUser = process.env.GMAIL_USER || process.env.EMAIL_USER;
+  const gmailPassword = process.env.GMAIL_PASSWORD || process.env.EMAIL_PASSWORD;
+
+  if (smtpHost && smtpPort && smtpUser && smtpPassword) {
+    transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: Number(smtpPort),
+      secure: smtpSecure,
+      auth: {
+        user: smtpUser,
+        pass: smtpPassword
+      }
+    });
+
+    return transporter;
+  }
 
   if (!gmailUser || !gmailPassword) {
-    console.warn('Gmail credentials not configured. Email service will not work.');
+    console.warn('Email credentials not configured. Email service will not work.');
     return null;
   }
 
@@ -36,7 +56,7 @@ export const sendEmail = async (to, subject, htmlContent) => {
     }
 
     const mailOptions = {
-      from: `"Candour Jewelry" <${process.env.GMAIL_USER}>`,
+      from: `"Candour Jewelry" <${process.env.GMAIL_USER || process.env.EMAIL_USER || process.env.SMTP_USER}>`,
       to,
       subject,
       html: htmlContent
