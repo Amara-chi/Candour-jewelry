@@ -78,6 +78,16 @@ Add to `backend/.env`:
 ```
 GMAIL_USER=your_gmail@gmail.com
 GMAIL_PASSWORD=your_16_character_app_password
+ADMIN_EMAILS=admin@candourjewelry.com,owner@candourjewelry.com
+```
+
+Optional SMTP configuration (overrides Gmail if set):
+```
+SMTP_HOST=smtp.yourprovider.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your_smtp_user
+SMTP_PASSWORD=your_smtp_password
 ```
 
 ### How to Get Gmail App Password
@@ -110,6 +120,20 @@ const orderDetails = {
 };
 
 await sendOrderConfirmation(userEmail, orderDetails);
+```
+
+#### 1b. Send Order Status Update
+```javascript
+import { sendOrderStatusUpdate } from './utils/emailService.js';
+
+await sendOrderStatusUpdate(userEmail, orderDetails, 'shipped');
+```
+
+#### 1c. Send Admin Order Notification
+```javascript
+import { sendAdminOrderNotification } from './utils/emailService.js';
+
+await sendAdminOrderNotification(orderDetails, 'pending');
 ```
 
 #### 2. Send Password Reset Email

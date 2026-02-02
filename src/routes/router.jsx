@@ -12,6 +12,7 @@ import Footer from '../components/Footer'
 import ManageProducts from './Admin/Manageproducts'
 import ManageUsers from './Admin/ManageUsers'
 import ManageOrders from './Admin/ManageOrders'
+import ManageCategories from './Admin/ManageCategories'
 import ProductsList from '../features/product/productsList.jsx'
 
 // Root route
@@ -103,6 +104,11 @@ const adminOrdersRoute = createRoute({
   component: withAdminLayout(ManageOrders),
 })
 
+const adminCategoriesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/categories',
+  component: withAdminLayout(ManageCategories),
+})
 
 // Create the route tree
 const routeTree = rootRoute.addChildren([
@@ -116,6 +122,7 @@ const routeTree = rootRoute.addChildren([
   adminUsersRoute,
   adminProductsRoute,
   adminOrdersRoute,
+  adminCategoriesRoute,
 ])
 
 export const router = createRouter({ routeTree })
