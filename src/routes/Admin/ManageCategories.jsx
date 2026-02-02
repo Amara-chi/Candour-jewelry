@@ -28,7 +28,7 @@ const ManageCategories = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const response = await categoryAPI.getCategories({ limit: 100 });
+      const response = await categoryAPI.getCategories({ limit: 100, status: 'all' });
       setCategories(response.data || []);
     } catch (err) {
       setError('Failed to fetch categories');

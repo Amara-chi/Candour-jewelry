@@ -51,7 +51,65 @@ export const sendEmail = async (to, subject, htmlContent) => {
   }
 };
 
+const formatOrderItems = (items = []) => items.map((item) => {
+  const name = item.productName || item.product?.name || 'Item';
+  const price = item.price ?? item.product?.price ?? 0;
+  return {
+    name,
+    quantity: item.quantity,
+    price
+  };
+});
+
+const getAdminRecipients = () => {
+  const configured = process.env.ADMIN_EMAILS
+    ?.split(',')
+    .map((email) => email.trim())
+    .filter(Boolean);
+  if (configured && configured.length > 0) {
+    return configured;
+  }
+  return process.env.GMAIL_USER ? [process.env.GMAIL_USER] : [];
+};
+
+const getStatusCopy = (status) => {
+  const normalized = (status || '').toLowerCase();
+  switch (normalized) {
+    case 'pending':
+      return {
+        title: 'Order Received',
+        message: 'We have received your order and will begin processing it shortly.'
+      };
+    case 'confirmed':
+      return {
+        title: 'Order Processed',
+        message: 'Good news! Your order has been confirmed and is being prepared for shipment.'
+      };
+    case 'shipped':
+      return {
+        title: 'Order Shipped',
+        message: 'Your order is on its way! Keep an eye out for delivery updates.'
+      };
+    case 'delivered':
+      return {
+        title: 'Order Delivered',
+        message: 'We hope you love your jewelry! Your order has been delivered.'
+      };
+    case 'cancelled':
+      return {
+        title: 'Order Cancelled',
+        message: 'Your order has been cancelled. If you have questions, please contact us.'
+      };
+    default:
+      return {
+        title: 'Order Update',
+        message: `Your order status is now: ${status}.`
+      };
+  }
+};
+
 export const sendOrderConfirmation = async (email, orderDetails) => {
+  const items = formatOrderItems(orderDetails.items);
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -84,7 +142,7 @@ export const sendOrderConfirmation = async (email, orderDetails) => {
 
           <div class="order-details">
             <h3>Order Items:</h3>
-            ${orderDetails.items.map(item => `
+            ${items.map(item => `
               <div class="product-item">
                 <p><strong>${item.name}</strong></p>
                 <p>Quantity: ${item.quantity} | Price: $${item.price}</p>
@@ -113,6 +171,115 @@ export const sendOrderConfirmation = async (email, orderDetails) => {
   `;
 
   return sendEmail(email, 'Order Confirmation - Candour Jewelry', htmlContent);
+};
+
+export const sendOrderStatusUpdate = async (email, orderDetails, status) => {
+  const statusCopy = getStatusCopy(status);
+  const items = formatOrderItems(orderDetails.items);
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { background-color: #B8860B; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background-color: #f9f9f9; }
+        .order-details { background-color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+        .product-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .status { font-size: 18px; font-weight: bold; color: #B8860B; margin-top: 10px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>${statusCopy.title}</h1>
+        </div>
+        <div class="content">
+          <p>Hi ${orderDetails.customerName || 'there'},</p>
+          <p>${statusCopy.message}</p>
+          <div class="order-details">
+            <h3>Order Number: ${orderDetails.orderId}</h3>
+            <p class="status">Current Status: ${status}</p>
+          </div>
+          <div class="order-details">
+            <h3>Order Items:</h3>
+            ${items.map(item => `
+              <div class="product-item">
+                <p><strong>${item.name}</strong></p>
+                <p>Quantity: ${item.quantity} | Price: $${item.price}</p>
+              </div>
+            `).join('')}
+          </div>
+          <p>If you have any questions, reply to this email and we'll be happy to help.</p>
+        </div>
+        <div class="footer">
+          <p>&copy; ${new Date().getFullYear()} Candour Jewelry. All rights reserved.</p>
+          <p>Email: info@candourjewelry.com | Phone: +1-800-JEWELRY</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail(email, `Order Update - ${statusCopy.title}`, htmlContent);
+};
+
+export const sendAdminOrderNotification = async (orderDetails, status = 'pending') => {
+  const recipients = getAdminRecipients();
+  if (recipients.length === 0) {
+    return { success: false, error: 'Admin email recipients not configured' };
+  }
+
+  const items = formatOrderItems(orderDetails.items);
+  const statusCopy = getStatusCopy(status);
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { background-color: #111827; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background-color: #f9f9f9; }
+        .order-details { background-color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+        .product-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Admin Order Alert</h1>
+        </div>
+        <div class="content">
+          <p>A customer order has been updated.</p>
+          <div class="order-details">
+            <h3>Order Number: ${orderDetails.orderId}</h3>
+            <p><strong>Status:</strong> ${statusCopy.title}</p>
+            <p><strong>Customer:</strong> ${orderDetails.customerName || 'N/A'} (${orderDetails.customerEmail || 'N/A'})</p>
+            <p><strong>Total:</strong> $${orderDetails.totalPrice.toFixed(2)}</p>
+          </div>
+          <div class="order-details">
+            <h3>Items:</h3>
+            ${items.map(item => `
+              <div class="product-item">
+                <p><strong>${item.name}</strong></p>
+                <p>Quantity: ${item.quantity} | Price: $${item.price}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="footer">
+          <p>&copy; ${new Date().getFullYear()} Candour Jewelry.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail(recipients.join(','), `Admin Order Update - ${statusCopy.title}`, htmlContent);
 };
 
 export const sendPasswordResetEmail = async (email, resetLink) => {
@@ -200,6 +367,8 @@ export const sendWelcomeEmail = async (email, userName) => {
 export default {
   sendEmail,
   sendOrderConfirmation,
+  sendOrderStatusUpdate,
+  sendAdminOrderNotification,
   sendPasswordResetEmail,
   sendWelcomeEmail
 };
