@@ -52,14 +52,32 @@ const categorySchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
+const generateSlug = (name) => name
+  .toLowerCase()
+  .replace(/[^a-z0-9 -]/g, '')
+  .replace(/\s+/g, '-')
+  .replace(/-+/g, '-');
+
 // Generate slug before saving
 categorySchema.pre('save', function(next) {
   if (this.isModified('name')) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
+    this.slug = generateSlug(this.name);
+  }
+  next();
+});
+
+// Ensure slug updates on name changes via findOneAndUpdate
+categorySchema.pre('findOneAndUpdate', function(next) {
+  const update = this.getUpdate() || {};
+  const name = update.name || update.$set?.name;
+  if (name) {
+    const slug = generateSlug(name);
+    if (update.$set) {
+      update.$set.slug = slug;
+    } else {
+      update.slug = slug;
+    }
+    this.setUpdate(update);
   }
   next();
 });

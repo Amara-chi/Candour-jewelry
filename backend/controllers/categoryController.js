@@ -5,9 +5,14 @@ import Category from '../models/Category.js';
 // @access  Public
 export const getCategories = async (req, res) => {
   try {
-    const { featured, status = 'active', includeSubcategories = false } = req.query;
+    const { featured, status, includeSubcategories = false } = req.query;
 
-    let query = { status };
+    const effectiveStatus = status ?? 'active';
+    let query = {};
+
+    if (effectiveStatus !== 'all') {
+      query.status = effectiveStatus;
+    }
 
     if (featured !== undefined) {
       query.featured = featured === 'true';
