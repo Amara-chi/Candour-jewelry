@@ -81,15 +81,6 @@ GMAIL_PASSWORD=your_16_character_app_password
 ADMIN_EMAILS=admin@candourjewelry.com,owner@candourjewelry.com
 ```
 
-Optional SMTP configuration (overrides Gmail if set):
-```
-SMTP_HOST=smtp.yourprovider.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your_smtp_user
-SMTP_PASSWORD=your_smtp_password
-```
-
 ### How to Get Gmail App Password
 
 #### Step 1: Enable 2-Factor Authentication
