@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { SEOHead } from '../../components/SEOHead';
-import AdminLayout from '../../layouts/AdminLayout';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
@@ -117,13 +116,13 @@ const ManageCategories = () => {
   );
 
   return (
-    <AdminLayout>
+    <>
       <SEOHead
         title="Manage Categories - Admin"
         description="Manage product categories"
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 py-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-elegant font-bold text-dark-900 dark:text-white">
             Manage Categories
@@ -312,7 +311,7 @@ const ManageCategories = () => {
           </div>
         </Modal>
       )}
-    </AdminLayout>
+    </>
   );
 };
 
