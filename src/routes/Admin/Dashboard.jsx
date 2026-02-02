@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { API_URL } from '../../config/api'
 import { Link } from '@tanstack/react-router'
+import Spinner from '../../components/Spinner'
 
 
 const Dashboard = () => {
@@ -130,9 +131,7 @@ const Dashboard = () => {
           </div>
 
           {ordersLoading ? (
-            <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-            </div>
+            <Spinner className="py-8" size={36} />
           ) : orders.length === 0 ? (
             <p className="text-dark-500 text-center py-8">No orders yet</p>
           ) : (

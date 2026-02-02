@@ -5,6 +5,7 @@ import { useCart } from '../../hooks/useCart';
 import { LazyImage } from '../../components/LazyImage';
 import Button from '../../components/Button';
 import { SEOHead } from '../../components/SEOHead';
+import Spinner from '../../components/Spinner';
 
 const CartPage = () => {
   const { cart, getCart, updateQuantity, removeItem, clearCart: clear, loading, error } = useCart();
@@ -61,7 +62,7 @@ const CartPage = () => {
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <Spinner className="mb-4" size={52} />
             <p className="text-dark-600 dark:text-dark-300">Loading your cart...</p>
           </div>
         </div>
@@ -165,7 +166,7 @@ const CartPage = () => {
                       </button>
                       <span className="w-12 text-center font-medium text-dark-900 dark:text-white">
                         {actionLoading === item._id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500 mx-auto"></div>
+                          <Spinner size={16} />
                         ) : (
                           item.quantity
                         )}

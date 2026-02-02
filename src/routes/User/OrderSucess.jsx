@@ -5,6 +5,7 @@ import Button from '../../components/Button';
 import { SEOHead } from '../../components/SEOHead';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
+import Spinner from '../../components/Spinner';
 
 const OrderSuccess = () => {
   const { orderId } = useSearch({ from: '/order-success' });
@@ -36,7 +37,7 @@ const OrderSuccess = () => {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+          <Spinner size={52} />
         </div>
       </MainLayout>
     );

@@ -4,6 +4,7 @@ import Cart from './User/Cart'
 import Dashboard from './Admin/Dashboard'
 import ProductDetails from './User/ProductDetails'
 import Shop from './User/Shop' 
+import Contact from './User/Contact'
 import CheckOut from './User/CheckOut'
 import OrderSuccess from './User/OrderSucess'
 import AdminLayout from '../layouts/AdminLayout'
@@ -79,6 +80,12 @@ const checkoutRoute = createRoute({
   component: withMainLayout(CheckOut),
 });
 
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contact',
+  component: withMainLayout(Contact),
+});
+
 const orderSuccessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/order-success',
@@ -117,6 +124,7 @@ const routeTree = rootRoute.addChildren([
   cartRoute,
   productRoute,
   checkoutRoute,
+  contactRoute,
   orderSuccessRoute,
   adminRoute,
   adminUsersRoute,

@@ -37,7 +37,7 @@ const Footer = () => {
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
     { label: 'About', href: '/about' },
-    { label: 'Contact', href: '#' }
+    { label: 'Contact', href: '/contact' }
   ];
 
   const legalLinks = [
@@ -51,7 +51,7 @@ const Footer = () => {
     { label: 'Help Center', href: '#' },
     { label: 'Track Order', href: '#' },
     { label: 'FAQ', href: '#' },
-    { label: 'Contact Us', href: '#' }
+    { label: 'Contact Us', href: '/contact' }
   ];
 
   const socialLinks = [
@@ -223,12 +223,21 @@ const Footer = () => {
               <ul className="space-y-2">
                 {customerService.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
+                    {link.href.startsWith('/') ? (
+                      <Link
+                        to={link.href}
+                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

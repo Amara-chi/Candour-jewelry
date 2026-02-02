@@ -3,6 +3,7 @@ import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
+import Spinner from '../../components/Spinner';
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -72,9 +73,7 @@ const ManageOrders = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-          </div>
+          <Spinner className="py-8" size={52} />
         ) : (
           <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg overflow-hidden">
             <table className="w-full">

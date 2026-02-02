@@ -5,8 +5,8 @@ import { getUsers, createUser, updateUser, deleteUser } from '../../features/use
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Card from '../../components/Card';
+import Spinner from '../../components/Spinner';
 
-      <SEOHead title="Manage Users - Admin" description="View, create, edit, and manage user accounts and permissions." />
 const Users = () => {
   const dispatch = useDispatch();
   const { items: users, loading, error } = useSelector((state) => state.user || state.users || { items: [] });
@@ -62,6 +62,7 @@ const Users = () => {
 
   return (
     <div className="space-y-4 p-4 sm:p-6 w-full min-h-screen bg-gray-50 dark:bg-dark-900">
+      <SEOHead title="Manage Users - Admin" description="View, create, edit, and manage user accounts and permissions." />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
@@ -98,7 +99,8 @@ const Users = () => {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center py-8">
+        <div className="flex flex-col items-center justify-center py-8 gap-3">
+          <Spinner size={40} />
           <div className="text-gray-600 dark:text-white text-lg">Loading users...</div>
         </div>
       )}
