@@ -2,6 +2,7 @@
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import ProductCard from './productCard';
+import Spinner from '../../components/Spinner';
 
 const ProductsGrid = ({ 
   products, 
@@ -53,16 +54,14 @@ const ProductsGrid = ({
 
       {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-        </div>
+        <Spinner className="py-8" size={48} />
       )}
 
       {/* Load More Trigger */}
       {hasMore && (
         <div ref={loadMoreRef} className="h-10 flex justify-center items-center">
           {loading && (
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
+            <Spinner size={24} />
           )}
         </div>
       )}

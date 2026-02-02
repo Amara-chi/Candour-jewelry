@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "@tanstack/react-router";
 import Footer from "../components/Footer";
 import AdminSidebar from "../components/AdminSidebar";
+import Spinner from "../components/Spinner";
 
 const AdminLayout = ({ children }) => {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -20,7 +21,7 @@ const AdminLayout = ({ children }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+        <Spinner size={52} />
       </div>
     );
   }

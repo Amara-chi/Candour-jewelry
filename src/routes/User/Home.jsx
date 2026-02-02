@@ -9,6 +9,7 @@ import candour from '../../assets/candour.png';
 import { SEOHead } from '../../components/SEOHead';
 import { useCategories } from '../../hooks/useCategories';
 import { useProducts } from '../../hooks/useProducts';
+import Spinner from '../../components/Spinner';
 
 const Home = () => {
   const { categories, loading: categoriesLoading } = useCategories();
@@ -204,9 +205,7 @@ const Home = () => {
     </div>
 
     {categoriesLoading ? (
-      <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-      </div>
+      <Spinner className="py-12" size={52} />
     ) : categories.length === 0 ? (
       <div className="text-center py-12">
         <p className="text-dark-600 dark:text-dark-300">No categories available</p>
@@ -263,9 +262,7 @@ const Home = () => {
         </div>
 
         {productsLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-          </div>
+          <Spinner className="py-12" size={52} />
         ) : featuredProducts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-dark-600 dark:text-dark-300">No featured products available</p>

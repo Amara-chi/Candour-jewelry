@@ -6,6 +6,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useDispatch } from 'react-redux'
 import { useCategories } from '../hooks/useCategories'
 import { createProduct, updateProduct, deleteProduct } from '../features/product/productSlice'
+import Spinner from './Spinner'
 
 // Modal Context
 const ModalContext = React.createContext()
@@ -339,7 +340,9 @@ const ProductFormModal = ({ data }) => {
             Categories *
           </label>
           {categoriesLoading ? (
-            <div className="text-sm text-dark-500 dark:text-dark-400 py-2">Loading categories...</div>
+            <div className="py-4">
+              <Spinner size={28} />
+            </div>
           ) : categories.length === 0 ? (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50 rounded-lg p-3 text-sm text-yellow-800 dark:text-yellow-200">
               📌 No categories available. Please create categories first in the Categories section.
