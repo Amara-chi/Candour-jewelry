@@ -1070,8 +1070,8 @@ const featureRoute = createRoute({
 
 ### Emails not sending
 - Verify Gmail app password (not regular password)
-- Enable "Less Secure App Access"
-- Check Email_USER and EMAIL_PASSWORD in .env
+- Ensure GMAIL_USER/GMAIL_PASSWORD or SMTP credentials are set in `.env`
+- If using SMTP, check host/port/secure settings
 
 ### PWA not installing
 - Check manifest.json is valid

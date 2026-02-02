@@ -1,15 +1,10 @@
 import Order from '../models/Order.js';
 import Cart from '../models/Cart.js';
-import nodemailer from 'nodemailer';
-
-// Email transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-});
+import {
+  sendOrderConfirmation,
+  sendOrderStatusUpdate,
+  sendAdminOrderNotification
+} from '../utils/emailService.js';
 
 // @desc    Create order from cart
 // @route   POST /api/orders
@@ -44,23 +39,25 @@ export const createOrder = async (req, res) => {
     await order.save();
     await order.populate('items.product', 'name price');
 
+    const orderDetails = {
+      orderId: order._id,
+      items: order.items,
+      totalPrice: order.totalAmount,
+      shippingAddress: [
+        shippingAddress?.street,
+        shippingAddress?.city,
+        shippingAddress?.state,
+        shippingAddress?.zipCode,
+        shippingAddress?.country
+      ].filter(Boolean).join(', '),
+      customerName: req.user?.name,
+      customerEmail: order.shippingEmail
+    };
+
     // Send confirmation email
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: order.shippingEmail,
-        subject: 'Order Confirmation - Candour Jewelry',
-        html: `
-          <h2>Thank you for your order!</h2>
-          <p>Your order #${order._id} has been received.</p>
-          <h3>Order Details:</h3>
-          <ul>
-            ${order.items.map(item => `<li>${item.productName || item.product?.name} - Qty: ${item.quantity}</li>`).join('')}
-          </ul>
-          <p><strong>Total: $${order.totalAmount.toFixed(2)}</strong></p>
-          <p>Status: <strong>${order.status}</strong></p>
-        `
-      });
+      await sendOrderConfirmation(order.shippingEmail, orderDetails);
+      await sendAdminOrderNotification(orderDetails, order.status);
     } catch (emailError) {
       console.log('Email failed, but order created:', emailError.message);
     }
@@ -161,17 +158,18 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
+    const orderDetails = {
+      orderId: order._id,
+      items: order.items,
+      totalPrice: order.totalAmount,
+      customerName: order.user?.name,
+      customerEmail: order.shippingEmail
+    };
+
     // Send status update email
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: order.shippingEmail,
-        subject: `Order #${order._id} - Status: ${status}`,
-        html: `
-          <h2>Order Status Updated</h2>
-          <p>Your order #${order._id} is now <strong>${status}</strong></p>
-        `
-      });
+      await sendOrderStatusUpdate(order.shippingEmail, orderDetails, status);
+      await sendAdminOrderNotification(orderDetails, status);
     } catch (emailError) {
       console.log('Status email failed:', emailError.message);
     }
