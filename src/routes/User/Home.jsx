@@ -92,15 +92,16 @@ const Home = () => {
       type="website"
     />
     <MainLayout>
-    <section className="h-screen relative  to-primary-200 text-dark-900 overflow-hidden">
+    <section className="h-screen relative to-primary-200 text-dark-900 overflow-hidden">
       {/* Background Image */}
-      <div className=" absolute inset-0 inset-x-0 bottom-0 pointer-events-non">
+      <div className="absolute inset-0 inset-x-0 bottom-0 pointer-events-none">
         <img
           src={hero}
           alt="Luxury Jewelry Background"
           className="w-full h-full object-cover opacity-65"
         />
       </div>
+      <div className="absolute inset-0 bg-gradient-to-r from-dark-900/70 via-dark-900/30 to-transparent"></div>
 
       {/* Bottom Geometric Pattern Overlay */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none">
@@ -114,15 +115,20 @@ const Home = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="relative container mx-auto flex flex-col items-center justify-center text-center h-full px-4">
-        <h1 className="text-4xl md:text-7xl font-parisienne font-extrabold text-wine-500 dark:text-primary-500 leading-tight ">
-          Timeless Elegance, Handcrafted Luxury
+      <div className="relative container mx-auto flex flex-col items-start justify-center text-left h-full px-6 sm:px-10">
+        <div className="inline-flex items-center gap-3 rounded-full border border-primary-200/40 bg-dark-900/40 px-4 py-2 text-xs uppercase tracking-[0.35em] text-primary-200">
+          Candour Atelier
+          <span className="h-1 w-10 rounded-full bg-primary-400"></span>
+        </div>
+        <h1 className="mt-6 text-4xl md:text-7xl font-elegant font-semibold text-white leading-tight">
+          Timeless Elegance,
+          <span className="block text-primary-300 font-parisienne text-5xl md:text-7xl">
+            Handcrafted Luxury
+          </span>
         </h1>
 
-
-        <p className="text-lg md:text-xl dark:text-white text-gray-800 font-semibold mt-3 max-w-2xl mb-8">
-          Discover jewelry that tells your story; crafted with passion,
-          precision, and the finest materials.
+        <p className="text-lg md:text-2xl text-white/80 font-medium mt-4 max-w-2xl mb-10">
+          Discover jewelry that tells your story—crafted with passion, precision, and the finest materials.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
@@ -135,12 +141,27 @@ const Home = () => {
           </Button>
 
           <Button
-            variant='secondaryreverse'
-            size='lg'
+            variant="outline"
+            size="lg"
           >
-            <Link to="">Learn More</Link>
+            <Link to="/about">Meet the Atelier</Link>
           </Button>
-
+        </div>
+        <div className="mt-10 flex items-center gap-6 text-sm text-white/70">
+          <div className="flex flex-col">
+            <span className="text-primary-200 uppercase tracking-[0.3em]">Since</span>
+            <span className="text-lg text-white">2016</span>
+          </div>
+          <div className="h-10 w-px bg-white/20"></div>
+          <div className="flex flex-col">
+            <span className="text-primary-200 uppercase tracking-[0.3em]">Pieces</span>
+            <span className="text-lg text-white">120+</span>
+          </div>
+          <div className="h-10 w-px bg-white/20"></div>
+          <div className="flex flex-col">
+            <span className="text-primary-200 uppercase tracking-[0.3em]">Custom</span>
+            <span className="text-lg text-white">Yes</span>
+          </div>
         </div>
       </div>
     </section>
@@ -208,8 +229,23 @@ const Home = () => {
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
       </div>
     ) : categories.length === 0 ? (
-      <div className="text-center py-12">
-        <p className="text-dark-600 dark:text-dark-300">No categories available</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {['Rings', 'Necklaces', 'Bracelets', 'Earrings'].map((label) => (
+          <div
+            key={label}
+            className="group relative h-full overflow-hidden rounded-2xl border border-primary-100/60 dark:border-dark-600 bg-white/80 dark:bg-dark-700/80 shadow-sm"
+          >
+            <div className="aspect-[4/5] bg-gradient-to-br from-primary-100 via-white to-wine-100 dark:from-dark-600 dark:via-dark-700 dark:to-dark-500 flex items-center justify-center">
+              <span className="text-4xl">💎</span>
+            </div>
+            <div className="p-5">
+              <h3 className="text-lg font-semibold text-dark-900 dark:text-white">{label}</h3>
+              <p className="text-sm text-dark-600 dark:text-dark-300 mt-2">
+                Curated edits arriving soon.
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -267,8 +303,22 @@ const Home = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
           </div>
         ) : featuredProducts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-dark-600 dark:text-dark-300">No featured products available</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {['Golden Halo Ring', 'Lumière Pendant', 'Eternal Cuff'].map((name) => (
+              <div
+                key={name}
+                className="rounded-3xl border border-primary-100/60 dark:border-dark-600 bg-white/80 dark:bg-dark-700/80 p-6 shadow-sm"
+              >
+                <div className="aspect-[4/5] rounded-2xl bg-gradient-to-br from-primary-100 via-white to-wine-100 dark:from-dark-600 dark:via-dark-700 dark:to-dark-500 mb-6"></div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.3em] text-primary-500 dark:text-primary-300">Signature</p>
+                    <h3 className="text-lg font-semibold text-dark-900 dark:text-white">{name}</h3>
+                  </div>
+                  <span className="text-sm text-dark-500 dark:text-dark-300">Preview</span>
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="relative">
