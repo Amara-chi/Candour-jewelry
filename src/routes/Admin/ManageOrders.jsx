@@ -50,7 +50,7 @@ const ManageOrders = () => {
         description="Manage customer orders"
       />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 py-6">
         <h1 className="text-3xl font-bold text-dark-900 dark:text-white mb-8">
           Order Management
         </h1>
