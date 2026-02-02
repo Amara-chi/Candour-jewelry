@@ -45,16 +45,19 @@ const Shop = () => {
     setSortBy('-createdAt');
   };
 
-  if (error) {
+  if (error && !loading) {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="text-6xl mb-4">😞</div>
+            <div className="text-6xl mb-4">❌</div>
             <h2 className="text-2xl font-bold text-dark-900 dark:text-white mb-2">
-              Failed to load products
+              Unable to Load Products
             </h2>
             <p className="text-dark-600 dark:text-dark-300 mb-4">{error}</p>
+            <p className="text-sm text-dark-500 dark:text-dark-400 mb-6">
+              Please check your connection and try again
+            </p>
             <Button variant="primary" onClick={() => mutate()}>
               Try Again
             </Button>

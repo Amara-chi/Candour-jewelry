@@ -4,6 +4,7 @@ import Button from './Button'
 import Input from './Input'
 import { useAuth } from '../hooks/useAuth'
 import { useDispatch } from 'react-redux'
+import { useCategories } from '../hooks/useCategories'
 import { createProduct, updateProduct, deleteProduct } from '../features/product/productSlice'
 
 // Modal Context
@@ -112,6 +113,7 @@ const ModalContent = ({ type, data }) => {
 const ProductFormModal = ({ data }) => {
   const { closeModal } = useModal()
   const dispatch = useDispatch()
+  const { categories, loading: categoriesLoading } = useCategories()
   const { product, mode = 'create' } = data || {}
   
   const [formData, setFormData] = useState({
@@ -330,6 +332,45 @@ const ProductFormModal = ({ data }) => {
           onChange={(e) => handleChange('tags', e.target.value)}
           placeholder="Separate tags with commas (e.g., gold, necklace, luxury)"
         />
+
+        {/* Categories */}
+        <div>
+          <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
+            Categories *
+          </label>
+          {categoriesLoading ? (
+            <div className="text-sm text-dark-500 dark:text-dark-400 py-2">Loading categories...</div>
+          ) : categories.length === 0 ? (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50 rounded-lg p-3 text-sm text-yellow-800 dark:text-yellow-200">
+              📌 No categories available. Please create categories first in the Categories section.
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-48 overflow-y-auto border border-dark-200 dark:border-dark-600 rounded-lg p-3 bg-white dark:bg-dark-700">
+              {categories.map(category => (
+                <label key={category._id} className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.categories.includes(category._id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        handleChange('categories', [...formData.categories, category._id])
+                      } else {
+                        handleChange('categories', formData.categories.filter(id => id !== category._id))
+                      }
+                    }}
+                    className="rounded border-dark-300 text-primary-500 focus:ring-primary-500"
+                  />
+                  <span className="ml-2 text-sm text-dark-700 dark:text-dark-300">{category.name}</span>
+                </label>
+              ))}
+            </div>
+          )}
+          {formData.categories.length > 0 && (
+            <p className="text-xs text-dark-500 dark:text-dark-400 mt-2">
+              {formData.categories.length} categor{formData.categories.length === 1 ? 'y' : 'ies'} selected
+            </p>
+          )}
+        </div>
 
         {/* Settings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
