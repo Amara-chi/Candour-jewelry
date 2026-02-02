@@ -89,10 +89,7 @@ const getAdminRecipients = () => {
   if (configured && configured.length > 0) {
     return configured;
   }
-  if (process.env.GMAIL_USER || process.env.EMAIL_USER) {
-    return [process.env.GMAIL_USER || process.env.EMAIL_USER];
-  }
-  return process.env.SMTP_USER ? [process.env.SMTP_USER] : [];
+  return process.env.GMAIL_USER ? [process.env.GMAIL_USER] : [];
 };
 
 const getStatusCopy = (status) => {

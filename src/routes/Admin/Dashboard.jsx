@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { API_URL } from '../../config/api'
 import { Link } from '@tanstack/react-router'
-import AdminLayout from '../../layouts/AdminLayout'
 
 
 const Dashboard = () => {
@@ -71,9 +70,9 @@ const Dashboard = () => {
   ]
 
   return (
-    <AdminLayout>
+    <>
       <SEOHead title="Admin Dashboard" description="Manage your Candour Jewelry e-commerce store, products, orders, and customers." />
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 py-6">
         <div className="mb-8">
           <h1 className="text-4xl font-elegant font-bold text-dark-900 dark:text-white mb-2">
             Admin Dashboard
@@ -178,7 +177,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-    </AdminLayout>
+    </>
   )
 }
 

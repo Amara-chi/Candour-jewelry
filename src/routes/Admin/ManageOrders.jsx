@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { SEOHead } from '../../components/SEOHead';
-import AdminLayout from '../../layouts/AdminLayout';
 import Button from '../../components/Button';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
@@ -45,13 +44,13 @@ const ManageOrders = () => {
   };
 
   return (
-    <AdminLayout>
+    <>
       <SEOHead
         title="Manage Orders - Admin"
         description="Manage customer orders"
       />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 py-6">
         <h1 className="text-3xl font-bold text-dark-900 dark:text-white mb-8">
           Order Management
         </h1>
@@ -141,7 +140,7 @@ const ManageOrders = () => {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 };
 
