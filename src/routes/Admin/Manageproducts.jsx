@@ -21,7 +21,7 @@ const ManageProducts = () => {
     filters,
     updateFilters,
     mutate
-  } = useProducts({ sort: sortBy, status: 'all' });
+  } = useProducts({ sort: sortBy });
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -114,6 +114,7 @@ const ManageProducts = () => {
         <ProductGrid
           products={filteredProducts}
           loading={loading}
+          isAdmin
           selectedProducts={selectedProducts}
           onSelectProduct={handleSelectProduct}
           onLoadMore={() => {
