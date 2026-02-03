@@ -78,17 +78,49 @@ const Dashboard = () => {
     return acc
   }, {})
 
-  const revenueSeries = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date()
-    date.setDate(date.getDate() - (6 - index))
-    const key = date.toDateString()
-    return {
-      label: date.toLocaleDateString(undefined, { weekday: 'short' }),
-      value: revenueByDay[key] || 0
+  const buildRevenueSeries = (days) => {
+    const buckets = days > 14 ? 7 : 1
+    const dailyValues = Array.from({ length: days }, (_, index) => {
+      const date = new Date()
+      date.setDate(date.getDate() - (days - 1 - index))
+      const key = date.toDateString()
+      return { date, value: revenueByDay[key] || 0 }
+    })
+
+    if (buckets === 1) {
+      return dailyValues.map((item) => ({
+        label: item.date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        value: item.value
+      }))
     }
-  })
+
+    const grouped = []
+    for (let i = 0; i < dailyValues.length; i += buckets) {
+      const chunk = dailyValues.slice(i, i + buckets)
+      const start = chunk[0].date
+      const end = chunk[chunk.length - 1].date
+      const label = `${start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}-${end.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`
+      grouped.push({
+        label,
+        value: chunk.reduce((sum, item) => sum + item.value, 0)
+      })
+    }
+    return grouped
+  }
+
+  const revenueRangeDays = {
+    '7d': 7,
+    '30d': 30,
+    '90d': 90
+  }
+
+  const revenueSeries = buildRevenueSeries(revenueRangeDays[revenueRange] || 30)
 
   const maxRevenue = Math.max(...revenueSeries.map(item => item.value), 0)
+  const revenueRangeTotal = revenueSeries.reduce((sum, item) => sum + item.value, 0)
+  const averageDailyRevenue = revenueRangeDays[revenueRange]
+    ? revenueRangeTotal / revenueRangeDays[revenueRange]
+    : 0
 
   const stats = [
     { label: 'Total Products', value: products.length, color: 'primary' },
@@ -97,62 +129,138 @@ const Dashboard = () => {
     { label: 'Total Orders', value: orders.length, color: 'purple' },
   ]
 
+  const ordersWithUsers = orders.filter(order => order.user?._id)
+  const customerOrderCounts = ordersWithUsers.reduce((acc, order) => {
+    const id = order.user?._id
+    if (!id) return acc
+    acc[id] = (acc[id] || 0) + 1
+    return acc
+  }, {})
+  const uniqueCustomers = Object.keys(customerOrderCounts).length
+  const returningCustomers = Object.values(customerOrderCounts).filter(count => count > 1).length
+  const returningRate = uniqueCustomers ? Math.round((returningCustomers / uniqueCustomers) * 100) : 0
+
+  const daysAgo = (days) => {
+    const date = new Date()
+    date.setDate(date.getDate() - days)
+    return date
+  }
+  const last7Orders = orders.filter(order => new Date(order.createdAt) >= daysAgo(7))
+  const prev7Orders = orders.filter(order => {
+    const createdAt = new Date(order.createdAt)
+    return createdAt >= daysAgo(14) && createdAt < daysAgo(7)
+  })
+  const orderVelocity = last7Orders.length - prev7Orders.length
+  const orderVelocityLabel = `${orderVelocity >= 0 ? '+' : ''}${orderVelocity}`
+  const orderVelocityTone = orderVelocity >= 0 ? 'text-green-500' : 'text-red-500'
+  const topRevenueSlot = revenueSeries.reduce((top, item) => {
+    if (!top || item.value > top.value) return item
+    return top
+  }, null)
+
   return (
     <>
       <SEOHead title="Admin Dashboard" description="Manage your Candour Jewelry e-commerce store, products, orders, and customers." />
       <div className="w-full px-4 sm:px-6 py-6">
-        <div className="mb-8">
-          <h1 className="text-4xl font-elegant font-bold text-dark-900 dark:text-white mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-dark-600 dark:text-dark-300">Welcome back! Here's your store overview.</p>
+        <div className="mb-10 rounded-3xl border border-primary-100/60 dark:border-dark-700 bg-gradient-to-r from-primary-50 via-white to-wine-50 dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 p-8 shadow-lg">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-primary-500">Admin Overview</p>
+              <h1 className="text-4xl lg:text-5xl font-elegant font-bold text-dark-900 dark:text-white mt-2">
+                Candour Jewelry Analytics
+              </h1>
+              <p className="text-dark-600 dark:text-dark-300 mt-3 max-w-2xl">
+                Track performance, monitor revenue trends, and stay on top of fulfillment with real-time store insights.
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="bg-white/80 dark:bg-dark-800/80 backdrop-blur rounded-2xl px-5 py-4 shadow-md">
+                <p className="text-xs uppercase text-dark-400 dark:text-dark-500">Revenue Range</p>
+                <div className="mt-3 flex items-center gap-2">
+                  {['7d', '30d', '90d'].map((range) => (
+                    <button
+                      key={range}
+                      type="button"
+                      onClick={() => setRevenueRange(range)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+                        revenueRange === range
+                          ? 'bg-primary-500 text-white shadow'
+                          : 'bg-white dark:bg-dark-700 text-dark-600 dark:text-dark-300'
+                      }`}
+                    >
+                      {range.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white/80 dark:bg-dark-800/80 backdrop-blur rounded-2xl px-5 py-4 shadow-md">
+                <p className="text-xs uppercase text-dark-400 dark:text-dark-500">Order Velocity</p>
+                <p className={`text-2xl font-bold ${orderVelocityTone}`}>{orderVelocityLabel}</p>
+                <p className="text-xs text-dark-400 dark:text-dark-500">vs previous 7 days</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-gradient-to-br from-white to-gray-50 dark:from-dark-800 dark:to-dark-700 rounded-xl p-6 shadow-md border border-gray-200 dark:border-dark-700">
+            <div key={index} className="relative overflow-hidden bg-white dark:bg-dark-800 rounded-2xl p-6 shadow-md border border-gray-100 dark:border-dark-700">
+              <div className={`absolute top-0 right-0 h-20 w-20 rounded-full blur-2xl opacity-30 ${
+                stat.color === 'primary' ? 'bg-primary-400'
+                  : stat.color === 'wine' ? 'bg-wine-400'
+                  : stat.color === 'blue' ? 'bg-blue-400'
+                  : 'bg-purple-400'
+              }`} />
               <p className="text-dark-500 dark:text-dark-400 text-sm font-medium">{stat.label}</p>
               <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
                 {typeof stat.value === 'number' ? stat.value : stat.value}
               </p>
+              <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Updated just now</p>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="lg:col-span-2 bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
-            <div className="flex items-start justify-between mb-6">
+          <div className="lg:col-span-2 bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-6">
               <div>
                 <p className="text-sm text-dark-500 dark:text-dark-300">Revenue Trend</p>
-                <h2 className="text-2xl font-bold text-dark-900 dark:text-white">
-                  ${totalRevenue.toFixed(2)}
+                <h2 className="text-3xl font-bold text-dark-900 dark:text-white">
+                  ${revenueRangeTotal.toFixed(2)}
                 </h2>
-                <p className="text-xs text-dark-400 dark:text-dark-500">Last 7 days</p>
+                <p className="text-xs text-dark-400 dark:text-dark-500">
+                  {revenueRangeDays[revenueRange] || 30}-day total • Avg daily ${averageDailyRevenue.toFixed(2)}
+                </p>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-dark-500 dark:text-dark-300">Avg Order</p>
+              <div className="rounded-xl bg-gray-50 dark:bg-dark-700 px-4 py-3">
+                <p className="text-xs text-dark-500 dark:text-dark-300">Best Window</p>
                 <p className="text-lg font-semibold text-dark-900 dark:text-white">
-                  ${averageOrderValue.toFixed(2)}
+                  {topRevenueSlot ? topRevenueSlot.label : 'N/A'}
+                </p>
+                <p className="text-xs text-dark-400 dark:text-dark-500">
+                  ${topRevenueSlot ? topRevenueSlot.value.toFixed(2) : '0.00'}
                 </p>
               </div>
             </div>
-            <div className="flex items-end gap-3 h-40">
+            <div className="flex items-end gap-3 h-44">
               {revenueSeries.map((item) => (
                 <div key={item.label} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="w-full bg-gray-100 dark:bg-dark-700 rounded-full h-28 flex items-end">
+                  <div className="w-full bg-gray-100 dark:bg-dark-700 rounded-full h-32 flex items-end">
                     <div
-                      className="w-full rounded-full bg-gradient-to-t from-primary-500 to-wine-400"
+                      className="w-full rounded-full bg-gradient-to-t from-primary-500 via-wine-400 to-wine-300 shadow"
                       style={{ height: maxRevenue ? `${Math.max((item.value / maxRevenue) * 100, 8)}%` : '8%' }}
                     />
                   </div>
-                  <span className="text-xs text-dark-500 dark:text-dark-300">{item.label}</span>
+                  <span className="text-[10px] text-dark-500 dark:text-dark-300 text-center leading-tight">
+                    {item.label}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6">
             <h2 className="text-xl font-semibold text-dark-900 dark:text-white mb-4">Order Status</h2>
             <div className="space-y-4">
               {[
@@ -183,48 +291,47 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-dark-700">
             <p className="text-sm text-dark-500 dark:text-dark-300">Fulfillment Rate</p>
             <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">{fulfillmentRate}%</p>
             <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Delivered vs total orders</p>
           </div>
-          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-dark-700">
             <p className="text-sm text-dark-500 dark:text-dark-300">Pending to Ship</p>
             <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
               {(statusCounts.pending || 0) + (statusCounts.confirmed || 0)}
             </p>
             <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Orders awaiting fulfillment</p>
           </div>
-          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
-            <p className="text-sm text-dark-500 dark:text-dark-300">Repeat Customers</p>
-            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
-              {orders.filter(order => order.user?._id).length > 0
-                ? new Set(orders.map(order => order.user?._id).filter(Boolean)).size
-                : 0}
-            </p>
-            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Unique customers who ordered</p>
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-dark-700">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Returning Customers</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">{returningRate}%</p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Share of customers with repeat orders</p>
           </div>
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white mb-6">
-            Quick Actions
-          </h2>
+        <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-8 mb-10 border border-gray-100 dark:border-dark-700">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white">
+              Quick Actions
+            </h2>
+            <p className="text-sm text-dark-500 dark:text-dark-400">Jump straight into key management areas.</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link to="/admin/products">
-              <button className="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-lg font-semibold transition-colors">
+              <button className="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-primary-500/20">
                 Manage Products
               </button>
             </Link>
             <Link to="/admin/orders">
-              <button className="w-full bg-wine-500 hover:bg-wine-600 text-white py-3 rounded-lg font-semibold transition-colors">
+              <button className="w-full bg-wine-500 hover:bg-wine-600 text-white py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-wine-500/20">
                 View Orders
               </button>
             </Link>
             <Link to="/admin/categories">
-              <button className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold transition-colors">
+              <button className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-purple-500/20">
                 Manage Categories
               </button>
             </Link>
@@ -232,7 +339,7 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-8">
+        <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-dark-700">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white">
               Recent Orders
