@@ -19,7 +19,7 @@ export const getProduct = createAsyncThunk(
   async (productId, { rejectWithValue }) => {
     try {
       const response = await productAPI.getProduct(productId);
-      return response.data;
+      return response;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch product');
     }
@@ -33,9 +33,9 @@ export const createProduct = createAsyncThunk(
       const response = await productAPI.createProduct(productData);
       
       // Optimistically update the list
-      dispatch(addProductOptimistically(response.data));
+      dispatch(addProductOptimistically(response));
       
-      return response.data;
+      return response;
     } catch (error) {
       // Rollback on error
       dispatch(removeOptimisticProduct(productData._tempId));
@@ -52,7 +52,7 @@ export const updateProduct = createAsyncThunk(
       dispatch(updateProductOptimistically({ id, changes: productData }));
       
       const response = await productAPI.updateProduct(id, productData);
-      return response.data;
+      return response;
     } catch (error) {
       // Rollback on error - you might want to implement proper rollback
       return rejectWithValue(error.response?.data?.message || 'Failed to update product');

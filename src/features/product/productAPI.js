@@ -54,7 +54,7 @@ export const productAPI = {
   // Get single product by ID or slug
   getProduct: async (productId) => {
     const response = await api.get(`/products/${productId}`);
-    return response.data;
+    return response.data?.data;
   },
 
   // Create new product
@@ -63,7 +63,7 @@ export const productAPI = {
       console.log('🔄 Sending product data:', productData);
       const response = await api.post('/products', productData);
       console.log('✅ Product created successfully:', response.data);
-      return response.data;
+      return response.data?.data;
     } catch (error) {
       console.error('❌ Product creation failed:');
       console.error('Status:', error.response?.status);
@@ -76,7 +76,7 @@ export const productAPI = {
   // Update product
   updateProduct: async (id, productData) => {
     const response = await api.put(`/products/${id}`, productData);
-    return response.data;
+    return response.data?.data;
   },
 
   // Delete product
