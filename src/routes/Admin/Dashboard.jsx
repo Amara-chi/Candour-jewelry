@@ -61,11 +61,37 @@ const Dashboard = () => {
   })
 
   const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+  const averageOrderValue = orders.length ? totalRevenue / orders.length : 0
+  const deliveredOrders = orders.filter(order => order.status === 'delivered').length
+  const fulfillmentRate = orders.length ? Math.round((deliveredOrders / orders.length) * 100) : 0
+
+  const statusCounts = orders.reduce((acc, order) => {
+    const status = order.status || 'pending'
+    acc[status] = (acc[status] || 0) + 1
+    return acc
+  }, {})
+
+  const revenueByDay = orders.reduce((acc, order) => {
+    const dayKey = new Date(order.createdAt).toDateString()
+    acc[dayKey] = (acc[dayKey] || 0) + (order.totalAmount || 0)
+    return acc
+  }, {})
+
+  const revenueSeries = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (6 - index))
+    const key = date.toDateString()
+    return {
+      label: date.toLocaleDateString(undefined, { weekday: 'short' }),
+      value: revenueByDay[key] || 0
+    }
+  })
+
+  const maxRevenue = Math.max(...revenueSeries.map(item => item.value), 0)
 
   const stats = [
     { label: 'Total Products', value: products.length, color: 'primary' },
     { label: 'Orders Today', value: todayOrders.length, color: 'wine' },
-    { label: 'Total Revenue', value: `$${totalRevenue.toFixed(2)}`, color: 'green' },
     { label: 'Customers', value: regularUsers.length, color: 'blue' },
     { label: 'Total Orders', value: orders.length, color: 'purple' },
   ]
@@ -82,7 +108,7 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
             <div key={index} className="bg-gradient-to-br from-white to-gray-50 dark:from-dark-800 dark:to-dark-700 rounded-xl p-6 shadow-md border border-gray-200 dark:border-dark-700">
               <p className="text-dark-500 dark:text-dark-400 text-sm font-medium">{stat.label}</p>
@@ -91,6 +117,93 @@ const Dashboard = () => {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2 bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <p className="text-sm text-dark-500 dark:text-dark-300">Revenue Trend</p>
+                <h2 className="text-2xl font-bold text-dark-900 dark:text-white">
+                  ${totalRevenue.toFixed(2)}
+                </h2>
+                <p className="text-xs text-dark-400 dark:text-dark-500">Last 7 days</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-dark-500 dark:text-dark-300">Avg Order</p>
+                <p className="text-lg font-semibold text-dark-900 dark:text-white">
+                  ${averageOrderValue.toFixed(2)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-end gap-3 h-40">
+              {revenueSeries.map((item) => (
+                <div key={item.label} className="flex-1 flex flex-col items-center gap-2">
+                  <div className="w-full bg-gray-100 dark:bg-dark-700 rounded-full h-28 flex items-end">
+                    <div
+                      className="w-full rounded-full bg-gradient-to-t from-primary-500 to-wine-400"
+                      style={{ height: maxRevenue ? `${Math.max((item.value / maxRevenue) * 100, 8)}%` : '8%' }}
+                    />
+                  </div>
+                  <span className="text-xs text-dark-500 dark:text-dark-300">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-dark-900 dark:text-white mb-4">Order Status</h2>
+            <div className="space-y-4">
+              {[
+                { label: 'Pending', key: 'pending', color: 'bg-yellow-400' },
+                { label: 'Confirmed', key: 'confirmed', color: 'bg-blue-400' },
+                { label: 'Shipped', key: 'shipped', color: 'bg-indigo-400' },
+                { label: 'Delivered', key: 'delivered', color: 'bg-green-400' },
+                { label: 'Cancelled', key: 'cancelled', color: 'bg-red-400' },
+              ].map((status) => {
+                const count = statusCounts[status.key] || 0
+                const percent = orders.length ? Math.round((count / orders.length) * 100) : 0
+                return (
+                  <div key={status.key}>
+                    <div className="flex justify-between text-sm text-dark-600 dark:text-dark-300 mb-1">
+                      <span>{status.label}</span>
+                      <span>{count}</span>
+                    </div>
+                    <div className="w-full h-2 bg-gray-100 dark:bg-dark-700 rounded-full">
+                      <div
+                        className={`h-2 rounded-full ${status.color}`}
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Fulfillment Rate</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">{fulfillmentRate}%</p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Delivered vs total orders</p>
+          </div>
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Pending to Ship</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
+              {(statusCounts.pending || 0) + (statusCounts.confirmed || 0)}
+            </p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Orders awaiting fulfillment</p>
+          </div>
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Repeat Customers</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
+              {orders.filter(order => order.user?._id).length > 0
+                ? new Set(orders.map(order => order.user?._id).filter(Boolean)).size
+                : 0}
+            </p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Unique customers who ordered</p>
+          </div>
         </div>
 
         {/* Quick Actions */}

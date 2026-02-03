@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from '@tanstack/react-router';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
 import axios from 'axios';
@@ -129,7 +130,9 @@ const ManageOrders = () => {
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <Button variant="ghost" size="sm">View</Button>
+                        <Link to="/admin/orders/$id" params={{ id: order._id }}>
+                          <Button variant="ghost" size="sm">View</Button>
+                        </Link>
                       </td>
                     </tr>
                   ))
