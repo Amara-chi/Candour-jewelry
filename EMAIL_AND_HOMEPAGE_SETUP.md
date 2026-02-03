@@ -78,14 +78,8 @@ Add to `backend/.env`:
 ```
 FRONTEND_URL=https://candour-jewelry.vercel.app
 FROM_EMAIL=info@candourjewelry.com
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your_smtp_user
-SMTP_PASS=your_smtp_password
-SMTP_SECURE=false
-
 GMAIL_USER=your_gmail@gmail.com
-GMAIL_PASSWORD=your_16_character_app_password
+GMAIL_PASS=your_16_character_app_password
 ADMIN_EMAILS=admin@candourjewelry.com,owner@candourjewelry.com
 ```
 
@@ -101,7 +95,7 @@ ADMIN_EMAILS=admin@candourjewelry.com,owner@candourjewelry.com
 1. Go to myaccount.google.com/apppasswords
 2. Select "Mail" and "Windows Computer" (or your device)
 3. Google will generate a 16-character password
-4. Copy this password (removing spaces) to `GMAIL_PASSWORD` in `.env`
+4. Copy this password (removing spaces) to `GMAIL_PASS` in `.env`
 
 ### Email Functions
 
@@ -288,7 +282,7 @@ categoryAPI.deleteCategory(id);
 **Solution**:
 1. Verify 2-FA is enabled on Gmail account
 2. Make sure you generated an App Password (not account password)
-3. Check that GMAIL_PASSWORD has no spaces
+3. Check that GMAIL_PASS has no spaces
 4. Verify GMAIL_USER matches your Gmail address
 
 ### Categories Not Displaying
