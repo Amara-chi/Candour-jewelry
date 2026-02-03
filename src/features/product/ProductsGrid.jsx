@@ -3,6 +3,7 @@ import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import ProductCard from './productCard';
 import Spinner from '../../components/Spinner';
+import { Package } from 'lucide-react';
 
 const ProductsGrid = ({ 
   products, 
@@ -10,7 +11,8 @@ const ProductsGrid = ({
   onLoadMore, 
   hasMore, 
   selectedProducts = [],
-  onSelectProduct 
+  onSelectProduct,
+  isAdmin = false
 }) => {
   const [loadMoreRef, inView] = useInView({
     threshold: 0,
@@ -46,6 +48,7 @@ const ProductsGrid = ({
             key={product._id || product._tempId || index}
             product={product}
             priority={index < 4}
+            isAdmin={isAdmin}
             isSelected={selectedProducts.includes(product._id)}
             onSelect={onSelectProduct}
           />

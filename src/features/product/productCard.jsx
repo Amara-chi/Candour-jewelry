@@ -51,7 +51,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0];
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-primary-100/70 dark:border-dark-600 bg-white/95 dark:bg-dark-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+      <div className="group relative overflow-hidden rounded-2xl border border-primary-100/70 dark:border-dark-600 bg-white/95 dark:bg-dark-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
       {/* Admin Actions Overlay */}
       {isAdmin && (
         <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
@@ -188,17 +188,19 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
               >
                 {!product.inStock ? 'Out of Stock' : 'Add to Cart'}
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  openModal('product-details', { product });
-                }}
-                className="px-3"
+              <Link
+                to={`/product/${product.slug || product._id}`}
+                className="flex"
+                onClick={(e) => e.stopPropagation()}
               >
-                <Eye className="h-4 w-4" />
-              </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="px-3"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </Link>
             </>
           ) : (
             // Admin info and actions
