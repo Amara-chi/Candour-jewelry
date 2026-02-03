@@ -6,6 +6,7 @@ import logo from '../assets/cj_logo_circle.png'
 import { useAuth } from '../hooks/useAuth'
 import { useModal } from '../components/Modal'
 import { useCart } from '../hooks/useCart'
+import { Menu, Moon, Sun, X } from 'lucide-react'
 
 const Navbar = () => {
   const { theme, toggleTheme, isDark } = useTheme()
@@ -134,8 +135,9 @@ const Navbar = () => {
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-dark-100 dark:bg-dark-800 text-dark-700 dark:text-dark-200 hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
             >
-              {isDark ? '☀️' : '🌙'}
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
             {/* Cart Icon */}
@@ -175,8 +177,9 @@ const Navbar = () => {
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-dark-100 dark:bg-dark-800 text-dark-700 dark:text-dark-200 hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
             >
-              {isDark ? '☀️' : '🌙'}
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
 
             {/* Cart Icon - Mobile */}
@@ -213,7 +216,7 @@ const Navbar = () => {
               onClick={toggleMobileMenu}
               className="p-2 rounded-lg bg-dark-100 dark:bg-dark-800 text-dark-700 dark:text-dark-200 hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
             >
-              {isMobileMenuOpen ? '✕' : '☰'}
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>

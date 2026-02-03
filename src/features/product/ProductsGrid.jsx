@@ -26,7 +26,7 @@ const ProductsGrid = ({
   if (!products.length && !loading) {
     return (
       <div className="text-center py-12">
-        <div className="text-6xl mb-4">📦</div>
+        <Package className="h-14 w-14 text-primary-500 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           No products found
         </h3>

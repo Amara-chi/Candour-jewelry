@@ -385,7 +385,7 @@ export const sendWelcomeEmail = async (email, userName) => {
 };
 
 export const sendAdminPromotionEmail = async (email, userName, credentials = {}) => {
-  const loginUrl = `${process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app'}/login`;
+  const loginUrl = `${process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app'}`;
   const { password } = credentials;
   const htmlContent = `
     <!DOCTYPE html>

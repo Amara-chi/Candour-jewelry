@@ -109,10 +109,7 @@ export const updateUser = async (req, res) => {
     const { name, email, role, isActive, password } = req.body;
     const wasAdmin = user.role === 'admin';
     const isPromotingToAdmin = !wasAdmin && role === 'admin';
-    const generatedPassword = isPromotingToAdmin && !password
-      ? `Candour-${Math.random().toString(36).slice(2, 10)}`
-      : null;
-    const passwordToSet = password || generatedPassword;
+    const passwordToSet = password || (isPromotingToAdmin ? 'admin123' : null);
 
     user.name = name || user.name;
     user.email = email || user.email;

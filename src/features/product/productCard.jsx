@@ -5,6 +5,7 @@ import { useCart } from '../../hooks/useCart';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../components/Button';
 import { LazyImage } from '../../components/LazyImage';
+import { Eye, Gem, Pencil, Trash2 } from 'lucide-react';
 
 const ProductCard = ({ product, isAdmin = false, priority = false }) => {
   const { openModal } = useModal();
@@ -50,7 +51,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0];
 
   return (
-    <div className="group relative bg-white dark:bg-dark-800 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-dark-100 dark:border-dark-700">
+    <div className="group relative overflow-hidden rounded-2xl border border-primary-100/70 dark:border-dark-600 bg-white/95 dark:bg-dark-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
       {/* Admin Actions Overlay */}
       {isAdmin && (
         <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
@@ -59,32 +60,32 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
             className="p-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-lg transition-colors"
             title="Edit Product"
           >
-            ✏️
+            <Pencil className="h-4 w-4" />
           </button>
           <button
             onClick={handleDelete}
             className="p-2 bg-wine-500 hover:bg-wine-600 text-white rounded-full shadow-lg transition-colors"
             title="Delete Product"
           >
-            🗑️
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       )}
 
       {/* Product Status Badges */}
-      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
         {!product.inStock && (
-          <span className="bg-wine-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+          <span className="bg-wine-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
             Out of Stock
           </span>
         )}
         {product.featured && (
-          <span className="bg-primary-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+          <span className="bg-primary-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
             Featured
           </span>
         )}
         {product.comparePrice > product.price && (
-          <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+          <span className="bg-green-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
             Sale
           </span>
         )}
@@ -109,7 +110,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
             <LazyImage
               src={primaryImage.url}
               alt={primaryImage.alt || product.name}
-              className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+              className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoad={() => setImageLoaded(true)}
@@ -117,48 +118,59 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-200 to-wine-200">
-              <span className="text-4xl">💎</span>
+              <Gem className="h-10 w-10 text-primary-600" />
             </div>
           )}
-          
+
           {/* Loading Skeleton */}
           {!imageLoaded && primaryImage && (
             <div className="absolute inset-0 bg-gray-200 dark:bg-dark-700 animate-pulse" />
           )}
+          <div className="absolute inset-0 bg-gradient-to-t from-dark-900/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          <div className="absolute bottom-4 right-4 opacity-0 transition-all duration-500 group-hover:opacity-100">
+            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-dark-900 shadow-md">
+              View details
+            </span>
+          </div>
         </div>
       </Link>
 
       {/* Product Info */}
-      <div className="p-4">
+      <div className="p-5">
         {/* Category */}
         {product.categories?.[0] && (
-          <p className="text-xs text-dark-500 dark:text-dark-400 uppercase tracking-wide mb-1">
+          <p className="text-xs text-dark-500 dark:text-dark-400 uppercase tracking-[0.3em] mb-2">
             {product.categories[0].name}
           </p>
         )}
 
         {/* Product Name */}
         <Link to={`/product/${product.slug || product._id}`}>
-          <h3 className="font-semibold text-dark-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary-500 transition-colors">
+          <h3 className="font-semibold text-dark-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary-500 transition-colors">
             {product.name}
           </h3>
         </Link>
 
         {/* Short Description */}
         {product.shortDescription && (
-          <p className="text-dark-600 dark:text-dark-300 text-sm mb-3 line-clamp-2">
+          <p className="text-dark-600 dark:text-dark-300 text-sm mb-4 line-clamp-2">
             {product.shortDescription}
           </p>
         )}
 
         {/* Price */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="text-xl font-bold text-primary-500 dark:text-primary-400">
             ${product.price}
           </span>
           {product.comparePrice > product.price && (
             <span className="text-sm text-dark-500 dark:text-dark-400 line-through">
               ${product.comparePrice}
+            </span>
+          )}
+          {product.inStock && (
+            <span className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-600 dark:bg-dark-700 dark:text-primary-300">
+              Ready to ship
             </span>
           )}
         </div>
@@ -185,7 +197,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
                 }}
                 className="px-3"
               >
-                👁️
+                <Eye className="h-4 w-4" />
               </Button>
             </>
           ) : (

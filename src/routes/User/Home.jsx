@@ -10,6 +10,7 @@ import { SEOHead } from '../../components/SEOHead';
 import { useCategories } from '../../hooks/useCategories';
 import { useProducts } from '../../hooks/useProducts';
 import Spinner from '../../components/Spinner';
+import { Gem, Heart, ShieldCheck } from 'lucide-react';
 
 const Home = () => {
   const { categories, loading: categoriesLoading } = useCategories();
@@ -259,8 +260,8 @@ const Home = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-600 dark:to-dark-500">
-                    {category.icon || '💎'}
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-600 dark:to-dark-500">
+                    <Gem className="h-12 w-12 text-primary-500" />
                   </div>
                 )}
               </div>
@@ -441,39 +442,72 @@ const Home = () => {
         </div>
       </section>
 
-<section className="py-20">
+<section className="py-20 bg-white dark:bg-dark-800">
   <div className="max-w-7xl mx-auto px-4">
+    <div className="flex flex-col items-center text-center mb-12">
+      <p className="text-sm uppercase tracking-[0.3em] text-primary-500 dark:text-primary-300 mb-3">
+        Candour Promise
+      </p>
+      <h2 className="text-3xl md:text-4xl font-elegant font-bold text-dark-900 dark:text-white">
+        Crafted with care, delivered with confidence
+      </h2>
+      <p className="mt-4 text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
+        Every detail is intentional—from sourcing and design to the moment your piece arrives.
+      </p>
+    </div>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {[
         {
-          icon: '🔒',
+          icon: ShieldCheck,
           title: 'Secure Shipping',
           desc: 'Insured delivery with discreet, luxury packaging.',
-          back: 'Tracked, insured, and styled to delight from unboxing to wear.'
+          back: 'Tracked, insured, and styled to delight from unboxing to wear.',
+          accent: 'from-primary-50 via-white to-wine-50',
+          iconBg: 'bg-primary-100 text-primary-600'
         },
         {
-          icon: '💎',
+          icon: Gem,
           title: 'Lifetime Warranty',
           desc: 'Guaranteed quality, craftsmanship, and aftercare.',
-          back: 'Complimentary cleaning and lifetime care guidance.'
+          back: 'Complimentary cleaning and lifetime care guidance.',
+          accent: 'from-wine-50 via-white to-primary-50',
+          iconBg: 'bg-wine-100 text-wine-600'
         },
         {
-          icon: '❤️',
+          icon: Heart,
           title: 'Ethically Sourced',
           desc: 'Conflict-free diamonds and responsibly sourced gems.',
-          back: 'We partner with trusted suppliers who value transparency.'
+          back: 'We partner with trusted suppliers who value transparency.',
+          accent: 'from-primary-50 via-white to-primary-100',
+          iconBg: 'bg-primary-100 text-primary-600'
         }
       ].map((item, index) => (
-        <div key={index} className="flip-card h-full">
+        <div key={index} className="flip-card h-full group">
           <div className="flip-card-inner h-full">
-            <div className="flip-card-front rounded-2xl border border-primary-100/60 dark:border-dark-600 bg-white dark:bg-dark-700 p-8 shadow-sm">
-              <div className="text-4xl mb-5">{item.icon}</div>
+            <div className={`flip-card-front rounded-3xl border border-primary-100/60 dark:border-dark-600 bg-gradient-to-br ${item.accent} dark:from-dark-700 dark:via-dark-700 dark:to-dark-600 p-8 shadow-sm`}>
+              <div className="flex items-center justify-between mb-6">
+                <div className={`h-12 w-12 rounded-full ${item.iconBg} flex items-center justify-center shadow-sm`}>
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <span className="text-xs uppercase tracking-[0.4em] text-dark-400 dark:text-dark-300">Flip</span>
+              </div>
               <h3 className="text-xl font-semibold mb-3 text-dark-900 dark:text-white">{item.title}</h3>
               <p className="text-gray-600 dark:text-gray-300">{item.desc}</p>
             </div>
-            <div className="flip-card-back rounded-2xl border border-primary-200/60 dark:border-dark-600 bg-gradient-to-br from-primary-500 via-wine-500 to-primary-400 p-8 text-white shadow-xl">
-              <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+            <div className="flip-card-back rounded-3xl border border-primary-200/60 dark:border-dark-600 bg-gradient-to-br from-primary-600 via-wine-500 to-primary-400 p-8 text-white shadow-xl">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="h-12 w-12 rounded-full bg-white/15 flex items-center justify-center">
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.4em] text-white/70">Promise</p>
+                  <h3 className="text-xl font-semibold">{item.title}</h3>
+                </div>
+              </div>
               <p className="text-white/90">{item.back}</p>
+              <div className="mt-6 text-xs uppercase tracking-[0.3em] text-white/70">
+                Tap to return
+              </div>
             </div>
           </div>
         </div>
