@@ -6,7 +6,6 @@ import { SEOHead } from '../../components/SEOHead';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
 import Spinner from '../../components/Spinner';
-import { CheckCircle } from 'lucide-react';
 
 const OrderSuccess = () => {
   const { orderId } = useSearch({ from: '/order-success' });

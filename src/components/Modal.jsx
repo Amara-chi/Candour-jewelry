@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { useCategories } from '../hooks/useCategories'
 import { createProduct, updateProduct, deleteProduct } from '../features/product/productSlice'
 import Spinner from './Spinner'
-import { AlertCircle, Gem, Image } from 'lucide-react'
 
 // Modal Context
 const ModalContext = React.createContext()

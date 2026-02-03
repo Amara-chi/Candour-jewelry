@@ -6,7 +6,6 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Card from '../../components/Card';
 import Spinner from '../../components/Spinner';
-import { AlertTriangle, Users as UsersIcon } from 'lucide-react';
 
 const Users = () => {
   const dispatch = useDispatch();

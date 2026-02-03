@@ -123,7 +123,7 @@ const ManageCategories = () => {
         description="Manage product categories"
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 py-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-elegant font-bold text-dark-900 dark:text-white">
             Manage Categories

@@ -3,7 +3,6 @@ import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import ProductCard from './productCard';
 import Spinner from '../../components/Spinner';
-import { Package } from 'lucide-react';
 
 const ProductsGrid = ({ 
   products, 

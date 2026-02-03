@@ -6,7 +6,6 @@ import { useProducts } from '../../hooks/useProducts';
 import Button from '../../components/Button';
 import { useCategories } from '../../hooks/useCategories';
 import Spinner from '../../components/Spinner';
-import { Search, X, XCircle } from 'lucide-react';
 
 const Shop = () => {
   const [sortBy, setSortBy] = useState('-createdAt');
@@ -212,7 +211,7 @@ const Shop = () => {
                     placeholder="Search by name, stone, or style..."
                     className="w-full pl-10 pr-3 py-2 border border-dark-200 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-dark-900 dark:text-white placeholder-dark-500 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dark-400" />
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400">🔍</span>
                 </div>
               </div>
 
@@ -344,7 +343,7 @@ const Shop = () => {
                       className="inline-flex items-center gap-2 rounded-full border border-primary-200/80 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700 transition hover:bg-primary-100"
                     >
                       {filter.label}
-                      <X className="h-3 w-3 text-primary-500" />
+                      <span className="text-primary-500">✕</span>
                     </button>
                   ))}
                   <button
@@ -361,7 +360,7 @@ const Shop = () => {
               <Spinner className="py-12" size={52} />
             ) : resultsCount === 0 ? (
               <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-12 text-center">
-                <Search className="h-14 w-14 text-primary-500 mx-auto mb-4" />
+                <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl font-semibold text-dark-900 dark:text-white mb-2">
                   No products found
                 </h3>

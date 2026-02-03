@@ -6,7 +6,6 @@ import { LazyImage } from '../../components/LazyImage';
 import Button from '../../components/Button';
 import { SEOHead } from '../../components/SEOHead';
 import Spinner from '../../components/Spinner';
-import { AlertTriangle, Gem, ShoppingBag } from 'lucide-react';
 
 const CartPage = () => {
   const { cart, getCart, updateQuantity, removeItem, clearCart: clear, loading, error } = useCart();
