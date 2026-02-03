@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import cookie from 'cookie';
 import { sendPasswordResetEmail } from '../utils/emailService.js';
 
 // Generate JWT Token
@@ -10,11 +11,131 @@ const generateToken = (id) => {
   });
 };
 
-const buildGoogleAuthUrl = () => {
+const OAUTH_STATE_COOKIE = 'google_oauth_state';
+const OAUTH_NONCE_COOKIE = 'google_oauth_nonce';
+const OAUTH_COOKIE_MAX_AGE_MS = 10 * 60 * 1000;
+const GOOGLE_CERTS_URL = 'https://www.googleapis.com/oauth2/v3/certs';
+const GOOGLE_ISSUERS = ['https://accounts.google.com', 'accounts.google.com'];
+const googleCertCache = {
+  certs: null,
+  expiresAt: 0
+};
+
+const getCookieSigningSecret = () => {
+  return process.env.JWT_SECRET;
+};
+
+const signCookieValue = (value, secret) => {
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(value)
+    .digest('base64url');
+  return `${value}.${signature}`;
+};
+
+const verifySignedCookieValue = (signedValue, secret) => {
+  if (!signedValue || !secret) {
+    return null;
+  }
+
+  const parts = signedValue.split('.');
+  if (parts.length !== 2) {
+    return null;
+  }
+
+  const [value, signature] = parts;
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(value)
+    .digest('base64url');
+
+  const signatureBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+
+  if (signatureBuffer.length !== expectedBuffer.length) {
+    return null;
+  }
+
+  if (!crypto.timingSafeEqual(signatureBuffer, expectedBuffer)) {
+    return null;
+  }
+
+  return value;
+};
+
+const getGoogleCerts = async () => {
+  if (googleCertCache.certs && Date.now() < googleCertCache.expiresAt) {
+    return googleCertCache.certs;
+  }
+
+  const response = await fetch(GOOGLE_CERTS_URL);
+  if (!response.ok) {
+    throw new Error('Unable to fetch Google certs.');
+  }
+
+  const cacheControl = response.headers.get('cache-control') || '';
+  const match = cacheControl.match(/max-age=(\d+)/);
+  const maxAgeSeconds = match ? Number(match[1]) : 300;
+
+  const certs = await response.json();
+  googleCertCache.certs = certs;
+  googleCertCache.expiresAt = Date.now() + maxAgeSeconds * 1000;
+
+  return certs;
+};
+
+const decodeJwtSegment = (segment) => {
+  return JSON.parse(Buffer.from(segment, 'base64url').toString('utf8'));
+};
+
+const verifyGoogleIdToken = async (idToken, clientId) => {
+  const segments = idToken.split('.');
+  if (segments.length !== 3) {
+    throw new Error('Invalid ID token format.');
+  }
+
+  const [headerSegment, payloadSegment, signatureSegment] = segments;
+  const header = decodeJwtSegment(headerSegment);
+  const payload = decodeJwtSegment(payloadSegment);
+
+  const certs = await getGoogleCerts();
+  const cert = certs[header.kid];
+
+  if (!cert) {
+    throw new Error('Unable to find matching Google cert.');
+  }
+
+  const verifier = crypto.createVerify('RSA-SHA256');
+  verifier.update(`${headerSegment}.${payloadSegment}`);
+  verifier.end();
+
+  const signature = Buffer.from(signatureSegment, 'base64url');
+  const validSignature = verifier.verify(cert, signature);
+
+  if (!validSignature) {
+    throw new Error('Invalid ID token signature.');
+  }
+
+  if (payload.aud !== clientId) {
+    throw new Error('Invalid ID token audience.');
+  }
+
+  if (!GOOGLE_ISSUERS.includes(payload.iss)) {
+    throw new Error('Invalid ID token issuer.');
+  }
+
+  if (!payload.exp || payload.exp * 1000 <= Date.now()) {
+    throw new Error('Expired ID token.');
+  }
+
+  return payload;
+};
+
+const buildGoogleAuthUrl = ({ state, nonce }) => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI;
 
-  if (!clientId || !redirectUri) {
+  if (!clientId || !redirectUri || !state) {
     return null;
   }
 
@@ -23,12 +144,18 @@ const buildGoogleAuthUrl = () => {
     redirect_uri: redirectUri,
     response_type: 'code',
     scope: [
+      'openid',
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile'
     ].join(' '),
     access_type: 'offline',
-    prompt: 'consent'
+    prompt: 'consent',
+    state
   });
+
+  if (nonce) {
+    params.set('nonce', nonce);
+  }
 
   return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 };
@@ -232,7 +359,24 @@ export const resetPassword = async (req, res) => {
 };
 
 export const googleAuth = async (req, res) => {
-  const authUrl = buildGoogleAuthUrl();
+  if (!process.env.FRONTEND_URL) {
+    return res.status(501).json({
+      success: false,
+      message: 'Google OAuth is not configured. Set FRONTEND_URL.'
+    });
+  }
+
+  const signingSecret = getCookieSigningSecret();
+  if (!signingSecret) {
+    return res.status(500).json({
+      success: false,
+      message: 'Google OAuth is not configured. Set JWT_SECRET.'
+    });
+  }
+
+  const state = crypto.randomBytes(32).toString('hex');
+  const nonce = crypto.randomBytes(32).toString('hex');
+  const authUrl = buildGoogleAuthUrl({ state, nonce });
 
   if (!authUrl) {
     return res.status(501).json({
@@ -241,14 +385,27 @@ export const googleAuth = async (req, res) => {
     });
   }
 
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: OAUTH_COOKIE_MAX_AGE_MS,
+    path: '/api/auth'
+  };
+
+  res.cookie(OAUTH_STATE_COOKIE, signCookieValue(state, signingSecret), cookieOptions);
+  res.cookie(OAUTH_NONCE_COOKIE, signCookieValue(nonce, signingSecret), cookieOptions);
+
   return res.redirect(authUrl);
 };
 
 export const googleCallback = async (req, res) => {
   const code = req.query.code;
+  const returnedState = req.query.state;
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+  const signingSecret = getCookieSigningSecret();
 
   if (!code) {
     return res.status(400).json({
@@ -264,7 +421,33 @@ export const googleCallback = async (req, res) => {
     });
   }
 
+  if (!process.env.FRONTEND_URL) {
+    return res.status(501).json({
+      success: false,
+      message: 'Google OAuth is not configured. Set FRONTEND_URL.'
+    });
+  }
+
+  if (!signingSecret) {
+    return res.status(500).json({
+      success: false,
+      message: 'Google OAuth is not configured. Set JWT_SECRET.'
+    });
+  }
+
   const frontendUrl = getFrontendUrl(req);
+  const cookies = cookie.parse(req.headers.cookie || '');
+  const storedState = verifySignedCookieValue(cookies[OAUTH_STATE_COOKIE], signingSecret);
+  const storedNonce = verifySignedCookieValue(cookies[OAUTH_NONCE_COOKIE], signingSecret);
+
+  res.clearCookie(OAUTH_STATE_COOKIE, { path: '/api/auth' });
+  res.clearCookie(OAUTH_NONCE_COOKIE, { path: '/api/auth' });
+
+  if (!storedState || !storedNonce || !returnedState || storedState !== returnedState) {
+    return res.redirect(
+      `${frontendUrl}/auth/callback?error=${encodeURIComponent('Invalid OAuth state.')}`
+    );
+  }
 
   try {
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
@@ -297,10 +480,13 @@ export const googleCallback = async (req, res) => {
       );
     }
 
-    const profileResponse = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
-    );
-    const profile = await profileResponse.json();
+    const profile = await verifyGoogleIdToken(idToken, clientId);
+
+    if (profile.nonce !== storedNonce) {
+      return res.redirect(
+        `${frontendUrl}/auth/callback?error=${encodeURIComponent('Invalid OAuth nonce.')}`
+      );
+    }
 
     if (!profile?.email) {
       return res.redirect(
