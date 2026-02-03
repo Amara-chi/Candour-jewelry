@@ -76,6 +76,8 @@ npm install nodemailer
 ### Environment Variables
 Add to `backend/.env`:
 ```
+FRONTEND_URL=https://candour-jewelry.vercel.app
+FROM_EMAIL=info@candourjewelry.com
 GMAIL_USER=your_gmail@gmail.com
 GMAIL_PASSWORD=your_16_character_app_password
 ADMIN_EMAILS=admin@candourjewelry.com,owner@candourjewelry.com
