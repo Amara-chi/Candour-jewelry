@@ -12,7 +12,7 @@ const initializeEmailService = () => {
   const smtpPort = process.env.SMTP_PORT;
   const smtpSecure = process.env.SMTP_SECURE === 'true';
   const smtpUser = process.env.SMTP_USER;
-  const smtpPassword = process.env.SMTP_PASSWORD;
+  const smtpPassword = process.env.SMTP_PASSWORD || process.env.SMTP_PASS;
 
   const gmailUser = process.env.GMAIL_USER || process.env.EMAIL_USER;
   const gmailPassword = process.env.GMAIL_PASSWORD || process.env.EMAIL_PASSWORD;
@@ -56,7 +56,7 @@ export const sendEmail = async (to, subject, htmlContent) => {
     }
 
     const mailOptions = {
-      from: `"Candour Jewelry" <${process.env.GMAIL_USER || process.env.EMAIL_USER || process.env.SMTP_USER}>`,
+      from: `"Candour Jewelry" <${process.env.FROM_EMAIL || process.env.GMAIL_USER || process.env.EMAIL_USER || process.env.SMTP_USER}>`,
       to,
       subject,
       html: htmlContent

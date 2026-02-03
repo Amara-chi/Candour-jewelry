@@ -5,6 +5,7 @@ import {
   getMe,
   updateDetails,
   forgotPassword,
+  resetPassword,
   googleAuth,
   googleCallback
 } from '../controllers/authController.js';
@@ -15,6 +16,7 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:token', resetPassword);
 router.get('/google', googleAuth);
 router.get('/google/callback', googleCallback);
 router.get('/me', protect, getMe);
