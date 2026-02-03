@@ -44,6 +44,12 @@ const userSchema = new mongoose.Schema({
     zipCode: String,
     country: String
   },
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpire: {
+    type: Date
+  },
   isActive: {
     type: Boolean,
     default: true
@@ -54,7 +60,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
-    next();
+    return next();
   }
 
   const salt = await bcrypt.genSalt(10);
