@@ -345,7 +345,10 @@ const ProductFormModal = ({ data }) => {
             </div>
           ) : categories.length === 0 ? (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50 rounded-lg p-3 text-sm text-yellow-800 dark:text-yellow-200">
-              📌 No categories available. Please create categories first in the Categories section.
+              <div className="flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 mt-0.5" />
+                <span>No categories available. Please create categories first in the Categories section.</span>
+              </div>
             </div>
           ) : (
             <div className="space-y-2 max-h-48 overflow-y-auto border border-dark-200 dark:border-dark-600 rounded-lg p-3 bg-white dark:bg-dark-700">
@@ -431,7 +434,7 @@ const ProductFormModal = ({ data }) => {
               id="image-upload"
             />
             <label htmlFor="image-upload" className="cursor-pointer">
-              <div className="text-4xl mb-2">📷</div>
+              <Image className="h-10 w-10 mb-2 text-primary-500" />
               <p className="text-dark-600 dark:text-dark-300 mb-2">
                 {uploading ? 'Uploading...' : 'Click to upload images'}
               </p>
@@ -636,7 +639,7 @@ const ProductDetailsModal = ({ data }) => {
               className="w-full h-full object-cover rounded-lg"
             />
           ) : (
-            <span className="text-6xl">💎</span>
+            <Gem className="h-12 w-12 text-primary-500" />
           )}
         </div>
         

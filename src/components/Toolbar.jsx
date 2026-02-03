@@ -1,5 +1,6 @@
 // components/Toolbar.jsx
 import React from 'react';
+import { Grid2x2, List } from 'lucide-react';
 
 const Toolbar = ({
   filteredCount,
@@ -41,7 +42,7 @@ const Toolbar = ({
                 : 'text-dark-900 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-dark-700'
             }`}
           >
-            ▫️
+            <Grid2x2 className="h-4 w-4" />
           </button>
           <button
             onClick={() => onViewModeChange('list')}
@@ -51,7 +52,7 @@ const Toolbar = ({
                 : 'text-dark-900 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-dark-700'
             }`}
           >
-            ☰
+            <List className="h-4 w-4" />
           </button>
         </div>
 

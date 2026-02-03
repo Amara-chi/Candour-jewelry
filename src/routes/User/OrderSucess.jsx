@@ -52,7 +52,7 @@ const OrderSuccess = () => {
 
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-8 text-center">
-          <div className="text-6xl mb-4">✅</div>
+          <CheckCircle className="h-14 w-14 text-green-500 mx-auto mb-4" />
           <h1 className="text-3xl font-elegant font-bold text-green-600 dark:text-green-400 mb-4">
             Order Confirmed!
           </h1>

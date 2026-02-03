@@ -143,7 +143,7 @@ const Shop = () => {
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="text-6xl mb-4">❌</div>
+            <XCircle className="h-14 w-14 text-wine-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-dark-900 dark:text-white mb-2">
               Unable to Load Products
             </h2>

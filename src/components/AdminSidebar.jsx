@@ -1,16 +1,25 @@
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Gem,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Users
+} from "lucide-react";
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   const { user, logout } = useAuth();
 
   const menuItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/admin/products', label: 'Products', icon: '💎' },
-    { path: '/admin/orders', label: 'Orders', icon: '📦' },
-    { path: '/admin/categories', label: 'Categories', icon: '📑' },
-    { path: '/admin/users', label: 'Users', icon: '👥' },
+    { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/admin/products', label: 'Products', icon: Gem },
+    { path: '/admin/orders', label: 'Orders', icon: Package },
+    { path: '/admin/categories', label: 'Categories', icon: FileText },
+    { path: '/admin/users', label: 'Users', icon: Users },
   ]
 
   return (
@@ -64,13 +73,19 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
                 "bg-primary-500 text-white dark:bg-primary-600 dark:text-white",
             }}
           >
-            {isOpen ? <div className="whitespace-nowrap flex gap-4">
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-              </div>
-              : <div className="whitespace-nowrap flex gap-4">
-              <span>{item.icon}</span>
-              </div>}
+            {(() => {
+              const Icon = item.icon;
+              return isOpen ? (
+                <div className="whitespace-nowrap flex gap-4 items-center">
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </div>
+              ) : (
+                <div className="whitespace-nowrap flex gap-4 items-center">
+                  <Icon className="h-4 w-4" />
+                </div>
+              );
+            })()}
           </Link>
         ))}
       </nav>
@@ -81,7 +96,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           onClick={logout}
           className="w-full flex items-center px-4 py-2 rounded-lg text-gray-600 dark:text-dark-200 hover:bg-wine-100 dark:hover:bg-wine-500 hover:text-wine-700 dark:hover:text-white transition-colors"
         >
-          <span className="mr-3">🚪</span>
+          <LogOut className="mr-3 h-4 w-4" />
           {isOpen && "Logout"}
         </button>
       </div>

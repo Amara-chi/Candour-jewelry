@@ -5,6 +5,7 @@ import { useCart } from '../../hooks/useCart';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../components/Button';
 import { LazyImage } from '../../components/LazyImage';
+import { Eye, Gem, Pencil, Trash2 } from 'lucide-react';
 
 const ProductCard = ({ product, isAdmin = false, priority = false }) => {
   const { openModal } = useModal();
@@ -59,14 +60,14 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
             className="p-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-lg transition-colors"
             title="Edit Product"
           >
-            ✏️
+            <Pencil className="h-4 w-4" />
           </button>
           <button
             onClick={handleDelete}
             className="p-2 bg-wine-500 hover:bg-wine-600 text-white rounded-full shadow-lg transition-colors"
             title="Delete Product"
           >
-            🗑️
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       )}
@@ -117,7 +118,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-200 to-wine-200">
-              <span className="text-4xl">💎</span>
+              <Gem className="h-10 w-10 text-primary-600" />
             </div>
           )}
           
@@ -185,7 +186,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
                 }}
                 className="px-3"
               >
-                👁️
+                <Eye className="h-4 w-4" />
               </Button>
             </>
           ) : (
