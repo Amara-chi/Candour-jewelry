@@ -9,6 +9,7 @@ import { useCategories } from '../hooks/useCategories'
 import { createProduct, updateProduct, deleteProduct } from '../features/product/productSlice'
 import Spinner from './Spinner'
 import { API_URL } from '../config/api'
+import { mutate } from 'swr'
 
 // Modal Context
 const ModalContext = React.createContext()
@@ -227,9 +228,10 @@ const ProductFormModal = ({ data }) => {
         })).unwrap()
       }
 
+      mutate((key) => typeof key === 'string' && key.startsWith('/api/products'))
       closeModal()
     } catch (error) {
-      setErrors({ submit: error.message || 'Failed to save product' })
+      setErrors({ submit: error?.message || error || 'Failed to save product' })
     } finally {
       setLoading(false)
     }

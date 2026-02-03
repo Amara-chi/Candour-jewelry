@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import cookie from 'cookie';
+import { sendPasswordResetEmail } from '../utils/emailService.js';
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -167,6 +168,17 @@ const getFrontendUrl = (req) => {
   );
 };
 
+const generateResetToken = () => {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const resetTokenHash = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  const resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000);
+
+  return { resetToken, resetTokenHash, resetTokenExpires };
+};
+
 // Register new user
 export const register = async (req, res) => {
   try {
@@ -244,21 +256,106 @@ export const login = async (req, res) => {
   }
 };
 
-// Forgot password (placeholder until email provider is configured)
 export const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  if (!email) {
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const { resetToken, resetTokenHash, resetTokenExpires } = generateResetToken();
+      user.resetPasswordToken = resetTokenHash;
+      user.resetPasswordExpires = resetTokenExpires;
+      await user.save();
+
+      const resetUrl = `${getFrontendUrl(req)}/reset-password/${resetToken}`;
+      await sendPasswordResetEmail(user.email, resetUrl);
+    }
+
+    return res.json({
+      success: true,
+      message: 'If an account exists, we sent password reset instructions to your email.'
+    });
+  } catch (error) {
     return res.status(400).json({
       success: false,
-      message: 'Email is required'
+      message: error.message
     });
   }
+};
 
-  res.json({
-    success: true,
-    message: 'If an account exists, we sent password reset instructions to your email.'
-  });
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'Reset token is required.'
+      });
+    }
+
+    if (!password || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password and confirm password are required.'
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Passwords do not match.'
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters.'
+      });
+    }
+
+    const resetTokenHash = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken: resetTokenHash,
+      resetPasswordExpires: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Reset token is invalid or has expired.'
+      });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: 'Password reset successful.'
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
 };
 
 export const googleAuth = async (req, res) => {

@@ -8,6 +8,7 @@ import Contact from './User/Contact'
 import CheckOut from './User/CheckOut'
 import OrderSuccess from './User/OrderSucess'
 import AuthCallback from './User/AuthCallback'
+import ResetPassword from './User/ResetPassword'
 import AdminLayout from '../layouts/AdminLayout'
 import MainLayout from '../layouts/MainLayout'
 import Footer from '../components/Footer'
@@ -100,6 +101,12 @@ const authCallbackRoute = createRoute({
   component: withMainLayout(AuthCallback),
 });
 
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/reset-password/$token',
+  component: withMainLayout(ResetPassword),
+});
+
 // Admin routes with AdminLayout
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -147,6 +154,7 @@ const routeTree = rootRoute.addChildren([
   adminOrderDetailsRoute,
   adminCategoriesRoute,
   authCallbackRoute,
+  resetPasswordRoute,
 ])
 
 export const router = createRouter({ routeTree })

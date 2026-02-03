@@ -75,7 +75,7 @@ export const useProduct = (productId) => {
   );
 
   return {
-    product: data?.data,
+    product: data,
     loading: isLoading,
     error: error?.message || error?.response?.data?.message || null,
     mutate
