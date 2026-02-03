@@ -83,20 +83,6 @@ const Navbar = () => {
             >
               Contact
             </Link>
-            <Link
-              to="/cart"
-              className="relative text-dark-700 dark:text-dark-200 hover:text-wine-500 dark:hover:text-primary-400 transition-colors"
-              activeProps={{
-                className: "text-wine-500 dark:text-primary-400 font-semibold"
-              }}
-            >
-              Cart
-              {cart?.totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-wine-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                  {cart.totalItems}
-                </span>
-              )}
-            </Link>
           
             {isAuthenticated && isAdmin && (
               <a href="/admin/dashboard" className="text-dark-700 dark:text-dark-300 hover:text-primary-500 transition-colors">
@@ -266,16 +252,6 @@ const Navbar = () => {
                 onClick={closeMobileMenu}
               >
                 Contact
-              </Link>
-              <Link 
-                to="/cart" 
-                className="block px-3 py-2 text-dark-700 dark:text-dark-200 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
-                activeProps={{
-                  className: "text-wine-500 dark:text-primary-400 font-semibold"
-                }}
-                onClick={closeMobileMenu}
-              >
-                Cart
               </Link>
 
               {isAuthenticated && isAdmin && (
