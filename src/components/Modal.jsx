@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
+import { AlertCircle, Gem, Image, Package, ShieldCheck, Tag, Truck } from 'lucide-react'
 import Button from './Button'
 import Input from './Input'
 import { useAuth } from '../hooks/useAuth'
@@ -29,6 +30,44 @@ export const ModalProvider = ({ children }) => {
       {children}
       <ModalContainer />
     </ModalContext.Provider>
+  )
+}
+
+export const SimpleModal = ({ onClose, children }) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
+
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
+      <div
+        className="fixed inset-0"
+        onClick={onClose}
+        role="button"
+        tabIndex={0}
+        aria-label="Close modal"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            onClose()
+          }
+        }}
+      />
+      <div className="relative bg-white dark:bg-dark-800 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto max-w-md w-full">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-dark-500 hover:text-dark-700 dark:text-dark-400 dark:hover:text-dark-200 text-2xl z-10"
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+        <div className="p-6">{children}</div>
+      </div>
+    </div>,
+    document.body
   )
 }
 

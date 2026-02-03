@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import Modal from '../../components/Modal';
+import { SimpleModal } from '../../components/Modal';
 import { categoryAPI } from '../../features/categories/CategoryAPI';
 import Spinner from '../../components/Spinner';
 
@@ -228,87 +228,85 @@ const ManageCategories = () => {
       </div>
 
       {isModalOpen && (
-        <Modal onClose={handleCloseModal}>
-          <div className="w-full max-w-md">
-            <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white mb-6">
-              {editingId ? 'Edit Category' : 'Add Category'}
-            </h2>
+        <SimpleModal onClose={handleCloseModal}>
+          <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white mb-6">
+            {editingId ? 'Edit Category' : 'Add Category'}
+          </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
-                  Category Name *
-                </label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Rings, Necklaces"
-                  required
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
+                Category Name *
+              </label>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="e.g., Rings, Necklaces"
+                required
+              />
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Brief category description"
-                  rows="3"
-                  className="w-full px-3 py-2 border border-dark-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-dark-900 dark:text-white"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Brief category description"
+                rows="3"
+                className="w-full px-3 py-2 border border-dark-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-dark-900 dark:text-white"
+              />
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
-                  Status
-                </label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-dark-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-dark-900 dark:text-white"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-dark-700 dark:text-dark-300 mb-2">
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-dark-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-700 text-dark-900 dark:text-white"
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
 
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="featured"
-                  checked={formData.featured}
-                  onChange={handleInputChange}
-                  className="w-4 h-4 rounded border-dark-300"
-                  id="featured"
-                />
-                <label htmlFor="featured" className="ml-2 text-sm text-dark-700 dark:text-dark-300">
-                  Mark as featured
-                </label>
-              </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="featured"
+                checked={formData.featured}
+                onChange={handleInputChange}
+                className="w-4 h-4 rounded border-dark-300"
+                id="featured"
+              />
+              <label htmlFor="featured" className="ml-2 text-sm text-dark-700 dark:text-dark-300">
+                Mark as featured
+              </label>
+            </div>
 
-              <div className="flex gap-3 justify-end mt-6">
-                <Button
-                  variant="ghost"
-                  onClick={handleCloseModal}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                >
-                  {editingId ? 'Update' : 'Create'} Category
-                </Button>
-              </div>
-            </form>
-          </div>
-        </Modal>
+            <div className="flex gap-3 justify-end mt-6">
+              <Button
+                variant="ghost"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+              >
+                {editingId ? 'Update' : 'Create'} Category
+              </Button>
+            </div>
+          </form>
+        </SimpleModal>
       )}
     </>
   );
