@@ -19,5 +19,8 @@ router.get('/google', googleAuth);
 router.get('/google/callback', googleCallback);
 router.get('/me', protect, getMe);
 router.put('/updatedetails', protect, updateDetails);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:token', resetPassword);
+router.get('/google', googleAuth);
 
 export default router;

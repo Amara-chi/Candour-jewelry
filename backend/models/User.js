@@ -44,6 +44,12 @@ const userSchema = new mongoose.Schema({
     zipCode: String,
     country: String
   },
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpire: {
+    type: Date
+  },
   isActive: {
     type: Boolean,
     default: true
