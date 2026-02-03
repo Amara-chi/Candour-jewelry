@@ -16,6 +16,7 @@ const Home = () => {
   const { categories, loading: categoriesLoading } = useCategories();
   const { products, loading: productsLoading } = useProducts({
     limit: 6,
+    featured: true,
     status: 'active',
     sort: '-createdAt'
   });
@@ -24,7 +25,7 @@ const Home = () => {
   const socialScrollRef = useRef(null);
 
   const featuredProducts = useMemo(() => {
-    return products.slice(0, 6);
+    return products.filter((product) => product.featured).slice(0, 6);
   }, [products]);
 
   const testimonials = [
