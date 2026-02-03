@@ -1,5 +1,11 @@
 import Category from '../models/Category.js';
 
+const generateSlug = (name) => name
+  .toLowerCase()
+  .replace(/[^a-z0-9 -]/g, '')
+  .replace(/\s+/g, '-')
+  .replace(/-+/g, '-');
+
 // @desc    Get all categories
 // @route   GET /api/categories
 // @access  Public
@@ -75,6 +81,10 @@ export const getCategory = async (req, res) => {
 // @access  Private/Admin
 export const createCategory = async (req, res) => {
   try {
+    if (req.body?.name && !req.body?.slug) {
+      req.body.slug = generateSlug(req.body.name);
+    }
+
     const category = await Category.create(req.body);
 
     res.status(201).json({
@@ -102,6 +112,10 @@ export const createCategory = async (req, res) => {
 // @access  Private/Admin
 export const updateCategory = async (req, res) => {
   try {
+    if (req.body?.name) {
+      req.body.slug = generateSlug(req.body.name);
+    }
+
     const category = await Category.findByIdAndUpdate(
       req.params.id,
       req.body,
