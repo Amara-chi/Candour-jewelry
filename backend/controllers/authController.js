@@ -1,13 +1,43 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import { sendPasswordResetEmail } from '../utils/emailService.js';
 
 // Generate JWT Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
+};
+
+const buildGoogleAuthUrl = () => {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+
+  if (!clientId || !redirectUri) {
+    return null;
+  }
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ].join(' '),
+    access_type: 'offline',
+    prompt: 'consent'
+  });
+
+  return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+};
+
+const getFrontendUrl = (req) => {
+  return (
+    process.env.FRONTEND_URL ||
+    req.headers.origin ||
+    'https://candour-jewelry.vercel.app'
+  );
 };
 
 // Register new user
@@ -87,6 +117,124 @@ export const login = async (req, res) => {
   }
 };
 
+// Forgot password (placeholder until email provider is configured)
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email is required'
+    });
+  }
+
+  res.json({
+    success: true,
+    message: 'If an account exists, we sent password reset instructions to your email.'
+  });
+};
+
+export const googleAuth = async (req, res) => {
+  const authUrl = buildGoogleAuthUrl();
+
+  if (!authUrl) {
+    return res.status(501).json({
+      success: false,
+      message: 'Google OAuth is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_REDIRECT_URI.'
+    });
+  }
+
+  return res.redirect(authUrl);
+};
+
+export const googleCallback = async (req, res) => {
+  const code = req.query.code;
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+
+  if (!code) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing OAuth code.'
+    });
+  }
+
+  if (!clientId || !clientSecret || !redirectUri) {
+    return res.status(501).json({
+      success: false,
+      message: 'Google OAuth is not configured. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REDIRECT_URI.'
+    });
+  }
+
+  const frontendUrl = getFrontendUrl(req);
+
+  try {
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        code,
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code'
+      })
+    });
+
+    if (!tokenResponse.ok) {
+      await tokenResponse.text();
+      return res.redirect(
+        `${frontendUrl}/auth/callback?error=${encodeURIComponent('Unable to authenticate with Google.')}`
+      );
+    }
+
+    const tokenData = await tokenResponse.json();
+    const idToken = tokenData.id_token;
+
+    if (!idToken) {
+      return res.redirect(
+        `${frontendUrl}/auth/callback?error=${encodeURIComponent('Missing Google ID token.')}`
+      );
+    }
+
+    const profileResponse = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
+    );
+    const profile = await profileResponse.json();
+
+    if (!profile?.email) {
+      return res.redirect(
+        `${frontendUrl}/auth/callback?error=${encodeURIComponent('Unable to retrieve Google profile.')}`
+      );
+    }
+
+    let user = await User.findOne({ email: profile.email });
+
+    if (!user) {
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      user = await User.create({
+        name: profile.name || profile.email.split('@')[0],
+        email: profile.email,
+        password: randomPassword,
+        avatar: profile.picture || ''
+      });
+    }
+
+    const token = generateToken(user._id);
+
+    return res.redirect(
+      `${frontendUrl}/auth/callback?token=${encodeURIComponent(token)}`
+    );
+  } catch {
+    return res.redirect(
+      `${frontendUrl}/auth/callback?error=${encodeURIComponent('Google login failed.')}`
+    );
+  }
+};
+
 // Get current logged in user
 export const getMe = async (req, res) => {
   try {
@@ -130,132 +278,4 @@ export const updateDetails = async (req, res) => {
       message: error.message
     });
   }
-};
-
-// Request password reset
-export const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email is required'
-      });
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() });
-
-    if (!user) {
-      return res.json({
-        success: true,
-        message: 'If an account exists, we sent password reset instructions to your email.'
-      });
-    }
-
-    const resetToken = crypto.randomBytes(20).toString('hex');
-    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
-
-    user.resetPasswordToken = resetTokenHash;
-    user.resetPasswordExpire = Date.now() + 60 * 60 * 1000;
-
-    await user.save({ validateBeforeSave: false });
-
-    const frontendUrl = process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app';
-    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
-
-    const emailResult = await sendPasswordResetEmail(user.email, resetLink);
-
-    if (!emailResult.success) {
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-      await user.save({ validateBeforeSave: false });
-
-      return res.status(500).json({
-        success: false,
-        message: emailResult.error || 'Unable to send reset email. Please try again later.'
-      });
-    }
-
-    return res.json({
-      success: true,
-      message: 'If an account exists, we sent password reset instructions to your email.'
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-// Reset password
-export const resetPassword = async (req, res) => {
-  try {
-    const { token } = req.params;
-    const { password } = req.body;
-
-    if (!password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password is required'
-      });
-    }
-
-    const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
-
-    const user = await User.findOne({
-      resetPasswordToken: resetTokenHash,
-      resetPasswordExpire: { $gt: Date.now() }
-    }).select('+password');
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid or expired reset token'
-      });
-    }
-
-    user.password = password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-
-    await user.save();
-
-    return res.json({
-      success: true,
-      message: 'Password reset successfully'
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-// Placeholder for Google OAuth until configured
-export const googleAuth = (req, res) => {
-  const frontendUrl = process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app';
-  res.status(200).send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Google Login Unavailable</title>
-        <meta charset="utf-8" />
-        <style>
-          body { font-family: Arial, sans-serif; background: #f9fafb; color: #111827; padding: 40px; }
-          .card { max-width: 520px; margin: 0 auto; background: white; border-radius: 12px; padding: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
-          a { color: #b8860b; text-decoration: none; font-weight: 600; }
-        </style>
-      </head>
-      <body>
-        <div class="card">
-          <h1>Google sign-in isn't configured yet.</h1>
-          <p>Please use email and password to sign in for now.</p>
-          <p><a href="${frontendUrl}">Return to Candour Jewelry</a></p>
-        </div>
-      </body>
-    </html>
-  `);
 };
