@@ -4,6 +4,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import { categoryAPI } from '../../features/categories/CategoryAPI';
+import Spinner from '../../components/Spinner';
 
 const ManageCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -157,9 +158,7 @@ const ManageCategories = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-          </div>
+          <Spinner className="py-12" size={52} />
         ) : (
           <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg overflow-hidden">
             {filteredCategories.length === 0 ? (

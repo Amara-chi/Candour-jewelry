@@ -9,6 +9,8 @@ import candour from '../../assets/candour.png';
 import { SEOHead } from '../../components/SEOHead';
 import { useCategories } from '../../hooks/useCategories';
 import { useProducts } from '../../hooks/useProducts';
+import Spinner from '../../components/Spinner';
+import { Gem, Heart, ShieldCheck } from 'lucide-react';
 
 const Home = () => {
   const { categories, loading: categoriesLoading } = useCategories();
@@ -204,9 +206,7 @@ const Home = () => {
     </div>
 
     {categoriesLoading ? (
-      <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-      </div>
+      <Spinner className="py-12" size={52} />
     ) : categories.length === 0 ? (
       <div className="text-center py-12">
         <p className="text-dark-600 dark:text-dark-300">No categories available</p>
@@ -224,8 +224,8 @@ const Home = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-600 dark:to-dark-500">
-                    {category.icon || '💎'}
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-600 dark:to-dark-500">
+                    <Gem className="h-12 w-12 text-primary-500" />
                   </div>
                 )}
               </div>
@@ -263,9 +263,7 @@ const Home = () => {
         </div>
 
         {productsLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-          </div>
+          <Spinner className="py-12" size={52} />
         ) : featuredProducts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-dark-600 dark:text-dark-300">No featured products available</p>
@@ -399,19 +397,19 @@ const Home = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {[
         {
-          icon: '🔒',
+          icon: ShieldCheck,
           title: 'Secure Shipping',
           desc: 'Insured delivery with discreet, luxury packaging.',
           back: 'Tracked, insured, and styled to delight from unboxing to wear.'
         },
         {
-          icon: '💎',
+          icon: Gem,
           title: 'Lifetime Warranty',
           desc: 'Guaranteed quality, craftsmanship, and aftercare.',
           back: 'Complimentary cleaning and lifetime care guidance.'
         },
         {
-          icon: '❤️',
+          icon: Heart,
           title: 'Ethically Sourced',
           desc: 'Conflict-free diamonds and responsibly sourced gems.',
           back: 'We partner with trusted suppliers who value transparency.'
@@ -420,7 +418,9 @@ const Home = () => {
         <div key={index} className="flip-card h-full">
           <div className="flip-card-inner h-full">
             <div className="flip-card-front rounded-2xl border border-primary-100/60 dark:border-dark-600 bg-white dark:bg-dark-700 p-8 shadow-sm">
-              <div className="text-4xl mb-5">{item.icon}</div>
+              <div className="text-primary-500 mb-5">
+                <item.icon className="h-10 w-10" />
+              </div>
               <h3 className="text-xl font-semibold mb-3 text-dark-900 dark:text-white">{item.title}</h3>
               <p className="text-gray-600 dark:text-gray-300">{item.desc}</p>
             </div>

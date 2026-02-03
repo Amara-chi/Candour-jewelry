@@ -5,11 +5,15 @@ import { getUsers, createUser, updateUser, deleteUser } from '../../features/use
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Card from '../../components/Card';
+import Spinner from '../../components/Spinner';
+import { AlertTriangle, Users as UsersIcon } from 'lucide-react';
 
-      <SEOHead title="Manage Users - Admin" description="View, create, edit, and manage user accounts and permissions." />
 const Users = () => {
   const dispatch = useDispatch();
   const { items: users, loading, error } = useSelector((state) => state.user || state.users || { items: [] });
+  const displayError = typeof error === 'string' && error.includes('Identifier')
+    ? 'Unable to load users right now. Please refresh the page or try again shortly.'
+    : error;
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -62,6 +66,7 @@ const Users = () => {
 
   return (
     <div className="space-y-4 p-4 sm:p-6 w-full min-h-screen bg-gray-50 dark:bg-dark-900">
+      <SEOHead title="Manage Users - Admin" description="View, create, edit, and manage user accounts and permissions." />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
@@ -87,18 +92,19 @@ const Users = () => {
       </div>
 
       {/* Error Display */}
-      {error && (
+      {displayError && (
         <div className="bg-red-100 dark:bg-wine-500 border border-red-300 dark:border-wine-600 text-red-800 dark:text-white p-3 sm:p-4 rounded-lg text-sm sm:text-base">
           <div className="flex items-center">
-            <span className="mr-2">⚠️</span>
-            {error}
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            {displayError}
           </div>
         </div>
       )}
 
       {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center py-8">
+        <div className="flex flex-col items-center justify-center py-8 gap-3">
+          <Spinner size={40} />
           <div className="text-gray-600 dark:text-white text-lg">Loading users...</div>
         </div>
       )}
@@ -106,7 +112,7 @@ const Users = () => {
       {/* Empty State */}
       {!loading && users.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">👥</div>
+          <UsersIcon className="h-14 w-14 text-primary-500 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No users found</h3>
           <p className="text-gray-500 dark:text-dark-400 mb-6">Get started by creating your first user</p>
           <Button 

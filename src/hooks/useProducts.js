@@ -4,10 +4,10 @@ import { productAPI } from '../features/product/productAPI';
 import { setFilters } from '../features/product/productSlice';
 
 const fetcher = async (url) => {
-  const path = url.replace('/api', '');
-  
   try {
-    const response = await productAPI.getProducts();
+    const searchParams = new URL(url, window.location.origin).searchParams;
+    const params = Object.fromEntries(searchParams.entries());
+    const response = await productAPI.getProducts(params);
     return response;
   } catch (error) {
     console.error('Fetch error:', error);

@@ -5,6 +5,8 @@ import { useCart } from '../../hooks/useCart';
 import { LazyImage } from '../../components/LazyImage';
 import Button from '../../components/Button';
 import { SEOHead } from '../../components/SEOHead';
+import Spinner from '../../components/Spinner';
+import { AlertTriangle, Gem, ShoppingBag } from 'lucide-react';
 
 const CartPage = () => {
   const { cart, getCart, updateQuantity, removeItem, clearCart: clear, loading, error } = useCart();
@@ -61,7 +63,7 @@ const CartPage = () => {
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <Spinner className="mb-4" size={52} />
             <p className="text-dark-600 dark:text-dark-300">Loading your cart...</p>
           </div>
         </div>
@@ -74,7 +76,7 @@ const CartPage = () => {
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="text-6xl mb-4">😞</div>
+            <AlertTriangle className="h-14 w-14 text-wine-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-dark-900 dark:text-white mb-2">
               Failed to load cart
             </h2>
@@ -103,7 +105,7 @@ const CartPage = () => {
         {!cart.items || cart.items.length === 0 ? (
           <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
             <div className="text-center py-12">
-              <span className="text-6xl mb-4 block">🛒</span>
+              <ShoppingBag className="h-14 w-14 text-primary-500 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-dark-700 dark:text-dark-300 mb-2">
                 Your cart is empty
               </h3>
@@ -137,7 +139,7 @@ const CartPage = () => {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-2xl">💎</span>
+                          <Gem className="h-6 w-6 text-primary-500" />
                         </div>
                       )}
                     </div>
@@ -165,7 +167,7 @@ const CartPage = () => {
                       </button>
                       <span className="w-12 text-center font-medium text-dark-900 dark:text-white">
                         {actionLoading === item._id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500 mx-auto"></div>
+                          <Spinner size={16} />
                         ) : (
                           item.quantity
                         )}
