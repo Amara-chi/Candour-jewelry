@@ -61,24 +61,10 @@ const Dashboard = () => {
     return orderDate.toDateString() === today.toDateString()
   })
 
+  const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+  const averageOrderValue = orders.length ? totalRevenue / orders.length : 0
   const deliveredOrders = orders.filter(order => order.status === 'delivered').length
   const fulfillmentRate = orders.length ? Math.round((deliveredOrders / orders.length) * 100) : 0
-
-  const rangeOptions = [
-    { value: '7d', label: 'Last 7 days', days: 7 },
-    { value: '30d', label: 'Last 30 days', days: 30 },
-    { value: '90d', label: 'Last 90 days', days: 90 },
-    { value: 'all', label: 'All time', days: null },
-  ]
-  const activeRange = rangeOptions.find(option => option.value === revenueRange) || rangeOptions[1]
-  const cutoffDate = activeRange.days
-    ? new Date(new Date().setDate(new Date().getDate() - activeRange.days))
-    : null
-  const filteredOrders = cutoffDate
-    ? orders.filter(order => new Date(order.createdAt) >= cutoffDate)
-    : orders
-  const filteredRevenueTotal = filteredOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
-  const filteredAverageOrder = filteredOrders.length ? filteredRevenueTotal / filteredOrders.length : 0
 
   const statusCounts = orders.reduce((acc, order) => {
     const status = order.status || 'pending'
@@ -86,33 +72,23 @@ const Dashboard = () => {
     return acc
   }, {})
 
-  const revenueByStatus = filteredOrders.reduce((acc, order) => {
-    const status = order.status || 'pending'
-    acc[status] = (acc[status] || 0) + (order.totalAmount || 0)
+  const revenueByDay = orders.reduce((acc, order) => {
+    const dayKey = new Date(order.createdAt).toDateString()
+    acc[dayKey] = (acc[dayKey] || 0) + (order.totalAmount || 0)
     return acc
   }, {})
 
-  const revenueSegments = [
-    { label: 'Delivered', key: 'delivered', color: '#22c55e' },
-    { label: 'Shipped', key: 'shipped', color: '#6366f1' },
-    { label: 'Confirmed', key: 'confirmed', color: '#38bdf8' },
-    { label: 'Pending', key: 'pending', color: '#facc15' },
-    { label: 'Cancelled', key: 'cancelled', color: '#f87171' },
-  ].map((segment) => {
-    const value = revenueByStatus[segment.key] || 0
-    return { ...segment, value }
+  const revenueSeries = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (6 - index))
+    const key = date.toDateString()
+    return {
+      label: date.toLocaleDateString(undefined, { weekday: 'short' }),
+      value: revenueByDay[key] || 0
+    }
   })
 
-  const revenueTotal = revenueSegments.reduce((sum, segment) => sum + segment.value, 0)
-  const revenueGradient = revenueTotal
-    ? revenueSegments.reduce((acc, segment, index) => {
-      const start = acc.offset
-      const share = (segment.value / revenueTotal) * 360
-      const end = start + share
-      acc.stops.push(`${segment.color} ${start}deg ${end}deg`)
-      return { stops: acc.stops, offset: end }
-    }, { stops: [], offset: 0 }).stops.join(', ')
-    : '#e5e7eb 0deg 360deg'
+  const maxRevenue = Math.max(...revenueSeries.map(item => item.value), 0)
 
   const stats = [
     { label: 'Total Products', value: products.length, color: 'primary' },
@@ -146,59 +122,33 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2 bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start justify-between mb-6">
               <div>
-                <p className="text-sm text-dark-500 dark:text-dark-300">Revenue Breakdown</p>
+                <p className="text-sm text-dark-500 dark:text-dark-300">Revenue Trend</p>
                 <h2 className="text-2xl font-bold text-dark-900 dark:text-white">
-                  ${filteredRevenueTotal.toFixed(2)}
+                  ${totalRevenue.toFixed(2)}
                 </h2>
-                <p className="text-xs text-dark-400 dark:text-dark-500">By order status</p>
-                <div className="mt-4">
-                  <label className="text-xs uppercase tracking-wide text-dark-400 dark:text-dark-500">Time Range</label>
-                  <select
-                    value={revenueRange}
-                    onChange={(event) => setRevenueRange(event.target.value)}
-                    className="mt-2 w-full rounded-lg border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-700 px-3 py-2 text-sm text-dark-700 dark:text-dark-100"
-                  >
-                    {rangeOptions.map(option => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mt-4 space-y-2">
-                  {revenueSegments.map((segment) => {
-                    const share = revenueTotal ? Math.round((segment.value / revenueTotal) * 100) : 0
-                    return (
-                      <div key={segment.key} className="flex items-center justify-between text-sm text-dark-600 dark:text-dark-300">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="inline-flex h-2.5 w-2.5 rounded-full"
-                            style={{ backgroundColor: segment.color }}
-                          />
-                          <span>{segment.label}</span>
-                        </div>
-                        <span>${segment.value.toFixed(2)} · {share}%</span>
-                      </div>
-                    )
-                  })}
-                </div>
+                <p className="text-xs text-dark-400 dark:text-dark-500">Last 7 days</p>
               </div>
-              <div className="flex flex-col items-center gap-4">
-                <div
-                  className="h-44 w-44 rounded-full flex items-center justify-center"
-                  style={{ background: `conic-gradient(${revenueGradient})` }}
-                >
-                  <div className="h-28 w-28 rounded-full bg-white dark:bg-dark-800 flex items-center justify-center text-center">
-                    <div>
-                      <p className="text-xs text-dark-500 dark:text-dark-300">Avg Order</p>
-                      <p className="text-lg font-semibold text-dark-900 dark:text-white">
-                        ${filteredAverageOrder.toFixed(2)}
-                      </p>
-                    </div>
+              <div className="text-right">
+                <p className="text-xs text-dark-500 dark:text-dark-300">Avg Order</p>
+                <p className="text-lg font-semibold text-dark-900 dark:text-white">
+                  ${averageOrderValue.toFixed(2)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-end gap-3 h-40">
+              {revenueSeries.map((item) => (
+                <div key={item.label} className="flex-1 flex flex-col items-center gap-2">
+                  <div className="w-full bg-gray-100 dark:bg-dark-700 rounded-full h-28 flex items-end">
+                    <div
+                      className="w-full rounded-full bg-gradient-to-t from-primary-500 to-wine-400"
+                      style={{ height: maxRevenue ? `${Math.max((item.value / maxRevenue) * 100, 8)}%` : '8%' }}
+                    />
                   </div>
+                  <span className="text-xs text-dark-500 dark:text-dark-300">{item.label}</span>
                 </div>
-                <p className="text-xs text-dark-400 dark:text-dark-500">Revenue share · {activeRange.label}</p>
-              </div>
+              ))}
             </div>
           </div>
 

@@ -7,8 +7,16 @@ import {
   deleteProduct,
   deleteProductImage
 } from '../controllers/productController.js';
+import Product from '../models/Product.js';
 import { protect, authorize } from '../middleware/auth.js';
 import upload from '../middleware/uploadMiddleware.js';
+
+const maybeUploadImages = (req, res, next) => {
+  if (req.is('multipart/form-data')) {
+    return upload.array('images', 10)(req, res, next);
+  }
+  return next();
+};
 
 const router = express.Router();
 
@@ -17,8 +25,8 @@ router.get('/', getProducts);
 router.get('/:id', getProduct);
 
 // Protected admin routes
-router.post('/', protect, authorize('admin'), upload.array('images', 10), createProduct);
-router.put('/:id', protect, authorize('admin'), upload.array('images', 10), updateProduct);
+router.post('/', protect, authorize('admin'), maybeUploadImages, createProduct);
+router.put('/:id', protect, authorize('admin'), maybeUploadImages, updateProduct);
 router.delete('/:id', protect, authorize('admin'), deleteProduct);
 router.delete('/:id/images/:imageId', protect, authorize('admin'), deleteProductImage);
 

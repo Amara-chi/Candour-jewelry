@@ -58,9 +58,9 @@ const generateSlug = (name) => name
   .replace(/\s+/g, '-')
   .replace(/-+/g, '-');
 
-// Generate slug before saving
-categorySchema.pre('save', function(next) {
-  if (this.isModified('name')) {
+// Generate slug before validation so required slug passes
+categorySchema.pre('validate', function(next) {
+  if ((this.isModified('name') || !this.slug) && this.name) {
     this.slug = generateSlug(this.name);
   }
   next();

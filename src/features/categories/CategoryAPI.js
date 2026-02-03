@@ -20,7 +20,7 @@ export const categoryAPI = {
   // Get all categories
   getCategories: async (params = {}) => {
     const response = await api.get('/categories', { params });
-    return response.data;
+    return response.data?.data || [];
   },
 
   // Get single category

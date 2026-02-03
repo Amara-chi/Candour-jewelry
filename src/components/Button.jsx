@@ -7,7 +7,7 @@ const Button = ({
   className = '', 
   ...props 
 }) => {
-  const baseClasses = 'relative overflow-hidden font-semibold rounded-lg transition-all duration-300 group'
+  const baseClasses = 'relative overflow-hidden font-semibold rounded-lg transition-all duration-300 group/button'
 
   const variants = {
     primary: 'text-primary-500 hover:text-white border border-primary-500 bg-transparent',
@@ -61,8 +61,8 @@ const Button = ({
           ${getHoverBackgroundColor()} 
           transform origin-bottom
           ${variant.includes('reverse') 
-            ? 'scale-y-100 group-hover:scale-y-0'  // drain out
-            : 'scale-y-0 group-hover:scale-y-100'} // fill up
+            ? 'scale-y-100 group-hover/button:scale-y-0'  // drain out
+            : 'scale-y-0 group-hover/button:scale-y-100'} // fill up
           transition-transform duration-300 ease-in-out
           z-10
         `} 
