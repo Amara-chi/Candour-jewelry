@@ -21,7 +21,7 @@ const ManageProducts = () => {
     filters,
     updateFilters,
     mutate
-  } = useProducts({ sort: sortBy, status: 'all' });
+  } = useProducts({ sort: sortBy });
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
