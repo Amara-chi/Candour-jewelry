@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [orders, setOrders] = useState([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [ordersLoading, setOrdersLoading] = useState(true)
+  const [revenueRange, setRevenueRange] = useState('30d')
 
   useEffect(() => {
     dispatch(getUsers())
