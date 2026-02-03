@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { sendAdminPromotionEmail } from '../utils/emailService.js';
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -96,7 +97,7 @@ export const createUser = async (req, res) => {
 // @access  Private/Admin
 export const updateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).select('+password');
 
     if (!user) {
       return res.status(404).json({
@@ -105,14 +106,31 @@ export const updateUser = async (req, res) => {
       });
     }
 
-    const { name, email, role, isActive } = req.body;
+    const { name, email, role, isActive, password } = req.body;
+    const wasAdmin = user.role === 'admin';
+    const isPromotingToAdmin = !wasAdmin && role === 'admin';
+    const passwordToSet = password || (isPromotingToAdmin ? 'admin123' : null);
 
     user.name = name || user.name;
     user.email = email || user.email;
     user.role = role || user.role;
     if (typeof isActive !== 'undefined') user.isActive = isActive;
+    if (passwordToSet) user.password = passwordToSet;
 
     const updatedUser = await user.save();
+    const isNowAdmin = updatedUser.role === 'admin';
+
+    if (!wasAdmin && isNowAdmin) {
+      try {
+        await sendAdminPromotionEmail(
+          updatedUser.email,
+          updatedUser.name,
+          passwordToSet ? { password: passwordToSet } : undefined
+        );
+      } catch (emailError) {
+        console.log('Admin promotion email failed:', emailError.message);
+      }
+    }
 
     res.json({
       success: true,
