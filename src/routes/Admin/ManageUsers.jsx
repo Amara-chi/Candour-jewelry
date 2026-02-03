@@ -10,6 +10,9 @@ import Spinner from '../../components/Spinner';
 const Users = () => {
   const dispatch = useDispatch();
   const { items: users, loading, error } = useSelector((state) => state.user || state.users || { items: [] });
+  const displayError = typeof error === 'string' && error.includes('Identifier')
+    ? 'Unable to load users right now. Please refresh the page or try again shortly.'
+    : error;
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -88,11 +91,11 @@ const Users = () => {
       </div>
 
       {/* Error Display */}
-      {error && (
+      {displayError && (
         <div className="bg-red-100 dark:bg-wine-500 border border-red-300 dark:border-wine-600 text-red-800 dark:text-white p-3 sm:p-4 rounded-lg text-sm sm:text-base">
           <div className="flex items-center">
-            <span className="mr-2">⚠️</span>
-            {error}
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            {displayError}
           </div>
         </div>
       )}
@@ -108,7 +111,7 @@ const Users = () => {
       {/* Empty State */}
       {!loading && users.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">👥</div>
+          <UsersIcon className="h-14 w-14 text-primary-500 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No users found</h3>
           <p className="text-gray-500 dark:text-dark-400 mb-6">Get started by creating your first user</p>
           <Button 
