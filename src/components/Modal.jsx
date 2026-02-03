@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { useCategories } from '../hooks/useCategories'
 import { createProduct, updateProduct, deleteProduct } from '../features/product/productSlice'
 import Spinner from './Spinner'
+import { API_URL } from '../config/api'
 
 // Modal Context
 const ModalContext = React.createContext()
@@ -88,6 +89,8 @@ const ModalContent = ({ type, data }) => {
         return <LoginModal data={data} />
       case 'register':
         return <RegisterModal data={data} />
+      case 'forgot-password':
+        return <ForgotPasswordModal data={data} />
       case 'product-form':
         return <ProductFormModal data={data} />
       case 'confirm-delete':
@@ -706,7 +709,8 @@ const LoginModal = ({ data }) => {
   const { login, loading, error, clearError } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    remember: true
   })
   const [errors, setErrors] = useState({})
 
@@ -715,14 +719,15 @@ const LoginModal = ({ data }) => {
   }, [clearError])
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     })
-    if (errors[e.target.name]) {
+    if (errors[name]) {
       setErrors({
         ...errors,
-        [e.target.name]: ''
+        [name]: ''
       })
     }
   }
@@ -747,9 +752,18 @@ const LoginModal = ({ data }) => {
     }
   }
 
+  const handleGoogleAuth = () => {
+    window.location.href = `${API_URL}/auth/google`
+  }
+
   const switchToRegister = () => {
     closeModal()
     openModal('register')
+  }
+
+  const handleForgotPassword = () => {
+    closeModal()
+    openModal('forgot-password', { email: formData.email })
   }
 
   return (
@@ -765,6 +779,44 @@ const LoginModal = ({ data }) => {
         </div>
       )}
       
+      <div className="space-y-3">
+        <button
+          type="button"
+          onClick={handleGoogleAuth}
+          className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-dark-200 dark:border-dark-700 px-4 py-2 text-sm font-semibold text-dark-700 dark:text-dark-200 hover:border-primary-300 hover:text-primary-500 dark:hover:border-primary-500 transition-colors"
+        >
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <path
+              fill="#FFC107"
+              d="M43.611 20.083H42V20H24v8h11.303C33.35 32.656 29.038 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.969 3.031l5.657-5.657C34.037 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.651-.389-3.917Z"
+            />
+            <path
+              fill="#FF3D00"
+              d="M6.306 14.691 12.01 18.87C13.541 15.177 18.114 12 24 12c3.059 0 5.842 1.154 7.969 3.031l5.657-5.657C34.037 6.053 29.268 4 24 4c-7.696 0-14.438 4.315-17.694 10.691Z"
+            />
+            <path
+              fill="#4CAF50"
+              d="M24 44c5.166 0 9.86-1.977 13.409-5.197l-6.185-5.231C29.225 35.091 26.715 36 24 36c-5.019 0-9.312-3.324-11.279-7.936l-5.685 4.379C10.247 39.556 16.623 44 24 44Z"
+            />
+            <path
+              fill="#1976D2"
+              d="M43.611 20.083H42V20H24v8h11.303a12.03 12.03 0 0 1-4.079 5.572l.002-.001 6.185 5.231C35.676 40.384 44 36 44 24c0-1.341-.138-2.651-.389-3.917Z"
+            />
+          </svg>
+          Continue with Google
+        </button>
+
+        <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-dark-400">
+          <span className="h-px flex-1 bg-dark-200 dark:bg-dark-700" />
+          or
+          <span className="h-px flex-1 bg-dark-200 dark:bg-dark-700" />
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Email Address"
@@ -787,6 +839,26 @@ const LoginModal = ({ data }) => {
           error={errors.password}
           required
         />
+
+        <div className="flex items-center justify-between text-sm">
+          <label className="flex items-center gap-2 text-dark-600 dark:text-dark-300">
+            <input
+              type="checkbox"
+              name="remember"
+              checked={formData.remember}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-dark-300 text-primary-500 focus:ring-primary-400"
+            />
+            Remember me
+          </label>
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            className="text-primary-500 hover:text-primary-600 font-semibold"
+          >
+            Forgot password?
+          </button>
+        </div>
         
         <Button 
           type="submit" 
@@ -814,6 +886,111 @@ const LoginModal = ({ data }) => {
   )
 }
 
+const ForgotPasswordModal = ({ data }) => {
+  const { closeModal, openModal } = useModal()
+  const [email, setEmail] = useState(data?.email || '')
+  const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setMessage('')
+
+    if (!email) {
+      setError('Email is required')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      })
+
+      if (response.ok) {
+        setMessage('If an account exists, we sent password reset instructions to your email.')
+      } else {
+        let errorMessage = 'Unable to send reset link. Please try again.'
+        try {
+          const payload = await response.json()
+          if (payload?.message) {
+            errorMessage = payload.message
+          }
+        } catch (parseError) {
+          // Ignore JSON parse errors
+        }
+        setError(errorMessage)
+      }
+    } catch (requestError) {
+      setError('Unable to send reset link. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const switchToLogin = () => {
+    closeModal()
+    openModal('login')
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white text-center">
+        Reset Password
+      </h2>
+
+      {error && (
+        <div className="bg-wine-100 border border-wine-400 text-wine-700 px-4 py-3 rounded text-sm">
+          {error}
+        </div>
+      )}
+
+      {message && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded text-sm">
+          {message}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Email Address"
+          name="email"
+          type="email"
+          placeholder="your.email@example.com"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          error={error}
+          required
+        />
+
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full"
+          disabled={submitting}
+        >
+          {submitting ? 'Sending...' : 'Send Reset Link'}
+        </Button>
+      </form>
+
+      <div className="text-center pt-4 border-t border-dark-200 dark:border-dark-700">
+        <button
+          type="button"
+          onClick={switchToLogin}
+          className="text-primary-500 hover:text-primary-600 font-semibold"
+        >
+          Back to sign in
+        </button>
+      </div>
+    </div>
+  )
+}
 
 // Register Modal
 const RegisterModal = ({ data }) => {
@@ -879,6 +1056,10 @@ const RegisterModal = ({ data }) => {
     openModal('login')
   }
 
+  const handleGoogleAuth = () => {
+    window.location.href = `${API_URL}/auth/google`
+  }
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white text-center">
@@ -892,6 +1073,44 @@ const RegisterModal = ({ data }) => {
         </div>
       )}
       
+      <div className="space-y-3">
+        <button
+          type="button"
+          onClick={handleGoogleAuth}
+          className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-dark-200 dark:border-dark-700 px-4 py-2 text-sm font-semibold text-dark-700 dark:text-dark-200 hover:border-primary-300 hover:text-primary-500 dark:hover:border-primary-500 transition-colors"
+        >
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <path
+              fill="#FFC107"
+              d="M43.611 20.083H42V20H24v8h11.303C33.35 32.656 29.038 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.969 3.031l5.657-5.657C34.037 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.651-.389-3.917Z"
+            />
+            <path
+              fill="#FF3D00"
+              d="M6.306 14.691 12.01 18.87C13.541 15.177 18.114 12 24 12c3.059 0 5.842 1.154 7.969 3.031l5.657-5.657C34.037 6.053 29.268 4 24 4c-7.696 0-14.438 4.315-17.694 10.691Z"
+            />
+            <path
+              fill="#4CAF50"
+              d="M24 44c5.166 0 9.86-1.977 13.409-5.197l-6.185-5.231C29.225 35.091 26.715 36 24 36c-5.019 0-9.312-3.324-11.279-7.936l-5.685 4.379C10.247 39.556 16.623 44 24 44Z"
+            />
+            <path
+              fill="#1976D2"
+              d="M43.611 20.083H42V20H24v8h11.303a12.03 12.03 0 0 1-4.079 5.572l.002-.001 6.185 5.231C35.676 40.384 44 36 44 24c0-1.341-.138-2.651-.389-3.917Z"
+            />
+          </svg>
+          Sign up with Google
+        </button>
+
+        <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-dark-400">
+          <span className="h-px flex-1 bg-dark-200 dark:bg-dark-700" />
+          or
+          <span className="h-px flex-1 bg-dark-200 dark:bg-dark-700" />
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Full Name"
