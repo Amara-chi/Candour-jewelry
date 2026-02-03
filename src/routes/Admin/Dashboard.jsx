@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [orders, setOrders] = useState([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [ordersLoading, setOrdersLoading] = useState(true)
+  const [revenueRange, setRevenueRange] = useState('30d')
 
   useEffect(() => {
     dispatch(getUsers())
@@ -60,12 +61,62 @@ const Dashboard = () => {
     return orderDate.toDateString() === today.toDateString()
   })
 
-  const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+  const deliveredOrders = orders.filter(order => order.status === 'delivered').length
+  const fulfillmentRate = orders.length ? Math.round((deliveredOrders / orders.length) * 100) : 0
+
+  const rangeOptions = [
+    { value: '7d', label: 'Last 7 days', days: 7 },
+    { value: '30d', label: 'Last 30 days', days: 30 },
+    { value: '90d', label: 'Last 90 days', days: 90 },
+    { value: 'all', label: 'All time', days: null },
+  ]
+  const activeRange = rangeOptions.find(option => option.value === revenueRange) || rangeOptions[1]
+  const cutoffDate = activeRange.days
+    ? new Date(new Date().setDate(new Date().getDate() - activeRange.days))
+    : null
+  const filteredOrders = cutoffDate
+    ? orders.filter(order => new Date(order.createdAt) >= cutoffDate)
+    : orders
+  const filteredRevenueTotal = filteredOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+  const filteredAverageOrder = filteredOrders.length ? filteredRevenueTotal / filteredOrders.length : 0
+
+  const statusCounts = orders.reduce((acc, order) => {
+    const status = order.status || 'pending'
+    acc[status] = (acc[status] || 0) + 1
+    return acc
+  }, {})
+
+  const revenueByStatus = filteredOrders.reduce((acc, order) => {
+    const status = order.status || 'pending'
+    acc[status] = (acc[status] || 0) + (order.totalAmount || 0)
+    return acc
+  }, {})
+
+  const revenueSegments = [
+    { label: 'Delivered', key: 'delivered', color: '#22c55e' },
+    { label: 'Shipped', key: 'shipped', color: '#6366f1' },
+    { label: 'Confirmed', key: 'confirmed', color: '#38bdf8' },
+    { label: 'Pending', key: 'pending', color: '#facc15' },
+    { label: 'Cancelled', key: 'cancelled', color: '#f87171' },
+  ].map((segment) => {
+    const value = revenueByStatus[segment.key] || 0
+    return { ...segment, value }
+  })
+
+  const revenueTotal = revenueSegments.reduce((sum, segment) => sum + segment.value, 0)
+  const revenueGradient = revenueTotal
+    ? revenueSegments.reduce((acc, segment, index) => {
+      const start = acc.offset
+      const share = (segment.value / revenueTotal) * 360
+      const end = start + share
+      acc.stops.push(`${segment.color} ${start}deg ${end}deg`)
+      return { stops: acc.stops, offset: end }
+    }, { stops: [], offset: 0 }).stops.join(', ')
+    : '#e5e7eb 0deg 360deg'
 
   const stats = [
     { label: 'Total Products', value: products.length, color: 'primary' },
     { label: 'Orders Today', value: todayOrders.length, color: 'wine' },
-    { label: 'Total Revenue', value: `$${totalRevenue.toFixed(2)}`, color: 'green' },
     { label: 'Customers', value: regularUsers.length, color: 'blue' },
     { label: 'Total Orders', value: orders.length, color: 'purple' },
   ]
@@ -82,7 +133,7 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
             <div key={index} className="bg-gradient-to-br from-white to-gray-50 dark:from-dark-800 dark:to-dark-700 rounded-xl p-6 shadow-md border border-gray-200 dark:border-dark-700">
               <p className="text-dark-500 dark:text-dark-400 text-sm font-medium">{stat.label}</p>
@@ -91,6 +142,119 @@ const Dashboard = () => {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2 bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-sm text-dark-500 dark:text-dark-300">Revenue Breakdown</p>
+                <h2 className="text-2xl font-bold text-dark-900 dark:text-white">
+                  ${filteredRevenueTotal.toFixed(2)}
+                </h2>
+                <p className="text-xs text-dark-400 dark:text-dark-500">By order status</p>
+                <div className="mt-4">
+                  <label className="text-xs uppercase tracking-wide text-dark-400 dark:text-dark-500">Time Range</label>
+                  <select
+                    value={revenueRange}
+                    onChange={(event) => setRevenueRange(event.target.value)}
+                    className="mt-2 w-full rounded-lg border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-700 px-3 py-2 text-sm text-dark-700 dark:text-dark-100"
+                  >
+                    {rangeOptions.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mt-4 space-y-2">
+                  {revenueSegments.map((segment) => {
+                    const share = revenueTotal ? Math.round((segment.value / revenueTotal) * 100) : 0
+                    return (
+                      <div key={segment.key} className="flex items-center justify-between text-sm text-dark-600 dark:text-dark-300">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="inline-flex h-2.5 w-2.5 rounded-full"
+                            style={{ backgroundColor: segment.color }}
+                          />
+                          <span>{segment.label}</span>
+                        </div>
+                        <span>${segment.value.toFixed(2)} · {share}%</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <div
+                  className="h-44 w-44 rounded-full flex items-center justify-center"
+                  style={{ background: `conic-gradient(${revenueGradient})` }}
+                >
+                  <div className="h-28 w-28 rounded-full bg-white dark:bg-dark-800 flex items-center justify-center text-center">
+                    <div>
+                      <p className="text-xs text-dark-500 dark:text-dark-300">Avg Order</p>
+                      <p className="text-lg font-semibold text-dark-900 dark:text-white">
+                        ${filteredAverageOrder.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-dark-400 dark:text-dark-500">Revenue share · {activeRange.label}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-dark-900 dark:text-white mb-4">Order Status</h2>
+            <div className="space-y-4">
+              {[
+                { label: 'Pending', key: 'pending', color: 'bg-yellow-400' },
+                { label: 'Confirmed', key: 'confirmed', color: 'bg-blue-400' },
+                { label: 'Shipped', key: 'shipped', color: 'bg-indigo-400' },
+                { label: 'Delivered', key: 'delivered', color: 'bg-green-400' },
+                { label: 'Cancelled', key: 'cancelled', color: 'bg-red-400' },
+              ].map((status) => {
+                const count = statusCounts[status.key] || 0
+                const percent = orders.length ? Math.round((count / orders.length) * 100) : 0
+                return (
+                  <div key={status.key}>
+                    <div className="flex justify-between text-sm text-dark-600 dark:text-dark-300 mb-1">
+                      <span>{status.label}</span>
+                      <span>{count}</span>
+                    </div>
+                    <div className="w-full h-2 bg-gray-100 dark:bg-dark-700 rounded-full">
+                      <div
+                        className={`h-2 rounded-full ${status.color}`}
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Fulfillment Rate</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">{fulfillmentRate}%</p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Delivered vs total orders</p>
+          </div>
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Pending to Ship</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
+              {(statusCounts.pending || 0) + (statusCounts.confirmed || 0)}
+            </p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Orders awaiting fulfillment</p>
+          </div>
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
+            <p className="text-sm text-dark-500 dark:text-dark-300">Repeat Customers</p>
+            <p className="text-3xl font-bold text-dark-900 dark:text-white mt-3">
+              {orders.filter(order => order.user?._id).length > 0
+                ? new Set(orders.map(order => order.user?._id).filter(Boolean)).size
+                : 0}
+            </p>
+            <p className="text-xs text-dark-400 dark:text-dark-500 mt-2">Unique customers who ordered</p>
+          </div>
         </div>
 
         {/* Quick Actions */}
