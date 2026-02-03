@@ -3,7 +3,7 @@ import { categoryAPI } from '../features/categories/CategoryAPI';
 
 const fetcher = async () => {
   const response = await categoryAPI.getCategories({ status: 'active' });
-  return response.data || [];
+  return response || [];
 };
 
 export const useCategories = () => {
