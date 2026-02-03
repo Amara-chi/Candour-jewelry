@@ -29,7 +29,7 @@ const ManageCategories = () => {
     try {
       setLoading(true);
       const response = await categoryAPI.getCategories({ limit: 100, status: 'all' });
-      setCategories(response.data || []);
+      setCategories(response || []);
     } catch (err) {
       setError('Failed to fetch categories');
       console.error('Error fetching categories:', err);
