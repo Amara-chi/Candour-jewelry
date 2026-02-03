@@ -10,7 +10,27 @@ import { SEOHead } from '../../components/SEOHead';
 import { useCategories } from '../../hooks/useCategories';
 import { useProducts } from '../../hooks/useProducts';
 import Spinner from '../../components/Spinner';
-import { Gem as GemIcon, Heart as HeartIcon, ShieldCheck as ShieldCheckIcon } from 'lucide-react';
+import { Gem, Heart, ShieldCheck } from 'lucide-react';
+
+const Gem = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+    <path d="M3 9l4-5h10l4 5-9 11-9-11z" />
+    <path d="M7 4l5 16 5-16" />
+  </svg>
+);
+
+const Heart = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+    <path d="M12 21s-6-4.35-9-8.5C1 9 3 6 6.5 6c2 0 3.5 1.2 5.5 3.2C14 7.2 15.5 6 17.5 6 21 6 23 9 21 12.5 18 16.65 12 21 12 21z" />
+  </svg>
+);
+
+const ShieldCheck = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+    <path d="M12 3l7 4v5c0 5-3.5 9-7 10-3.5-1-7-5-7-10V7l7-4z" />
+    <path d="M9 12l2 2 4-4" />
+  </svg>
+);
 
 const Home = () => {
   const { categories, loading: categoriesLoading } = useCategories();

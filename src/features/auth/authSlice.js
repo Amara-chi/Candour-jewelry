@@ -6,20 +6,27 @@ import { API_URL } from '../../config/api';
 // Helper function to safely access localStorage
 const getStoredToken = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('token');
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
   }
   return null;
 };
 
-const setStoredToken = (token) => {
+const setStoredToken = (token, remember = true) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('token', token);
+    if (remember) {
+      localStorage.setItem('token', token);
+      sessionStorage.removeItem('token');
+    } else {
+      sessionStorage.setItem('token', token);
+      localStorage.removeItem('token');
+    }
   }
 };
 
 const removeStoredToken = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
   }
 };
 
@@ -132,7 +139,7 @@ const authSlice = createSlice({
         state.token = action.payload.data.token;
         state.isAuthenticated = true;
         state.isAdmin = action.payload.data.role === 'admin';
-        setStoredToken(action.payload.data.token); 
+        setStoredToken(action.payload.data.token, action.meta?.arg?.remember !== false); 
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
