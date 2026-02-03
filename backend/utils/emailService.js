@@ -385,7 +385,7 @@ export const sendWelcomeEmail = async (email, userName) => {
 };
 
 export const sendAdminPromotionEmail = async (email, userName, credentials = {}) => {
-  const loginUrl = process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app';
+  const loginUrl = `${process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app'}/login`;
   const { password } = credentials;
   const htmlContent = `
     <!DOCTYPE html>
@@ -414,8 +414,7 @@ export const sendAdminPromotionEmail = async (email, userName, credentials = {})
             <p><strong>Email:</strong> ${email}</p>
             ${password ? `<p><strong>Temporary Password:</strong> ${password}</p>` : '<p><strong>Password:</strong> Use your existing password. If you need help, use the reset password flow.</p>'}
           </div>
-          <a href="${loginUrl}" class="login-button">Open Candour Jewelry</a>
-          <p><strong>Please log in and change your password as soon as possible.</strong></p>
+          <a href="${loginUrl}" class="login-button">Log In</a>
           <p>If you have any questions, reply to this email and we'll be happy to help.</p>
         </div>
         <div class="footer">
