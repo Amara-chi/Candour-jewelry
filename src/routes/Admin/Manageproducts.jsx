@@ -114,6 +114,7 @@ const ManageProducts = () => {
         <ProductGrid
           products={filteredProducts}
           loading={loading}
+          isAdmin
           selectedProducts={selectedProducts}
           onSelectProduct={handleSelectProduct}
           onLoadMore={() => {
