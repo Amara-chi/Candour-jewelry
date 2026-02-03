@@ -7,7 +7,6 @@ import Shop from './User/Shop'
 import Contact from './User/Contact'
 import CheckOut from './User/CheckOut'
 import OrderSuccess from './User/OrderSucess'
-import AuthCallback from './User/AuthCallback'
 import AdminLayout from '../layouts/AdminLayout'
 import MainLayout from '../layouts/MainLayout'
 import Footer from '../components/Footer'
@@ -93,12 +92,6 @@ const orderSuccessRoute = createRoute({
   component: withMainLayout(OrderSuccess),
 });
 
-const authCallbackRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/auth/callback',
-  component: withMainLayout(AuthCallback),
-});
-
 // Admin routes with AdminLayout
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -138,7 +131,6 @@ const routeTree = rootRoute.addChildren([
   adminProductsRoute,
   adminOrdersRoute,
   adminCategoriesRoute,
-  authCallbackRoute,
 ])
 
 export const router = createRouter({ routeTree })

@@ -10,6 +10,10 @@ import Home from './routes/User/Home'
 function App() {
   const { theme } = useTheme()
   return null
+ 
+    {/* <ProductDetails />
+  <Cart />
+  <Dashboard />*/}
 }
 
 export default App

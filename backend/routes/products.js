@@ -7,7 +7,6 @@ import {
   deleteProduct,
   deleteProductImage
 } from '../controllers/productController.js';
-import Product from '../models/Product.js';
 import { protect, authorize } from '../middleware/auth.js';
 import upload from '../middleware/uploadMiddleware.js';
 
