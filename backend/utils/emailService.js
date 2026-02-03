@@ -384,11 +384,57 @@ export const sendWelcomeEmail = async (email, userName) => {
   return sendEmail(email, 'Welcome to Candour Jewelry!', htmlContent);
 };
 
+export const sendAdminPromotionEmail = async (email, userName, credentials = {}) => {
+  const loginUrl = `${process.env.FRONTEND_URL || 'https://candour-jewelry.vercel.app'}/login`;
+  const { password } = credentials;
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { background-color: #111827; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background-color: #f9f9f9; }
+        .credentials { background-color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+        .login-button { background-color: #B8860B; color: white; padding: 12px 30px; text-align: center; border-radius: 5px; text-decoration: none; display: inline-block; margin: 20px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>You're now a Candour Jewelry Admin</h1>
+        </div>
+        <div class="content">
+          <p>Hi ${userName || 'there'},</p>
+          <p>Your account has been upgraded to an admin role. You can now access the admin dashboard.</p>
+          <div class="credentials">
+            <h3>Login Credentials</h3>
+            <p><strong>Email:</strong> ${email}</p>
+            ${password ? `<p><strong>Temporary Password:</strong> ${password}</p>` : '<p><strong>Password:</strong> Use your existing password. If you need help, use the reset password flow.</p>'}
+          </div>
+          <a href="${loginUrl}" class="login-button">Log In</a>
+          <p>If you have any questions, reply to this email and we'll be happy to help.</p>
+        </div>
+        <div class="footer">
+          <p>&copy; ${new Date().getFullYear()} Candour Jewelry. All rights reserved.</p>
+          <p>Email: info@candourjewelry.com | Phone: +1-800-JEWELRY</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail(email, 'You are now a Candour Jewelry Admin', htmlContent);
+};
+
 export default {
   sendEmail,
   sendOrderConfirmation,
   sendOrderStatusUpdate,
   sendAdminOrderNotification,
   sendPasswordResetEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  sendAdminPromotionEmail
 };
