@@ -14,6 +14,7 @@ import ManageProducts from './Admin/Manageproducts'
 import ManageUsers from './Admin/ManageUsers'
 import ManageOrders from './Admin/ManageOrders'
 import ManageCategories from './Admin/ManageCategories'
+import OrderDetails from './Admin/OrderDetails'
 import ProductsList from '../features/product/productsList.jsx'
 
 // Root route
@@ -111,6 +112,12 @@ const adminOrdersRoute = createRoute({
   component: withAdminLayout(ManageOrders),
 })
 
+const adminOrderDetailsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/orders/$id',
+  component: withAdminLayout(OrderDetails),
+})
+
 const adminCategoriesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin/categories',
@@ -130,6 +137,7 @@ const routeTree = rootRoute.addChildren([
   adminUsersRoute,
   adminProductsRoute,
   adminOrdersRoute,
+  adminOrderDetailsRoute,
   adminCategoriesRoute,
 ])
 
