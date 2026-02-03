@@ -68,7 +68,11 @@ const ModalContainer = () => {
       
       <div className={`relative bg-white dark:bg-dark-800 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto ${
         // Adjust width based on modal type
-        modal.type === 'product-form' ? 'max-w-4xl w-full' : 'max-w-md w-full'
+        modal.type === 'product-form'
+          ? 'max-w-4xl w-full'
+          : modal.type === 'product-details'
+          ? 'max-w-5xl w-full'
+          : 'max-w-md w-full'
       }`}>
         <ModalContent type={modal.type} data={modal.data} />
       </div>
@@ -598,6 +602,12 @@ const ProductDetailsModal = ({ data }) => {
   const { closeModal, openModal } = useModal()
   const { addToCart } = useCart() // You'll need to create this hook
   const { isAuthenticated } = useAuth()
+  const primaryImage = product?.images?.find((img) => img.isPrimary) || product?.images?.[0]
+  const [activeImage, setActiveImage] = useState(primaryImage?.url || '')
+
+  useEffect(() => {
+    setActiveImage(primaryImage?.url || '')
+  }, [primaryImage?.url])
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -627,80 +637,165 @@ const ProductDetailsModal = ({ data }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white">
-        Product Details
-      </h2>
-      
-      <div className="space-y-4">
-        {/* Product Image */}
-        <div className="w-full h-48 bg-gradient-to-br from-primary-200 to-wine-200 rounded-lg flex items-center justify-center">
-          {product.images?.[0] ? (
-            <img 
-              src={product.images[0].url} 
-              alt={product.name}
-              className="w-full h-full object-cover rounded-lg"
-            />
-          ) : (
-            <Gem className="h-12 w-12 text-primary-500" />
-          )}
-        </div>
-        
-        {/* Product Info */}
-        <div>
-          <h3 className="text-xl font-semibold text-dark-900 dark:text-white">{product.name}</h3>
-          <p className="text-2xl font-bold text-primary-500 mt-2">${product.price}</p>
-          {product.comparePrice && (
-            <p className="text-lg text-dark-500 dark:text-dark-400 line-through">
-              ${product.comparePrice}
-            </p>
-          )}
-          <p className="text-dark-600 dark:text-dark-300 mt-2">
-            {product.shortDescription || product.description}
-          </p>
-          
-          {/* Stock Status */}
-          <div className="mt-3">
+    <div className="space-y-8">
+      <div className="flex flex-col gap-3 border-b border-primary-100/70 pb-6 dark:border-dark-700">
+        <p className="text-xs uppercase tracking-[0.35em] text-primary-500 dark:text-primary-300">
+          Candour Atelier
+        </p>
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-elegant font-bold text-dark-900 dark:text-white">
+              {product.name}
+            </h2>
+            {product.categories?.[0]?.name && (
+              <p className="text-sm text-dark-500 dark:text-dark-300 mt-1">
+                {product.categories[0].name}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
             {product.inStock ? (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                In Stock
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                Ready to ship
               </span>
             ) : (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-wine-100 text-wine-800">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-wine-100 text-wine-800">
                 Out of Stock
+              </span>
+            )}
+            {product.comparePrice > product.price && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-700">
+                Limited Offer
               </span>
             )}
           </div>
         </div>
+      </div>
 
-        {/* Admin Actions */}
-        {isAdmin && (
-          <div className="flex space-x-3 pt-4 border-t border-dark-200 dark:border-dark-700">
-            <Button variant="primary" className="flex-1" onClick={handleEdit}>
-              Edit Product
-            </Button>
-            <Button variant="secondary" className="flex-1" onClick={handleDelete}>
-              Delete Product
-            </Button>
+      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="space-y-4">
+          <div className="relative overflow-hidden rounded-3xl border border-primary-100/70 bg-gradient-to-br from-primary-50 via-white to-wine-50 dark:border-dark-600 dark:from-dark-700 dark:via-dark-700 dark:to-dark-600">
+            <div className="aspect-square flex items-center justify-center">
+              {activeImage ? (
+                <img
+                  src={activeImage}
+                  alt={product.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <Gem className="h-16 w-16 text-primary-500" />
+              )}
+            </div>
           </div>
-        )}
 
-        {/* User Actions */}
-        {!isAdmin && (
-          <div className="flex space-x-3 pt-4 border-t border-dark-200 dark:border-dark-700">
-            <Button 
-              variant="primary" 
-              className="flex-1"
-              onClick={handleAddToCart}
-              disabled={!product.inStock}
-            >
-              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-            </Button>
-            <Button variant="outline" className="flex-1">
-              Add to Wishlist
-            </Button>
+          {product.images?.length > 1 && (
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {product.images.map((image, index) => (
+                <button
+                  key={`${image.url}-${index}`}
+                  type="button"
+                  onClick={() => setActiveImage(image.url)}
+                  className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border transition-all ${
+                    activeImage === image.url
+                      ? 'border-primary-500 ring-2 ring-primary-200'
+                      : 'border-primary-100/70 dark:border-dark-600'
+                  }`}
+                >
+                  <img src={image.url} alt={product.name} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-3xl font-bold text-primary-500">${product.price}</span>
+            {product.comparePrice > product.price && (
+              <span className="text-lg text-dark-400 line-through">${product.comparePrice}</span>
+            )}
           </div>
-        )}
+          <p className="text-dark-600 dark:text-dark-300 leading-relaxed">
+            {product.shortDescription || product.description}
+          </p>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-white/80 p-4 text-sm text-dark-600 shadow-sm dark:border-dark-600 dark:bg-dark-700/80 dark:text-dark-200">
+              <Truck className="h-5 w-5 text-primary-500" />
+              <div>
+                <p className="font-semibold text-dark-900 dark:text-white">Luxury Delivery</p>
+                <p className="text-xs text-dark-500 dark:text-dark-300">Insured and discreet.</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-white/80 p-4 text-sm text-dark-600 shadow-sm dark:border-dark-600 dark:bg-dark-700/80 dark:text-dark-200">
+              <ShieldCheck className="h-5 w-5 text-primary-500" />
+              <div>
+                <p className="font-semibold text-dark-900 dark:text-white">Lifetime Care</p>
+                <p className="text-xs text-dark-500 dark:text-dark-300">Guided aftercare.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-2xl border border-primary-100/70 bg-white/80 p-5 text-sm text-dark-600 shadow-sm dark:border-dark-600 dark:bg-dark-700/80 dark:text-dark-200">
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-2">
+                <Tag className="h-4 w-4 text-primary-500" />
+                SKU
+              </span>
+              <span className="font-semibold text-dark-900 dark:text-white">{product.sku || 'N/A'}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-2">
+                <Package className="h-4 w-4 text-primary-500" />
+                Stock
+              </span>
+              <span className="font-semibold text-dark-900 dark:text-white">
+                {product.trackQuantity ? product.quantity : '∞'}
+              </span>
+            </div>
+            {product.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {product.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-primary-100/80 bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-600 dark:border-dark-600 dark:bg-dark-700 dark:text-primary-300"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Admin Actions */}
+          {isAdmin && (
+            <div className="flex flex-col gap-3 pt-2">
+              <Button variant="primary" className="w-full" onClick={handleEdit}>
+                Edit Product
+              </Button>
+              <Button variant="secondary" className="w-full" onClick={handleDelete}>
+                Delete Product
+              </Button>
+            </div>
+          )}
+
+          {/* User Actions */}
+          {!isAdmin && (
+            <div className="flex flex-col gap-3 pt-2">
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={handleAddToCart}
+                disabled={!product.inStock}
+              >
+                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+              </Button>
+              <Button variant="outline" className="w-full">
+                Add to Wishlist
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
