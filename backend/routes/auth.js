@@ -3,7 +3,10 @@ import {
   register,
   login,
   getMe,
-  updateDetails
+  updateDetails,
+  forgotPassword,
+  resetPassword,
+  googleAuth
 } from '../controllers/authController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -13,5 +16,8 @@ router.post('/register', register);
 router.post('/login', login);
 router.get('/me', protect, getMe);
 router.put('/updatedetails', protect, updateDetails);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:token', resetPassword);
+router.get('/google', googleAuth);
 
 export default router;
