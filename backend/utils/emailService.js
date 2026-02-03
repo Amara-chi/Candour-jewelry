@@ -9,7 +9,7 @@ const initializeEmailService = () => {
   if (transporter) return transporter;
 
   const gmailUser = process.env.GMAIL_USER || process.env.EMAIL_USER;
-  const gmailPassword = process.env.GMAIL_PASS || process.env.GMAIL_PASSWORD || process.env.EMAIL_PASSWORD;
+  const gmailPassword = process.env.GMAIL_PASSWORD || process.env.GMAIL_PASS || process.env.EMAIL_PASSWORD;
 
   if (!gmailUser || !gmailPassword) {
     console.warn('Email credentials not configured. Email service will not work.');
