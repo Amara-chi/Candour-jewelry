@@ -4,6 +4,7 @@ import { useModal } from '../../components/Modal';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
 import ProductGrid from '../../features/product/ProductsGrid';
+import { AlertTriangle } from 'lucide-react';
 
 const ManageProducts = () => {
   const { openModal } = useModal();
@@ -68,7 +69,7 @@ const ManageProducts = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4">😞</div>
+          <AlertTriangle className="h-14 w-14 text-wine-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-dark-700 dark:text-white mb-2">
             Failed to load products
           </h2>

@@ -75,7 +75,7 @@ const CartPage = () => {
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="text-6xl mb-4">😞</div>
+            <AlertTriangle className="h-14 w-14 text-wine-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-dark-900 dark:text-white mb-2">
               Failed to load cart
             </h2>
@@ -104,7 +104,7 @@ const CartPage = () => {
         {!cart.items || cart.items.length === 0 ? (
           <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
             <div className="text-center py-12">
-              <span className="text-6xl mb-4 block">🛒</span>
+              <ShoppingBag className="h-14 w-14 text-primary-500 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-dark-700 dark:text-dark-300 mb-2">
                 Your cart is empty
               </h3>
@@ -138,7 +138,7 @@ const CartPage = () => {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-2xl">💎</span>
+                          <Gem className="h-6 w-6 text-primary-500" />
                         </div>
                       )}
                     </div>

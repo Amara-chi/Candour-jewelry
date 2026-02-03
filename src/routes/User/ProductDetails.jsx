@@ -1,5 +1,6 @@
 import MainLayout from '../../layouts/MainLayout'
 import { SEOHead } from '../../components/SEOHead'
+import { Gem } from 'lucide-react'
 
 const ProductDetails = () => {
   return (
@@ -14,7 +15,7 @@ const ProductDetails = () => {
           {/* Product Images */}
           <div className="bg-white dark:bg-dark-800 rounded-xl p-8">
             <div className="w-full h-96 bg-gradient-to-br from-primary-200 to-wine-200 rounded-lg flex items-center justify-center">
-              <span className="text-8xl">💎</span>
+              <Gem className="h-16 w-16 text-primary-600" />
             </div>
           </div>
 
