@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useModal } from '../../components/Modal';
 import { SEOHead } from '../../components/SEOHead';
@@ -12,6 +12,7 @@ const ManageProducts = () => {
   const [sortBy, setSortBy] = useState('-createdAt');
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [bulkAction, setBulkAction] = useState('');
+  const hasResetFilters = useRef(false);
   
   const {
     products,
@@ -22,6 +23,19 @@ const ManageProducts = () => {
     updateFilters,
     mutate
   } = useProducts({ sort: sortBy });
+
+  useEffect(() => {
+    if (hasResetFilters.current) return;
+    hasResetFilters.current = true;
+    updateFilters({
+      search: '',
+      category: '',
+      status: '',
+      inStock: false,
+      featured: false,
+      page: 1
+    });
+  }, [updateFilters]);
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
