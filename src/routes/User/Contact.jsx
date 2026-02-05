@@ -1,8 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SEOHead } from '../../components/SEOHead';
 import Button from '../../components/Button';
+import axios from 'axios';
+import { API_URL } from '../../config/api';
 
 const Contact = () => {
+  const [formValues, setFormValues] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState({ type: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const nextErrors = {};
+    if (!formValues.name.trim()) nextErrors.name = 'Name is required.';
+    if (!formValues.email.trim()) nextErrors.email = 'Email is required.';
+    if (!formValues.subject.trim()) nextErrors.subject = 'Subject is required.';
+    if (!formValues.message.trim()) nextErrors.message = 'Message is required.';
+    return nextErrors;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const nextErrors = validateForm();
+    setErrors(nextErrors);
+    setStatus({ type: '', message: '' });
+
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(`${API_URL}/contact`, formValues);
+      if (response.data?.success) {
+        setStatus({ type: 'success', message: 'Thanks for reaching out! Our team will reply within 24 hours.' });
+        setFormValues({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setStatus({ type: 'error', message: response.data?.message || 'Unable to send your message right now.' });
+      }
+    } catch (error) {
+      setStatus({ type: 'error', message: error.response?.data?.message || 'Unable to send your message right now.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-dark-900">
       <SEOHead
@@ -69,7 +119,7 @@ const Contact = () => {
           <p className="text-sm text-dark-600 dark:text-dark-300 mb-6">
             Share your ideas, timelines, or order details. We’ll reply with tailored guidance.
           </p>
-          <form className="grid gap-4">
+          <form className="grid gap-4" onSubmit={handleSubmit}>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-xs uppercase tracking-[0.2em] text-dark-500 dark:text-dark-400">
@@ -77,9 +127,13 @@ const Contact = () => {
                 </label>
                 <input
                   type="text"
+                  name="name"
                   placeholder="Your name"
+                  value={formValues.name}
+                  onChange={handleChange}
                   className="mt-2 w-full rounded-xl border border-dark-200 dark:border-dark-600 bg-white dark:bg-dark-700 px-4 py-3 text-sm text-dark-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 />
+                {errors.name && <p className="mt-2 text-xs text-wine-500">{errors.name}</p>}
               </div>
               <div>
                 <label className="text-xs uppercase tracking-[0.2em] text-dark-500 dark:text-dark-400">
@@ -87,9 +141,13 @@ const Contact = () => {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="you@example.com"
+                  value={formValues.email}
+                  onChange={handleChange}
                   className="mt-2 w-full rounded-xl border border-dark-200 dark:border-dark-600 bg-white dark:bg-dark-700 px-4 py-3 text-sm text-dark-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 />
+                {errors.email && <p className="mt-2 text-xs text-wine-500">{errors.email}</p>}
               </div>
             </div>
             <div>
@@ -98,9 +156,13 @@ const Contact = () => {
               </label>
               <input
                 type="text"
+                name="subject"
                 placeholder="Custom ring, order support, appointment request..."
+                value={formValues.subject}
+                onChange={handleChange}
                 className="mt-2 w-full rounded-xl border border-dark-200 dark:border-dark-600 bg-white dark:bg-dark-700 px-4 py-3 text-sm text-dark-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
               />
+              {errors.subject && <p className="mt-2 text-xs text-wine-500">{errors.subject}</p>}
             </div>
             <div>
               <label className="text-xs uppercase tracking-[0.2em] text-dark-500 dark:text-dark-400">
@@ -108,16 +170,31 @@ const Contact = () => {
               </label>
               <textarea
                 rows="5"
+                name="message"
                 placeholder="Tell us about your vision..."
+                value={formValues.message}
+                onChange={handleChange}
                 className="mt-2 w-full rounded-xl border border-dark-200 dark:border-dark-600 bg-white dark:bg-dark-700 px-4 py-3 text-sm text-dark-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
               />
+              {errors.message && <p className="mt-2 text-xs text-wine-500">{errors.message}</p>}
             </div>
+            {status.message && (
+              <div
+                className={`rounded-xl border px-4 py-3 text-sm ${
+                  status.type === 'success'
+                    ? 'border-green-200 bg-green-50 text-green-700'
+                    : 'border-wine-200 bg-wine-50 text-wine-700'
+                }`}
+              >
+                {status.message}
+              </div>
+            )}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <p className="text-xs text-dark-500 dark:text-dark-400">
                 By submitting, you agree to receive communication from Candour Jewelry.
               </p>
-              <Button variant="primary" size="lg">
-                Send Message
+              <Button variant="primary" size="lg" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>
             </div>
           </form>

@@ -5,6 +5,7 @@ import Dashboard from './Admin/Dashboard'
 import ProductDetails from './User/ProductDetails'
 import Shop from './User/Shop' 
 import Contact from './User/Contact'
+import About from './User/About'
 import CheckOut from './User/CheckOut'
 import OrderSuccess from './User/OrderSucess'
 import AuthCallback from './User/AuthCallback'
@@ -89,6 +90,12 @@ const contactRoute = createRoute({
   component: withMainLayout(Contact),
 });
 
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: withMainLayout(About),
+});
+
 const orderSuccessRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/order-success',
@@ -146,6 +153,7 @@ const routeTree = rootRoute.addChildren([
   productRoute,
   checkoutRoute,
   contactRoute,
+  aboutRoute,
   orderSuccessRoute,
   adminRoute,
   adminUsersRoute,
