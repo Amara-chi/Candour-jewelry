@@ -6,10 +6,15 @@ import { useProducts } from '../../hooks/useProducts';
 import Button from '../../components/Button';
 import { useCategories } from '../../hooks/useCategories';
 import Spinner from '../../components/Spinner';
+import { useNavigate, useSearch } from '@tanstack/react-router';
+import { XCircle } from 'lucide-react';
 
 const Shop = () => {
+  const navigate = useNavigate();
+  const search = useSearch({ from: '/shop' });
+  const searchCategory = search?.category || '';
   const [sortBy, setSortBy] = useState('-createdAt');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(searchCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [showInStockOnly, setShowInStockOnly] = useState(false);
@@ -38,6 +43,24 @@ const Shop = () => {
       Math.min(prev[1], priceBounds[1])
     ]);
   }, [priceBounds]);
+
+  useEffect(() => {
+    if (searchCategory !== selectedCategory) {
+      setSelectedCategory(searchCategory);
+    }
+  }, [searchCategory, selectedCategory]);
+
+  useEffect(() => {
+    if (selectedCategory !== searchCategory) {
+      navigate({
+        to: '/shop',
+        search: (prev) => ({
+          ...prev,
+          category: selectedCategory || undefined
+        })
+      });
+    }
+  }, [navigate, searchCategory, selectedCategory]);
 
   const defaultPriceRange = useMemo(() => [priceBounds[0], priceBounds[1]], [priceBounds]);
 
