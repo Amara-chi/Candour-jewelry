@@ -18,6 +18,7 @@ const Dashboard = () => {
   const adminUsers = users.filter(user => user.role === 'admin')
 
   const [products, setProducts] = useState([])
+  const [totalProducts, setTotalProducts] = useState(null)
   const [orders, setOrders] = useState([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [ordersLoading, setOrdersLoading] = useState(true)
@@ -32,9 +33,13 @@ const Dashboard = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${API_URL}/products`)
-      setProducts(response.data?.data || [])
+      const fetchedProducts = response.data?.data || []
+      const paginationTotal = response.data?.pagination?.total
+      setProducts(fetchedProducts)
+      setTotalProducts(typeof paginationTotal === 'number' ? paginationTotal : null)
     } catch (err) {
       console.error('Failed to fetch products:', err)
+      setTotalProducts(null)
     } finally {
       setProductsLoading(false)
     }
@@ -123,7 +128,7 @@ const Dashboard = () => {
     : 0
 
   const stats = [
-    { label: 'Total Products', value: products.length, color: 'primary' },
+    { label: 'Total Products', value: totalProducts ?? products.length, color: 'primary' },
     { label: 'Orders Today', value: todayOrders.length, color: 'wine' },
     { label: 'Customers', value: regularUsers.length, color: 'blue' },
     { label: 'Total Orders', value: orders.length, color: 'purple' },
