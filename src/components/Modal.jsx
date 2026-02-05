@@ -172,7 +172,6 @@ const ProductFormModal = ({ data }) => {
     comparePrice: '',
     sku: '',
     quantity: '0',
-    trackQuantity: true,
     categories: [],
     tags: '',
     status: 'draft',
@@ -194,7 +193,6 @@ const ProductFormModal = ({ data }) => {
         comparePrice: product.comparePrice || '',
         sku: product.sku || '',
         quantity: product.quantity?.toString() || '0',
-        trackQuantity: product.trackQuantity ?? true,
         categories: product.categories?.map(cat => cat._id) || [],
         tags: product.tags?.join(', ') || '',
         status: product.status || 'draft',
@@ -213,7 +211,8 @@ const ProductFormModal = ({ data }) => {
         ...formData,
         price: Number(formData.price),
         comparePrice: formData.comparePrice ? Number(formData.comparePrice) : undefined,
-        quantity: formData.trackQuantity ? Number(formData.quantity) : 0,
+        quantity: Number(formData.quantity),
+        trackQuantity: true,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         categories: formData.categories,
         images: images
@@ -370,7 +369,6 @@ const ProductFormModal = ({ data }) => {
             min="0"
             value={formData.quantity}
             onChange={(e) => handleChange('quantity', e.target.value)}
-            disabled={!formData.trackQuantity}
           />
         </div>
 
@@ -454,15 +452,6 @@ const ProductFormModal = ({ data }) => {
               <span className="ml-2 text-sm text-dark-700 dark:text-dark-300">Featured Product</span>
             </label>
             
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={formData.trackQuantity}
-                onChange={(e) => handleChange('trackQuantity', e.target.checked)}
-                className="rounded border-dark-300 text-primary-500 focus:ring-primary-500"
-              />
-              <span className="ml-2 text-sm text-dark-700 dark:text-dark-300">Track Quantity</span>
-            </label>
           </div>
         </div>
 
@@ -791,7 +780,7 @@ const ProductDetailsModal = ({ data }) => {
                 Stock
               </span>
               <span className="font-semibold text-dark-900 dark:text-white">
-                {product.trackQuantity ? product.quantity : '∞'}
+                {product.quantity ?? 0}
               </span>
             </div>
             {product.tags?.length > 0 && (

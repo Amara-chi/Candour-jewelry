@@ -152,7 +152,6 @@ productSchema.pre('save', function(next) {
 
 // Virtual for inStock
 productSchema.virtual('inStock').get(function() {
-  if (!this.trackQuantity) return true;
   return this.quantity > 0;
 });
 
