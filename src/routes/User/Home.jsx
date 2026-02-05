@@ -18,7 +18,7 @@ const Home = () => {
     featured: true,
     status: 'active',
     sort: '-createdAt',
-    limit: 100
+    limit: 4
   });
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const featuredScrollRef = useRef(null);
