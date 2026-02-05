@@ -86,8 +86,8 @@ const ProductDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
-          <div className="bg-white dark:bg-dark-800 rounded-xl p-8">
-            <div className="w-full h-96 bg-gradient-to-br from-primary-200 to-wine-200 rounded-lg flex items-center justify-center overflow-hidden">
+          <div className="bg-white dark:bg-dark-800 rounded-xl p-6 sm:p-8">
+            <div className="w-full h-72 sm:h-96 bg-gradient-to-br from-primary-200 to-wine-200 rounded-lg flex items-center justify-center overflow-hidden">
               {primaryImage ? (
                 <img
                   src={primaryImage.url}
@@ -99,9 +99,9 @@ const ProductDetails = () => {
               )}
             </div>
             {product.images?.length > 1 && (
-              <div className="grid grid-cols-3 gap-4 mt-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
                 {product.images.slice(0, 3).map((image) => (
-                  <div key={image._id || image.url} className="h-24 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-700">
+                  <div key={image._id || image.url} className="h-20 sm:h-24 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-700">
                     <img src={image.url} alt={image.alt || product.name} className="w-full h-full object-cover" />
                   </div>
                 ))}
@@ -111,11 +111,11 @@ const ProductDetails = () => {
 
           {/* Product Info */}
           <div className="space-y-6">
-            <h1 className="text-4xl font-elegant font-bold text-dark-900 dark:text-white">
+            <h1 className="text-3xl sm:text-4xl font-elegant font-bold text-dark-900 dark:text-white">
               {product.name}
             </h1>
-            <p className="text-3xl font-bold text-primary-500">${product.price}</p>
-            <p className="text-dark-600 dark:text-dark-300 text-lg">
+            <p className="text-2xl sm:text-3xl font-bold text-primary-500">${product.price}</p>
+            <p className="text-dark-600 dark:text-dark-300 text-base sm:text-lg">
               {product.description || product.shortDescription || 'Premium handcrafted jewelry designed to last.'}
             </p>
 

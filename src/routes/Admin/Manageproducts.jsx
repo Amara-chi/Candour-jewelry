@@ -105,7 +105,7 @@ const ManageProducts = () => {
       
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl lg:text-4xl font-bold text-dark-900 dark:text-white mb-2">
               Product Management
@@ -118,7 +118,7 @@ const ManageProducts = () => {
           <Button
             variant="primary"
             onClick={() => openModal('product-form', { mode: 'create' })}
-            className="mt-4 lg:mt-0"
+            className="w-full sm:w-auto mt-4 lg:mt-0"
           >
             + Add New Product
           </Button>

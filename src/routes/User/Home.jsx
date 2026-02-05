@@ -95,7 +95,7 @@ const Home = () => {
       type="website"
     />
     <MainLayout>
-    <section className="h-screen relative to-primary-200 text-dark-900 overflow-hidden">
+    <section className="min-h-[85vh] md:h-screen relative to-primary-200 text-dark-900 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 inset-x-0 bottom-0 pointer-events-none">
         <img
@@ -118,7 +118,7 @@ const Home = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="relative container mx-auto flex flex-col items-start justify-center text-left h-full px-6 sm:px-10">
+      <div className="relative container mx-auto flex flex-col items-start justify-center text-left h-full px-6 sm:px-10 py-20 md:py-0">
         <div className="inline-flex items-center gap-3 rounded-full border border-primary-200/40 bg-dark-900/40 px-4 py-2 text-xs uppercase tracking-[0.35em] text-primary-200">
           Candour Atelier
           <span className="h-1 w-10 rounded-full bg-primary-400"></span>
@@ -150,17 +150,17 @@ const Home = () => {
             <Link to="/about">Meet the Atelier</Link>
           </Button>
         </div>
-        <div className="mt-10 flex items-center gap-6 text-sm text-white/70">
+        <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-white/70">
           <div className="flex flex-col">
             <span className="text-primary-200 uppercase tracking-[0.3em]">Since</span>
             <span className="text-lg text-white">2016</span>
           </div>
-          <div className="h-10 w-px bg-white/20"></div>
+          <div className="hidden sm:block h-10 w-px bg-white/20"></div>
           <div className="flex flex-col">
             <span className="text-primary-200 uppercase tracking-[0.3em]">Pieces</span>
             <span className="text-lg text-white">120+</span>
           </div>
-          <div className="h-10 w-px bg-white/20"></div>
+          <div className="hidden sm:block h-10 w-px bg-white/20"></div>
           <div className="flex flex-col">
             <span className="text-primary-200 uppercase tracking-[0.3em]">Custom</span>
             <span className="text-lg text-white">Yes</span>
@@ -407,8 +407,8 @@ const Home = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-10 flex flex-col items-center gap-6">
-              <div className="flex gap-3">
+              <div className="mt-10 flex flex-col items-center gap-6">
+                <div className="flex gap-3">
                 {testimonials.map((_, index) => (
                   <button
                     key={`dot-${index}`}
@@ -420,7 +420,7 @@ const Home = () => {
                   />
                 ))}
               </div>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   type="button"
                   onClick={() =>
@@ -571,7 +571,7 @@ const Home = () => {
           </div>
         ))}
       </div>
-      <div className="mt-6 flex justify-center gap-4">
+      <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
         <button
           type="button"
           onClick={() => scrollCarousel(socialScrollRef, -1)}

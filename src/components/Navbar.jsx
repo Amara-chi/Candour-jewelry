@@ -46,11 +46,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="ml-[-30px] flex items-center" onClick={closeMobileMenu}>
-            <div className='w-28 '>
+          <Link to="/" className="flex items-center gap-2 sm:gap-3" onClick={closeMobileMenu}>
+            <div className="w-16 sm:w-20 md:w-28">
               <img src={logo} alt="" />
             </div>
-            <span className=" md:text-3xl sm:text-sm sm:text-nowrap ml-[-20px] font-parisienne font-bold text-wine-400 dark:text-primary-400 ">
+            <span className="text-base sm:text-lg md:text-3xl leading-none font-parisienne font-bold text-wine-400 dark:text-primary-400 whitespace-nowrap">
               Candour's Jewelry
             </span>
           </Link>

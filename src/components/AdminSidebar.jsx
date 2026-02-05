@@ -25,7 +25,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <div
       className={`fixed pt-16 top-0 left-0 h-full z-40 transition-all duration-500 ease-in-out
-        ${isOpen ? "w-64" : "md:w-[97px]"}
+        ${isOpen ? "w-64" : "w-16 md:w-[97px]"}
         bg-white dark:bg-dark-900 border-r border-primary-200  dark:border-dark-700
         shadow-md flex flex-col`}
     >
@@ -33,7 +33,7 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
       <button
         onClick={toggleSidebar}
         className={`absolute bg-primary-600  mt-[8px] hover:bg-primary-700 text-white p-2 rounded-r-full shadow-md transition-all duration-500 ease-in-out ${
-          isOpen ? `left-64` : `left-24`
+          isOpen ? `left-64` : `left-16 md:left-24`
         }`}
       >
         {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}

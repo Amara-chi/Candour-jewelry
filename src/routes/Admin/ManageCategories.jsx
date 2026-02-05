@@ -124,13 +124,14 @@ const ManageCategories = () => {
       />
 
       <div className="w-full px-4 sm:px-6 py-6">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 className="text-3xl font-elegant font-bold text-dark-900 dark:text-white">
             Manage Categories
           </h1>
           <Button
             variant="primary"
             onClick={() => handleOpenModal()}
+            className="w-full sm:w-auto"
           >
             Add Category
           </Button>
@@ -166,62 +167,64 @@ const ManageCategories = () => {
                 <p className="text-dark-600 dark:text-dark-300">No categories found</p>
               </div>
             ) : (
-              <table className="w-full">
-                <thead className="bg-gray-100 dark:bg-dark-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Description</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Featured</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredCategories.map((category) => (
-                    <tr key={category._id} className="border-t border-gray-200 dark:border-dark-700 hover:bg-gray-50 dark:hover:bg-dark-700">
-                      <td className="px-6 py-4 text-sm font-medium text-dark-900 dark:text-white">
-                        {category.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-dark-600 dark:text-dark-300">
-                        {category.description || '—'}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          category.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {category.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        {category.featured ? (
-                          <span className="text-wine-600">★</span>
-                        ) : (
-                          <span className="text-gray-400">☆</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleOpenModal(category)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(category._id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Delete
-                        </Button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[720px]">
+                  <thead className="bg-gray-100 dark:bg-dark-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Name</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Description</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Status</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Featured</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredCategories.map((category) => (
+                      <tr key={category._id} className="border-t border-gray-200 dark:border-dark-700 hover:bg-gray-50 dark:hover:bg-dark-700">
+                        <td className="px-6 py-4 text-sm font-medium text-dark-900 dark:text-white">
+                          {category.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-dark-600 dark:text-dark-300">
+                          {category.description || '—'}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            category.status === 'active'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {category.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {category.featured ? (
+                            <span className="text-wine-600">★</span>
+                          ) : (
+                            <span className="text-gray-400">☆</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleOpenModal(category)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(category._id)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}

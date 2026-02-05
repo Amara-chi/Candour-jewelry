@@ -126,11 +126,11 @@ const CartPage = () => {
               {cart.items.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-4 flex gap-4"
+                  className="bg-white dark:bg-dark-800 rounded-xl shadow-sm p-4 flex flex-col sm:flex-row gap-4"
                 >
                   {/* Product Image */}
                   <Link to={`/product/${item.product?.slug || item.product?._id}`}>
-                    <div className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-700">
+                    <div className="w-full sm:w-24 h-40 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-700">
                       {item.product?.images?.[0] ? (
                         <LazyImage
                           src={item.product.images[0].url}
@@ -183,7 +183,7 @@ const CartPage = () => {
                   </div>
 
                   {/* Item Total & Remove */}
-                  <div className="flex flex-col items-end justify-between">
+                  <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-3 sm:gap-0 sm:mt-0">
                     <p className="font-bold text-dark-900 dark:text-white">
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
@@ -210,7 +210,7 @@ const CartPage = () => {
 
             {/* Cart Summary */}
             <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6 sticky top-4">
+              <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-5 sm:p-6 lg:sticky lg:top-24">
                 <h2 className="text-xl font-bold text-dark-900 dark:text-white mb-4">
                   Order Summary
                 </h2>
