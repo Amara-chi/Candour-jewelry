@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import './models/Collection.js';
 import auth from './routes/auth.js';
 import users from './routes/users.js';
 import products from './routes/products.js';

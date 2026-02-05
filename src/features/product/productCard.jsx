@@ -212,7 +212,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
                 </div>
                 <div className="flex justify-between">
                   <span>Stock:</span>
-                  <span>{product.trackQuantity ? product.quantity : '∞'}</span>
+                  <span>{product.quantity ?? 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Status:</span>

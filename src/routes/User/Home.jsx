@@ -15,17 +15,17 @@ import { Gem, Heart, ShieldCheck } from 'lucide-react';
 const Home = () => {
   const { categories, loading: categoriesLoading } = useCategories();
   const { products, loading: productsLoading } = useProducts({
-    limit: 6,
     featured: true,
     status: 'active',
-    sort: '-createdAt'
+    sort: '-createdAt',
+    limit: 100
   });
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const featuredScrollRef = useRef(null);
   const socialScrollRef = useRef(null);
 
   const featuredProducts = useMemo(() => {
-    return products.filter((product) => product.featured).slice(0, 6);
+    return products.filter((product) => product.featured);
   }, [products]);
 
   const testimonials = [

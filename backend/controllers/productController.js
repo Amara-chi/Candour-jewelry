@@ -51,10 +51,7 @@ export const getProducts = async (req, res) => {
     }
     
     if (inStock === 'true') {
-      query.$or = [
-        { trackQuantity: false },
-        { trackQuantity: true, quantity: { $gt: 0 } }
-      ];
+      query.quantity = { $gt: 0 };
     }
 
     const products = await Product.find(query)
