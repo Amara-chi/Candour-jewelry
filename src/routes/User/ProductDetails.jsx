@@ -76,7 +76,15 @@ const ProductDetails = () => {
         image={primaryImage?.url}
       />
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="flex items-center gap-2 text-xs text-dark-500 dark:text-dark-300 mb-6">
+          <Link to="/" className="hover:text-primary-500">Home</Link>
+          <span>/</span>
+          <Link to="/shop" className="hover:text-primary-500">Shop</Link>
+          <span>/</span>
+          <span className="text-dark-700 dark:text-dark-100">{product.name}</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
           <div className="bg-white dark:bg-dark-800 rounded-xl p-6 sm:p-8">
             <div className="w-full h-72 sm:h-96 bg-gradient-to-br from-primary-200 to-wine-200 rounded-lg flex items-center justify-center overflow-hidden">
@@ -148,6 +156,17 @@ const ProductDetails = () => {
             )}
           </div>
         </div>
+
+        {product.description && (
+          <section className="mt-16 bg-white dark:bg-dark-800 rounded-3xl p-8 shadow-lg">
+            <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white mb-4">
+              Product Details
+            </h2>
+            <p className="text-dark-600 dark:text-dark-300 leading-relaxed">
+              {product.description}
+            </p>
+          </section>
+        )}
       </div>
     </MainLayout>
   )
