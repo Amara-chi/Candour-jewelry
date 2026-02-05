@@ -262,7 +262,7 @@ const Home = () => {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-100 to-wine-100 dark:from-dark-600 dark:to-dark-500">
-                    <Gem className="h-12 w-12 text-primary-500" />
+                    <GemIcon className="h-12 w-12 text-primary-500" />
                   </div>
                 )}
               </div>
@@ -459,7 +459,7 @@ const Home = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {[
         {
-          icon: ShieldCheck,
+          icon: ShieldCheckIcon,
           title: 'Secure Shipping',
           desc: 'Insured delivery with discreet, luxury packaging.',
           back: 'Tracked, insured, and styled to delight from unboxing to wear.',
@@ -467,7 +467,7 @@ const Home = () => {
           iconBg: 'bg-primary-100 text-primary-600'
         },
         {
-          icon: Gem,
+          icon: GemIcon,
           title: 'Lifetime Warranty',
           desc: 'Guaranteed quality, craftsmanship, and aftercare.',
           back: 'Complimentary cleaning and lifetime care guidance.',
@@ -475,7 +475,7 @@ const Home = () => {
           iconBg: 'bg-wine-100 text-wine-600'
         },
         {
-          icon: Heart,
+          icon: HeartIcon,
           title: 'Ethically Sourced',
           desc: 'Conflict-free diamonds and responsibly sourced gems.',
           back: 'We partner with trusted suppliers who value transparency.',
