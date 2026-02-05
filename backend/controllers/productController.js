@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Product from '../models/Product.js';
 import { v2 as cloudinary } from 'cloudinary';
 // import slugify from 'slugify';
@@ -85,13 +86,13 @@ export const getProducts = async (req, res) => {
 // @access  Public
 export const getProduct = async (req, res) => {
   try {
-    const product = await Product.findOne({
-      $or: [
-        { _id: req.params.id },
-        { slug: req.params.id }
-      ]
-    })
-    .populate('categories', 'name slug');
+    const searchConditions = [{ slug: req.params.id }];
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      searchConditions.unshift({ _id: req.params.id });
+    }
+
+    const product = await Product.findOne({ $or: searchConditions })
+      .populate('categories', 'name slug');
 
     if (!product) {
       return res.status(404).json({
