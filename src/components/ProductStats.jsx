@@ -7,7 +7,7 @@ const ProductStats = ({ products }) => {
     const total = products.length;
     const active = products.filter(p => p.status === 'active').length;
     const draft = products.filter(p => p.status === 'draft').length;
-    const outOfStock = products.filter(p => p.trackQuantity && p.quantity === 0).length;
+    const outOfStock = products.filter(p => p.quantity === 0).length;
     const featured = products.filter(p => p.featured).length;
 
     return { total, active, draft, outOfStock, featured };
