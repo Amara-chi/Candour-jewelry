@@ -19,12 +19,18 @@ export const useProducts = (params = {}) => {
   const dispatch = useDispatch();
   const filters = useSelector(state => state.products?.filters || {});
   
-  const queryString = new URLSearchParams({
+  const queryParams = {
     ...filters,
     ...params,
     page: params.page || 1,
     limit: params.limit || 12
-  }).toString();
+  };
+
+  if (queryParams.featured !== true && queryParams.featured !== 'true') {
+    delete queryParams.featured;
+  }
+
+  const queryString = new URLSearchParams(queryParams).toString();
 
   const { data, error, mutate, isLoading } = useSWR(
     `/api/products?${queryString}`,
