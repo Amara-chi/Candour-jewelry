@@ -79,7 +79,7 @@ const ProductCard = ({ product, isAdmin = false, priority = false }) => {
             Out of Stock
           </span>
         )}
-        {product.featured && (
+        {isAdmin && product.featured && (
           <span className="bg-primary-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
             Featured
           </span>
