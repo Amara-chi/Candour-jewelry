@@ -36,7 +36,6 @@ const Footer = () => {
   const quickLinks = [
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
-    { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' }
   ];
 
@@ -89,7 +88,7 @@ const Footer = () => {
         </script>
       </Helmet>
 
-      <footer className="relative bg-gradient-to-b from-white via-white to-primary-50/40 dark:from-dark-950 dark:via-dark-950 dark:to-dark-900 border-t border-dark-200 dark:border-dark-700 text-gray-800 dark:text-gray-100 mt-20 transition-colors duration-300 overflow-hidden">
+      <footer className="relative bg-gradient-to-b from-white via-white to-primary-50/40 dark:from-dark-950 dark:via-dark-950 dark:to-dark-900 border-t border-dark-200 dark:border-dark-700 text-gray-800 dark:text-white mt-20 transition-colors duration-300 overflow-hidden">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary-100/60 via-transparent to-transparent dark:from-primary-900/20" />
         <div className="max-w-7xl mx-auto px-4 py-16 relative">
           <div className="mb-16">
@@ -104,10 +103,10 @@ const Footer = () => {
                   <h4 className="mt-4 text-2xl md:text-3xl font-elegant font-bold text-dark-900 dark:text-white">
                     Receive private access to new collections and bespoke offers.
                   </h4>
-                  <p className="mt-3 text-sm md:text-base text-dark-700 dark:text-dark-200">
+                  <p className="mt-3 text-sm md:text-base text-dark-700 dark:text-white/80">
                     Join our inner circle for early previews, gemstone stories, and appointments crafted just for you.
                   </p>
-                  <div className="mt-6 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.25em] text-dark-600 dark:text-dark-300">
+                  <div className="mt-6 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.25em] text-dark-600 dark:text-white/70">
                     <span className="flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full bg-primary-500" />
                       Ethical sourcing
@@ -124,7 +123,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <form className="flex flex-col gap-3">
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-dark-600 dark:text-dark-300">
+                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-dark-600 dark:text-white/70">
                       Email Address
                     </label>
                     <div className="flex flex-col gap-3 sm:flex-row">
@@ -140,7 +139,7 @@ const Footer = () => {
                         Join Now
                       </button>
                     </div>
-                    <p className="text-xs text-dark-600 dark:text-dark-300">
+                    <p className="text-xs text-dark-600 dark:text-white/70">
                       By subscribing, you agree to receive emails from Candour Jewelry. Unsubscribe anytime.
                     </p>
                   </form>
@@ -159,7 +158,7 @@ const Footer = () => {
                   Candour Jewelry
                 </span>
               </div>
-              <p className="text-sm text-dark-700 dark:text-dark-300 mb-4">
+              <p className="text-sm text-dark-700 dark:text-white/80 mb-4">
                 Handcrafted jewelry with timeless elegance. Crafted with passion, precision, and the finest materials.
               </p>
               <div className="flex gap-3">
@@ -170,7 +169,7 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     title={social.name}
-                    className="w-11 h-11 rounded-full border border-dark-200/80 dark:border-dark-700/80 bg-white/80 dark:bg-dark-900/70 flex items-center justify-center text-dark-600 dark:text-dark-300 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-500/60 hover:bg-primary-600 hover:text-white dark:hover:border-primary-400/70 dark:hover:bg-primary-500"
+                    className="w-11 h-11 rounded-full border border-dark-200/80 dark:border-dark-700/80 bg-white/80 dark:bg-dark-900/70 flex items-center justify-center text-dark-600 dark:text-white/80 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-500/60 hover:bg-primary-600 hover:text-white dark:hover:border-primary-400/70 dark:hover:bg-primary-500"
                   >
                     <svg
                       aria-hidden="true"
@@ -199,14 +198,14 @@ const Footer = () => {
                     {link.href.startsWith('/') ? (
                       <Link
                         to={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </a>
@@ -226,14 +225,14 @@ const Footer = () => {
                     {link.href.startsWith('/') ? (
                       <Link
                         to={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </a>
@@ -252,7 +251,7 @@ const Footer = () => {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                      className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                     >
                       {link.label}
                     </a>
@@ -269,9 +268,9 @@ const Footer = () => {
                 <li>
                   <a
                     href="mailto:info@candourjewelry.com"
-                    className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors flex items-center gap-2"
+                    className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors flex items-center gap-2"
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-dark-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-white/70">
                       <svg
                         aria-hidden="true"
                         viewBox="0 0 24 24"
@@ -292,9 +291,9 @@ const Footer = () => {
                 <li>
                   <a
                     href="tel:+18003388939"
-                    className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors flex items-center gap-2"
+                    className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors flex items-center gap-2"
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-dark-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-white/70">
                       <svg
                         aria-hidden="true"
                         viewBox="0 0 24 24"
@@ -311,8 +310,8 @@ const Footer = () => {
                     +1-800-JEWELRY
                   </a>
                 </li>
-                <li className="text-sm text-dark-700 dark:text-dark-300 flex items-start gap-2">
-                  <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-dark-300">
+                <li className="text-sm text-dark-700 dark:text-white/80 flex items-start gap-2">
+                  <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-white/70">
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 24 24"
@@ -335,15 +334,15 @@ const Footer = () => {
 
           <div className="border-t border-dark-200 dark:border-dark-700 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-dark-700 dark:text-dark-300">
+              <p className="text-sm text-dark-700 dark:text-white/80">
                 &copy; {currentYear} Candour Jewelry. All rights reserved.
               </p>
-              <div className="flex gap-4 text-xs text-dark-600 dark:text-dark-300">
-                <a href="#" className="hover:text-primary-500 transition-colors">Payment Methods</a>
-                <span className="text-dark-400">•</span>
-                <a href="#" className="hover:text-primary-500 transition-colors">Accessibility</a>
-                <span className="text-dark-400">•</span>
-                <a href="#" className="hover:text-primary-500 transition-colors">Site Map</a>
+              <div className="flex gap-4 text-xs text-dark-600 dark:text-white/70">
+                <a href="#" className="hover:text-primary-500 dark:hover:text-primary-300 transition-colors">Payment Methods</a>
+                <span className="text-dark-400 dark:text-white/60">•</span>
+                <a href="#" className="hover:text-primary-500 dark:hover:text-primary-300 transition-colors">Accessibility</a>
+                <span className="text-dark-400 dark:text-white/60">•</span>
+                <a href="#" className="hover:text-primary-500 dark:hover:text-primary-300 transition-colors">Site Map</a>
               </div>
             </div>
           </div>
