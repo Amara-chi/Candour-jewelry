@@ -77,7 +77,7 @@ const OrderSuccess = () => {
             </div>
           )}
 
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/shop">
               <Button variant="primary" size="lg">
                 Continue Shopping

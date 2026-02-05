@@ -167,7 +167,7 @@ const Dashboard = () => {
     <>
       <SEOHead title="Admin Dashboard" description="Manage your Candour Jewelry e-commerce store, products, orders, and customers." />
       <div className="w-full px-4 sm:px-6 py-6">
-        <div className="mb-10 rounded-3xl border border-primary-100/60 dark:border-dark-700 bg-gradient-to-r from-primary-50 via-white to-wine-50 dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 p-8 shadow-lg">
+        <div className="mb-10 rounded-3xl border border-primary-100/60 dark:border-dark-700 bg-gradient-to-r from-primary-50 via-white to-wine-50 dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 p-6 sm:p-8 shadow-lg">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-primary-500">Admin Overview</p>
@@ -178,10 +178,10 @@ const Dashboard = () => {
                 Track performance, monitor revenue trends, and stay on top of fulfillment with real-time store insights.
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="bg-white/80 dark:bg-dark-800/80 backdrop-blur rounded-2xl px-5 py-4 shadow-md">
                 <p className="text-xs uppercase text-dark-400 dark:text-dark-500">Revenue Range</p>
-                <div className="mt-3 flex items-center gap-2">
+                <div className="mt-3 flex flex-wrap items-center gap-2">
                   {['7d', '30d', '90d'].map((range) => (
                     <button
                       key={range}
@@ -248,20 +248,22 @@ const Dashboard = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-end gap-3 h-44">
-              {revenueSeries.map((item) => (
-                <div key={item.label} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="w-full bg-gray-100 dark:bg-dark-700 rounded-full h-32 flex items-end">
-                    <div
-                      className="w-full rounded-full bg-gradient-to-t from-primary-500 via-wine-400 to-wine-300 shadow"
-                      style={{ height: maxRevenue ? `${Math.max((item.value / maxRevenue) * 100, 8)}%` : '8%' }}
-                    />
+            <div className="overflow-x-auto">
+              <div className="min-w-[520px] flex items-end gap-3 h-44">
+                {revenueSeries.map((item) => (
+                  <div key={item.label} className="flex-1 flex flex-col items-center gap-2">
+                    <div className="w-full bg-gray-100 dark:bg-dark-700 rounded-full h-32 flex items-end">
+                      <div
+                        className="w-full rounded-full bg-gradient-to-t from-primary-500 via-wine-400 to-wine-300 shadow"
+                        style={{ height: maxRevenue ? `${Math.max((item.value / maxRevenue) * 100, 8)}%` : '8%' }}
+                      />
+                    </div>
+                    <span className="text-[10px] text-dark-500 dark:text-dark-300 text-center leading-tight">
+                      {item.label}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-dark-500 dark:text-dark-300 text-center leading-tight">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
@@ -317,7 +319,7 @@ const Dashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-8 mb-10 border border-gray-100 dark:border-dark-700">
+        <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6 sm:p-8 mb-10 border border-gray-100 dark:border-dark-700">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white">
               Quick Actions
@@ -344,8 +346,8 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-dark-700">
-          <div className="flex justify-between items-center mb-6">
+        <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100 dark:border-dark-700">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
             <h2 className="text-2xl font-elegant font-bold text-dark-900 dark:text-white">
               Recent Orders
             </h2>

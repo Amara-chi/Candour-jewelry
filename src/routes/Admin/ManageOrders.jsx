@@ -57,7 +57,7 @@ const ManageOrders = () => {
           Order Management
         </h1>
 
-        <div className="mb-6 flex gap-2">
+        <div className="mb-6 flex flex-wrap gap-2">
           {['all', 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled'].map((status) => (
             <button
               key={status}
@@ -77,7 +77,8 @@ const ManageOrders = () => {
           <Spinner className="py-8" size={52} />
         ) : (
           <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg overflow-hidden">
-            <table className="w-full">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px]">
               <thead className="bg-gray-100 dark:bg-dark-700">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-dark-900 dark:text-white">Order ID</th>
@@ -139,6 +140,7 @@ const ManageOrders = () => {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>
