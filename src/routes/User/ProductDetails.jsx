@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
-import { Link, useParams } from '@tanstack/react-router';
+import React, { useState } from 'react';
+import { useParams } from '@tanstack/react-router';
 import MainLayout from '../../layouts/MainLayout';
 import { SEOHead } from '../../components/SEOHead';
-import { Gem, Heart, ShieldCheck, Sparkles, Truck } from 'lucide-react';
+import { Gem, Heart, ShieldCheck } from 'lucide-react';
 import { useProduct } from '../../hooks/useProducts';
 import Spinner from '../../components/Spinner';
 import Button from '../../components/Button';
@@ -18,7 +18,6 @@ const ProductDetails = () => {
   const { openModal } = useModal();
   const [actionLoading, setActionLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleAddToCart = async () => {
     if (!product?._id) return;
@@ -40,19 +39,7 @@ const ProductDetails = () => {
     }
   };
 
-  const images = product?.images || [];
-  const primaryImage = images.find((img) => img.isPrimary) || images[0];
-  const selectedImage = images[selectedImageIndex] || primaryImage;
-
-  const productHighlights = useMemo(() => {
-    if (product?.tags?.length) return product.tags.slice(0, 4);
-    return ['Handcrafted finish', 'Ethically sourced materials', 'Gift-ready packaging', 'Atelier warranty'];
-  }, [product?.tags]);
-
-  const hasDimensions = Boolean(product?.dimensions?.length || product?.dimensions?.width || product?.dimensions?.height);
-  const dimensions = product?.dimensions
-    ? `${product.dimensions.length || '-'} x ${product.dimensions.width || '-'} x ${product.dimensions.height || '-'} ${product.dimensions.unit || ''}`.trim()
-    : null;
+  const primaryImage = product?.images?.find((img) => img.isPrimary) || product?.images?.[0];
 
   if (loading) {
     return (
@@ -99,33 +86,24 @@ const ProductDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
-          <div className="bg-white dark:bg-dark-800 rounded-2xl p-6 shadow-lg">
-            <div className="relative w-full h-[420px] bg-gradient-to-br from-primary-200 to-wine-200 rounded-2xl flex items-center justify-center overflow-hidden">
-              {selectedImage ? (
+          <div className="bg-white dark:bg-dark-800 rounded-xl p-8">
+            <div className="w-full h-96 bg-gradient-to-br from-primary-200 to-wine-200 rounded-lg flex items-center justify-center overflow-hidden">
+              {primaryImage ? (
                 <img
-                  src={selectedImage.url}
-                  alt={selectedImage.alt || product.name}
+                  src={primaryImage.url}
+                  alt={primaryImage.alt || product.name}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <Gem className="h-16 w-16 text-primary-600" />
               )}
             </div>
-            {images.length > 1 && (
-              <div className="grid grid-cols-4 gap-3 mt-6">
-                {images.slice(0, 4).map((image, index) => (
-                  <button
-                    type="button"
-                    key={image._id || image.url}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`h-20 rounded-xl overflow-hidden border transition-all ${
-                      selectedImageIndex === index
-                        ? 'border-primary-500 ring-2 ring-primary-300'
-                        : 'border-transparent hover:border-primary-200'
-                    }`}
-                  >
+            {product.images?.length > 1 && (
+              <div className="grid grid-cols-3 gap-4 mt-6">
+                {product.images.slice(0, 3).map((image) => (
+                  <div key={image._id || image.url} className="h-24 rounded-lg overflow-hidden bg-gray-100 dark:bg-dark-700">
                     <img src={image.url} alt={image.alt || product.name} className="w-full h-full object-cover" />
-                  </button>
+                  </div>
                 ))}
               </div>
             )}
@@ -133,52 +111,25 @@ const ProductDetails = () => {
 
           {/* Product Info */}
           <div className="space-y-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-primary-500 dark:text-primary-300 mb-3">
-                {product.categories?.[0]?.name || 'Signature Collection'}
-              </p>
-              <h1 className="text-4xl font-elegant font-bold text-dark-900 dark:text-white">
-                {product.name}
-              </h1>
-              <p className="mt-3 text-dark-600 dark:text-dark-300 text-lg">
-                {product.shortDescription || product.description || 'Premium handcrafted jewelry designed to last.'}
-              </p>
-            </div>
+            <h1 className="text-4xl font-elegant font-bold text-dark-900 dark:text-white">
+              {product.name}
+            </h1>
+            <p className="text-3xl font-bold text-primary-500">${product.price}</p>
+            <p className="text-dark-600 dark:text-dark-300 text-lg">
+              {product.description || product.shortDescription || 'Premium handcrafted jewelry designed to last.'}
+            </p>
 
-            <div className="flex items-end gap-3">
-              <p className="text-3xl font-bold text-primary-500">${product.price}</p>
-              {product.comparePrice > product.price && (
-                <p className="text-sm text-dark-400 line-through">${product.comparePrice}</p>
-              )}
-              {product.comparePrice > product.price && (
-                <span className="text-xs rounded-full bg-green-100 text-green-700 px-2 py-1">
-                  Save ${(product.comparePrice - product.price).toFixed(2)}
-                </span>
-              )}
+            <div className="flex flex-wrap gap-3 text-sm text-dark-500 dark:text-dark-300">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary-200/60 px-3 py-1">
+                <ShieldCheck className="h-4 w-4 text-primary-500" />
+                Lifetime polishing support
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary-200/60 px-3 py-1">
+                <Gem className="h-4 w-4 text-primary-500" />
+                Hand-finished in the atelier
+              </span>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-dark-600 dark:text-dark-300">
-              <div className="rounded-2xl border border-primary-100/70 dark:border-dark-700 p-4 bg-white/70 dark:bg-dark-800/60">
-                <div className="flex items-center gap-2 text-primary-500 mb-2">
-                  <Sparkles className="h-4 w-4" />
-                  Highlights
-                </div>
-                <ul className="space-y-1">
-                  {productHighlights.map((highlight) => (
-                    <li key={highlight}>• {highlight}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-primary-100/70 dark:border-dark-700 p-4 bg-white/70 dark:bg-dark-800/60">
-                <div className="flex items-center gap-2 text-primary-500 mb-2">
-                  <Truck className="h-4 w-4" />
-                  Delivery
-                </div>
-                <p>Ships in 2–4 business days with insured delivery.</p>
-                <p className="mt-2">Complimentary gift packaging included.</p>
-              </div>
-            </div>
-
+            
             <div className="space-y-4">
               <Button
                 variant="primary"
@@ -203,35 +154,6 @@ const ProductDetails = () => {
             {message && (
               <p className="text-sm text-primary-500">{message}</p>
             )}
-
-            <div className="grid gap-4 pt-4 border-t border-dark-100 dark:border-dark-700 text-sm text-dark-600 dark:text-dark-300">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-dark-400">SKU</p>
-                  <p>{product.sku || '—'}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-dark-400">Availability</p>
-                  <p>{product.inStock ? 'In stock' : 'Made to order'}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-dark-400">Weight</p>
-                  <p>{product.weight?.value ? `${product.weight.value}${product.weight.unit || 'g'}` : '—'}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-dark-400">Dimensions</p>
-                  <p>{hasDimensions ? dimensions : '—'}</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-dark-400">Care</p>
-                <p>Store in a dry pouch and polish gently with a soft cloth after wear.</p>
-              </div>
-              <div className="flex flex-wrap gap-2 text-xs text-primary-500">
-                <ShieldCheck className="h-4 w-4" />
-                Complimentary resizing within 30 days.
-              </div>
-            </div>
           </div>
         </div>
 
