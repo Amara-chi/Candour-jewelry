@@ -88,7 +88,7 @@ const Footer = () => {
         </script>
       </Helmet>
 
-      <footer className="relative bg-gradient-to-b from-white via-white to-primary-50/40 dark:from-dark-950 dark:via-dark-950 dark:to-dark-900 border-t border-dark-200 dark:border-dark-700 text-gray-800 dark:text-gray-100 mt-20 transition-colors duration-300 overflow-hidden">
+      <footer className="relative bg-gradient-to-b from-white via-white to-primary-50/40 dark:from-dark-950 dark:via-dark-950 dark:to-dark-900 border-t border-dark-200 dark:border-dark-700 text-gray-800 dark:text-white mt-20 transition-colors duration-300 overflow-hidden">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary-100/60 via-transparent to-transparent dark:from-primary-900/20" />
         <div className="max-w-7xl mx-auto px-4 py-16 relative">
           <div className="grid gap-6 md:grid-cols-3 mb-14">
@@ -184,14 +184,14 @@ const Footer = () => {
                     {link.href.startsWith('/') ? (
                       <Link
                         to={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </a>
@@ -217,14 +217,14 @@ const Footer = () => {
                     {link.href.startsWith('/') ? (
                       <Link
                         to={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
                       >
                         {link.label}
                       </a>
@@ -242,9 +242,9 @@ const Footer = () => {
                 <li>
                   <a
                     href="mailto:info@candourjewelry.com"
-                    className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors flex items-center gap-2"
+                    className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors flex items-center gap-2"
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-dark-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-white/70">
                       <svg
                         aria-hidden="true"
                         viewBox="0 0 24 24"
@@ -265,9 +265,9 @@ const Footer = () => {
                 <li>
                   <a
                     href="tel:+18003388939"
-                    className="text-sm text-dark-700 dark:text-dark-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors flex items-center gap-2"
+                    className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors flex items-center gap-2"
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-dark-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-white/70">
                       <svg
                         aria-hidden="true"
                         viewBox="0 0 24 24"
@@ -284,8 +284,8 @@ const Footer = () => {
                     +1-800-JEWELRY
                   </a>
                 </li>
-                <li className="text-sm text-dark-700 dark:text-dark-300 flex items-start gap-2">
-                  <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-dark-300">
+                <li className="text-sm text-dark-700 dark:text-white/80 flex items-start gap-2">
+                  <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-dark-200/80 bg-white/80 text-dark-600 dark:border-dark-700 dark:bg-dark-900/80 dark:text-white/70">
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 24 24"
@@ -308,7 +308,7 @@ const Footer = () => {
 
           <div className="border-t border-dark-200 dark:border-dark-700 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-dark-700 dark:text-dark-300">
+              <p className="text-sm text-dark-700 dark:text-white/80">
                 &copy; {currentYear} Candour Jewelry. All rights reserved.
               </p>
               <div className="flex gap-4 text-xs text-dark-600 dark:text-dark-300">
