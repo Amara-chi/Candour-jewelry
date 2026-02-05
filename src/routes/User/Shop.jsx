@@ -205,7 +205,7 @@ const Shop = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-sm border border-dark-100 dark:border-dark-700 p-6 sticky top-20">
+            <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-sm border border-dark-100 dark:border-dark-700 p-6 lg:sticky lg:top-24">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="text-lg font-semibold text-dark-900 dark:text-white">Filters</h3>
@@ -281,24 +281,24 @@ const Shop = () => {
                     onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
                     className="w-full accent-primary-500"
                   />
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="number"
                       min={priceBounds[0]}
                       max={priceBounds[1]}
                       value={priceRange[0]}
                       onChange={(e) => handleMinPriceChange(Number(e.target.value))}
-                      className="w-24 px-2 py-1 border border-dark-200 dark:border-dark-600 rounded bg-white dark:bg-dark-700 text-dark-900 dark:text-white text-sm"
+                      className="w-full sm:w-24 px-2 py-1 border border-dark-200 dark:border-dark-600 rounded bg-white dark:bg-dark-700 text-dark-900 dark:text-white text-sm"
                       placeholder="Min"
                     />
-                    <span className="self-center text-dark-500">-</span>
+                    <span className="self-center text-dark-500 hidden sm:inline">-</span>
                     <input
                       type="number"
                       min={priceBounds[0]}
                       max={priceBounds[1]}
                       value={priceRange[1]}
                       onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
-                      className="w-24 px-2 py-1 border border-dark-200 dark:border-dark-600 rounded bg-white dark:bg-dark-700 text-dark-900 dark:text-white text-sm"
+                      className="w-full sm:w-24 px-2 py-1 border border-dark-200 dark:border-dark-600 rounded bg-white dark:bg-dark-700 text-dark-900 dark:text-white text-sm"
                       placeholder="Max"
                     />
                   </div>

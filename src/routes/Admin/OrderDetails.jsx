@@ -68,7 +68,7 @@ const OrderDetails = () => {
               <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-6">
                 <h2 className="text-xl font-semibold text-dark-900 dark:text-white mb-4">Order Items</h2>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[520px] text-sm">
                     <thead className="border-b border-gray-200 dark:border-dark-700">
                       <tr>
                         <th className="text-left py-2 text-dark-600 dark:text-dark-300">Product</th>

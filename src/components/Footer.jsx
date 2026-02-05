@@ -49,7 +49,7 @@ const Footer = () => {
   const customerService = [
     { label: 'Help Center', href: '#' },
     { label: 'Track Order', href: '#' },
-    { label: 'FAQ', href: '#' },
+    { label: 'Care Guide', href: '#' },
     { label: 'Contact Us', href: '/contact' }
   ];
 
@@ -91,65 +91,33 @@ const Footer = () => {
       <footer className="relative bg-gradient-to-b from-white via-white to-primary-50/40 dark:from-dark-950 dark:via-dark-950 dark:to-dark-900 border-t border-dark-200 dark:border-dark-700 text-gray-800 dark:text-white mt-20 transition-colors duration-300 overflow-hidden">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary-100/60 via-transparent to-transparent dark:from-primary-900/20" />
         <div className="max-w-7xl mx-auto px-4 py-16 relative">
-          <div className="mb-16">
-            <div className="relative overflow-hidden rounded-3xl border border-dark-200/80 dark:border-dark-700/80 bg-white/90 dark:bg-dark-900/90 shadow-[0_30px_80px_-40px_rgba(8,8,23,0.35)] backdrop-blur">
-              <div className="absolute -right-12 -top-16 h-48 w-48 rounded-full bg-primary-200/60 blur-3xl dark:bg-primary-700/20" />
-              <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-amber-100/70 blur-3xl dark:bg-amber-500/10" />
-              <div className="relative grid gap-8 p-8 md:grid-cols-[1.2fr_1fr] md:p-12">
-                <div>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-primary-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary-700 dark:border-primary-700/50 dark:bg-primary-900/40 dark:text-primary-200">
-                    Candour Atelier
-                  </span>
-                  <h4 className="mt-4 text-2xl md:text-3xl font-elegant font-bold text-dark-900 dark:text-white">
-                    Receive private access to new collections and bespoke offers.
-                  </h4>
-                  <p className="mt-3 text-sm md:text-base text-dark-700 dark:text-white/80">
-                    Join our inner circle for early previews, gemstone stories, and appointments crafted just for you.
-                  </p>
-                  <div className="mt-6 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.25em] text-dark-600 dark:text-white/70">
-                    <span className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-primary-500" />
-                      Ethical sourcing
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-primary-500" />
-                      Concierge service
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-primary-500" />
-                      Exclusive previews
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <form className="flex flex-col gap-3">
-                    <label className="text-xs font-semibold uppercase tracking-[0.2em] text-dark-600 dark:text-white/70">
-                      Email Address
-                    </label>
-                    <div className="flex flex-col gap-3 sm:flex-row">
-                      <input
-                        type="email"
-                        placeholder="you@example.com"
-                        className="flex-1 rounded-full border border-dark-200/80 bg-white px-5 py-3 text-sm text-dark-900 shadow-sm outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 dark:border-dark-700 dark:bg-dark-900 dark:text-white"
-                      />
-                      <button
-                        type="submit"
-                        className="rounded-full bg-dark-900 px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-primary-600 dark:bg-primary-500 dark:text-dark-950 dark:hover:bg-primary-400"
-                      >
-                        Join Now
-                      </button>
-                    </div>
-                    <p className="text-xs text-dark-600 dark:text-white/70">
-                      By subscribing, you agree to receive emails from Candour Jewelry. Unsubscribe anytime.
-                    </p>
-                  </form>
-                </div>
+          <div className="grid gap-6 md:grid-cols-3 mb-14">
+            {[
+              {
+                title: 'Private Appointments',
+                description: 'Reserve a one-on-one styling session with our atelier specialists.',
+              },
+              {
+                title: 'Lifetime Care',
+                description: 'Complimentary inspections, cleanings, and stone security checks.',
+              },
+              {
+                title: 'Gift Concierge',
+                description: 'Personalized packaging and handwritten notes for every occasion.',
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-dark-200/80 dark:border-dark-700/80 bg-white/80 dark:bg-dark-900/70 p-6 shadow-[0_18px_45px_-30px_rgba(8,8,23,0.4)] backdrop-blur"
+              >
+                <h4 className="text-base font-semibold text-dark-900 dark:text-white">{item.title}</h4>
+                <p className="mt-2 text-sm text-dark-700 dark:text-dark-300">{item.description}</p>
               </div>
-            </div>
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-            <div className="lg:col-span-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            <div>
               <div className="flex items-center mb-4">
                 <div className="w-10 h-10 bg-primary-600 dark:bg-primary-500 rounded-full flex items-center justify-center mr-3">
                   <span className="text-white font-bold text-sm">CJ</span>
@@ -158,10 +126,28 @@ const Footer = () => {
                   Candour Jewelry
                 </span>
               </div>
-              <p className="text-sm text-dark-700 dark:text-white/80 mb-4">
-                Handcrafted jewelry with timeless elegance. Crafted with passion, precision, and the finest materials.
+              <p className="text-sm text-dark-700 dark:text-dark-300 mb-5">
+                Crafted in New York with ethically sourced gemstones and a dedication to timeless elegance.
               </p>
-              <div className="flex gap-3">
+              <form className="flex flex-col gap-3">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-dark-600 dark:text-dark-300">
+                  Newsletter
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    className="flex-1 rounded-full border border-dark-200/80 bg-white px-4 py-2.5 text-sm text-dark-900 shadow-sm outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 dark:border-dark-700 dark:bg-dark-900 dark:text-white"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-full bg-dark-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition hover:bg-primary-600 dark:bg-primary-500 dark:text-dark-950 dark:hover:bg-primary-400"
+                  >
+                    Subscribe
+                  </button>
+                </div>
+              </form>
+              <div className="mt-6 flex gap-3">
                 {socialLinks.map((social) => (
                   <a
                     key={social.name}
@@ -169,12 +155,12 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     title={social.name}
-                    className="w-11 h-11 rounded-full border border-dark-200/80 dark:border-dark-700/80 bg-white/80 dark:bg-dark-900/70 flex items-center justify-center text-dark-600 dark:text-white/80 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-500/60 hover:bg-primary-600 hover:text-white dark:hover:border-primary-400/70 dark:hover:bg-primary-500"
+                    className="w-10 h-10 rounded-full border border-dark-200/80 dark:border-dark-700/80 bg-white/80 dark:bg-dark-900/70 flex items-center justify-center text-dark-600 dark:text-dark-300 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-500/60 hover:bg-primary-600 hover:text-white dark:hover:border-primary-400/70 dark:hover:bg-primary-500"
                   >
                     <svg
                       aria-hidden="true"
                       viewBox={social.viewBox}
-                      className="h-5 w-5"
+                      className="h-4 w-4"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="1.6"
@@ -190,7 +176,7 @@ const Footer = () => {
 
             <div>
               <h4 className="text-sm font-bold text-dark-900 dark:text-white mb-4 uppercase tracking-wider">
-                Quick Links
+                Discover
               </h4>
               <ul className="space-y-2">
                 {quickLinks.map((link) => (
@@ -213,11 +199,17 @@ const Footer = () => {
                   </li>
                 ))}
               </ul>
+              <div className="mt-6 rounded-2xl border border-primary-200/70 bg-primary-50/70 p-4 text-xs text-primary-700 dark:border-primary-700/40 dark:bg-primary-900/30 dark:text-primary-200">
+                <p className="font-semibold uppercase tracking-[0.2em]">Showroom</p>
+                <p className="mt-2 text-sm font-medium text-dark-900 dark:text-white">
+                  By appointment only • 10 AM - 7 PM
+                </p>
+              </div>
             </div>
 
             <div>
               <h4 className="text-sm font-bold text-dark-900 dark:text-white mb-4 uppercase tracking-wider">
-                Customer Service
+                Client Care
               </h4>
               <ul className="space-y-2">
                 {customerService.map((link) => (
@@ -237,24 +229,6 @@ const Footer = () => {
                         {link.label}
                       </a>
                     )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-dark-900 dark:text-white mb-4 uppercase tracking-wider">
-                Legal
-              </h4>
-              <ul className="space-y-2">
-                {legalLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-dark-700 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
-                    >
-                      {link.label}
-                    </a>
                   </li>
                 ))}
               </ul>
@@ -337,12 +311,12 @@ const Footer = () => {
               <p className="text-sm text-dark-700 dark:text-white/80">
                 &copy; {currentYear} Candour Jewelry. All rights reserved.
               </p>
-              <div className="flex gap-4 text-xs text-dark-600 dark:text-white/70">
-                <a href="#" className="hover:text-primary-500 dark:hover:text-primary-300 transition-colors">Payment Methods</a>
-                <span className="text-dark-400 dark:text-white/60">•</span>
-                <a href="#" className="hover:text-primary-500 dark:hover:text-primary-300 transition-colors">Accessibility</a>
-                <span className="text-dark-400 dark:text-white/60">•</span>
-                <a href="#" className="hover:text-primary-500 dark:hover:text-primary-300 transition-colors">Site Map</a>
+              <div className="flex gap-4 text-xs text-dark-600 dark:text-dark-300">
+                {legalLinks.map((link) => (
+                  <a key={link.label} href={link.href} className="hover:text-primary-500 transition-colors">
+                    {link.label}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
